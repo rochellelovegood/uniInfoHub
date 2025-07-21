@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.1) 0%, rgba(18, 18, 18, 0) 70%);
+        position: relative;
+        overflow: hidden;
+        padding: 5rem 0;
+        border-bottom: 1px solid #333;
+    }
+
+    .hero-title {
+        background: linear-gradient(90deg, #8a2be2, #00bfff);
+        /* Add this back in for the gradient text effect */
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.5px;
+        font-weight: 800;
+        text-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+    }
+
+    .hero-subtitle {
+        color: #b0b0b0;
+        font-weight: 400;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .btn-gradient-primary {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+        border-radius: 50px;
+        padding: 0.75rem 2rem;
+        box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+    }
+
+    .btn-gradient-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+    }
+
+    .btn-glass {
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        border-radius: 50px;
+        padding: 0.75rem 2rem;
+        color: #e0e0e0;
+    }
+
+    .btn-glass:hover {
+        background: rgba(50, 50, 60, 0.6);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        background-color: var(--card-bg);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-hover:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .card-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+        color: white;
+        font-size: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .section-title {
+        position: relative;
+        display: inline-block;
+        font-weight: 700;
+        color: #e0e0e0;
+        margin-bottom: 3rem;
+    }
+
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: var(--primary-gradient);
+        border-radius: 3px;
+    }
+
+    .card-highlight {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .text-accent {
+        color: var(--text-accent);
+        font-weight: 500;
+    }
+
+    .hero-illustration {
+        margin-top: 3rem;
+        filter: drop-shadow(0 0 15px rgba(138, 43, 226, 0.5));
+    }
+
+    /* Dark mode specific adjustments */
+    .text-muted {
+        color: #8a8a8a !important;
+    }
+
+    .badge {
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container text-center py-5">
+        <h1 class=" display-3 fw-bold mb-3">{{ page_title }}</h1>
+        <p class="hero-subtitle fs-4 mb-4">{{ intro_message }}</p>
+
+        <div class="cta-buttons mt-4">
+            {# Corrected Login URL #}
+            <a class="btn btn-gradient-primary btn-lg px-4 me-3" href="{% url 'login' %}" role="button">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+            </a>
+            {# Corrected Register URL (will still need a custom view/URL for it) #}
+            <a class="btn btn-glass btn-lg px-4" href="#" role="button">
+                <i class="bi bi-person-plus me-2"></i>Register
+            </a>
+        </div>
+
+        <div class="hero-illustration mt-5">
+            <img src="https://img.icons8.com/nolan/200/rocket.png" alt="Launching Opportunities" class="img-fluid" style="max-height: 200px;">
+        </div>
+    </div>
+</div>
+
+<div class="container my-5 p-5">
+    <h2 class="text-center mb-5 section-title">Discover What's Possible</h2>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card card-hover h-100 shadow-lg">
+                <div class="card-icon-wrapper bg-primary-gradient">
+                    <i class="bi bi-award"></i>
+                </div>
+                <div class="card-body px-4 py-4">
+                    <h3 class="card-title h5 text-white">Global Excellence Grant</h3>
+                    <div class="card-highlight mb-3">
+                        <span class="badge bg-primary bg-opacity-10 text-primary">Scholarship</span>
+                        <span class="text-muted small">Deadline: Aug 15, 2025</span>
+                    </div>
+                    <p class="card-text">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>Minimum GPA 3.5<br>
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>STEM undergraduates<br>
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>All nationalities
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-0 pt-0 px-4 pb-4">
+                    <small class="text-accent"><i class="bi bi-lock-fill me-1"></i>Login to apply</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card card-hover h-100 shadow-lg">
+                <div class="card-icon-wrapper bg-info-gradient">
+                    <i class="bi bi-megaphone"></i>
+                </div>
+                <div class="card-body px-4 py-4 ">
+                    <h3 class="card-title h5 text-white">Career Fair 2025</h3>
+                    <div class="card-highlight mb-3">
+                        <span class="badge bg-info bg-opacity-10 text-info">Event</span>
+                        <span class="text-muted small">Sept 10, 2025</span>
+                    </div>
+                    <p class="card-text">
+                        <i class="bi bi-calendar-event text-info me-2"></i>Annual University Career Fair<br>
+                        <i class="bi bi-clock text-info me-2"></i>9 AM to 4 PM<br>
+                        <i class="bi bi-geo-alt text-info me-2"></i>Grand Hall
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-0 pt-0 px-4 pb-4">
+                    <small class="text-accent"><i class="bi bi-lock-fill me-1"></i>Login to RSVP</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card card-hover h-100 shadow-lg">
+                <div class="card-icon-wrapper bg-success-gradient">
+                    <i class="bi bi-file-earmark-text"></i>
+                </div>
+                <div class="card-body px-4 py-4">
+                    <h3 class="card-title h5 text-white">Essay Writing Guide</h3>
+                    <div class="card-highlight mb-3">
+                        <span class="badge bg-success bg-opacity-10 text-success">Resource</span>
+                        <span class="text-muted small">PDF Download</span>
+                    </div>
+                    <p class="card-text">
+                        <i class="bi bi-list-check text-success me-2"></i>Structure & formatting<br>
+                        <i class="bi bi-search text-success me-2"></i>Research techniques<br>
+                        <i class="bi bi-book text-success me-2"></i>Citation styles
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-0 pt-0 px-4 pb-4">
+                    <small class="text-accent"><i class="bi bi-lock-fill me-1"></i>Login to download</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
