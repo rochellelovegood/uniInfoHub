@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .registration-card {
+        background-color: var(--card-bg);
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+    }
+    
+    .registration-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .card-header {
+        background: var(--primary-gradient) !important;
+        border-bottom: none;
+        padding: 1.5rem;
+    }
+    
+    .form-label {
+        color: #e0e0e0;
+        font-weight: 500;
+    }
+    
+    .form-control {
+        background-color: #2a2a3a;
+        border: 1px solid #444;
+        color: #f0f0f0;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+    }
+    
+    .form-control:focus {
+        background-color: #2a2a3a;
+        color: #fff;
+        border-color: var(--text-accent);
+        box-shadow: 0 0 0 0.25rem rgba(138, 43, 226, 0.25);
+    }
+    
+    .btn-gradient-primary {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        padding: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+    }
+    
+    .btn-gradient-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+    }
+    
+    .text-muted {
+        color: #8a8a8a !important;
+    }
+    
+    .alert {
+        border: none;
+        border-radius: 8px;
+    }
+    
+    .divider {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        color: #666;
+    }
+    
+    .divider::before, .divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid #444;
+    }
+    
+    .divider::before {
+        margin-right: 1rem;
+    }
+    
+    .divider::after {
+        margin-left: 1rem;
+    }
+    
+    a {
+        color: var(--text-accent);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    a:hover {
+        color: #a85cf9;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="registration-card card shadow-lg">
+                <div class="card-header text-white text-center">
+                    <h3 class="mb-0"><i class="bi bi-person-plus me-2"></i>{{ page_title }}</h3>
+                </div>
+                <div class="card-body p-4">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                <i class="bi {% if message.tags == 'success' %}bi-check-circle-fill{% else %}bi-exclamation-triangle-fill{% endif %} me-2"></i>
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post" class="mt-3">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.non_field_errors %}
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">
+                                    {{ field.label }}
+                                    {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                                </label>
+                                {{ field }}
+                                
+                                {% for error in field.errors %}
+                                    <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                        
+                        <button type="submit" class="btn btn-gradient-primary w-100 mt-4 py-2">
+                            <i class="bi bi-person-check me-2"></i>Register
+                        </button>
+                    </form>
+                    
+                    <div class="divider">or</div>
+                    
+                    <div class="text-center">
+                        <p class="mb-0">Already have an account? <a href="{% url 'login' %}" class="fw-bold">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

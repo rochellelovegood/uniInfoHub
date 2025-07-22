@@ -1,7 +1,7 @@
 # uniHub/scholarships/models.py
-
+from django.contrib import admin
 from django.db import models
-
+from django.contrib.auth.models import User
 class Scholarship(models.Model):
     """
     Represents a scholarship opportunity available to students.
@@ -73,3 +73,26 @@ class Scholarship(models.Model):
         """
         ordering = ['deadline', 'title'] # Default ordering for retrieved scholarships: by deadline (soonest first), then by title.
         verbose_name_plural = "Scholarships" # Correct plural name to display in the Django admin.
+#khin update for userProfile
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    roll_no = models.CharField(max_length=20, unique=True, help_text="Your unique Roll Number (e.g., YKPT-XXXX)")
+
+    MAJOR_CHOICES = [
+       
+        ('SE', 'B.C.Sc. (Software Engineering)'),
+        ('BIS', 'B.C.Sc. (Business Information Systems)'),
+        ('KE', 'B.C.Sc. (Knowledge Engineering)'),
+        ('HPC', 'B.C.Sc. (High Performance Computing)'),
+        ('ES', 'B.C.Tech. (Embedded Systems)'),
+        ('CN', 'B.C.Tech. (Communication and Networking)'),
+        ('CSec', 'B.C.Tech. (Cyber Security)'),
+    ]
+    major = models.CharField(max_length=50, choices=MAJOR_CHOICES, default='CS')
+
+    SEMESTER_CHOICES = [(i, f'Semester {i}') for i in range(1, 11)]
+    semester = models.IntegerField(choices=SEMESTER_CHOICES, default=1)
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
+

@@ -1,9 +1,12 @@
 # uniHub/scholarships/views.py
 
-from django.shortcuts import render
-from django.db.models import Q # Used for complex queries (like OR conditions for search)
-from datetime import date # To get today's date for filtering active scholarships
 from .models import Scholarship # Import your Scholarship model
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.contrib import messages
+from django.db.models import Q # Keep this for scholarship_list
+from datetime import date # Keep this for scholarship_lis
+from .forms import UserRegisterForm # <--- This is now correct
 
 # uniHub/uniHub/views.py
 
@@ -84,3 +87,25 @@ def scholarship_list(request):
         'deadline_before_str': deadline_before_str or '', # Pass back current deadline filter
     }
     return render(request, 'scholarships/scholarship_list.html', context)
+
+# NEW: register_view (moved from users/views.py)
+def register_view(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, f'Account created for {user.username}! You are now logged in.')
+            return redirect('home')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.replace('_', ' ').capitalize()}: {error}")
+    else:
+        form = UserRegisterForm()
+
+    context = {
+        'form': form,
+        'page_title': 'Register for OpportunityHub'
+    }
+    return render(request, 'registration/register.html', context)
