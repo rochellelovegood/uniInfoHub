@@ -80,8 +80,8 @@ class UserProfile(models.Model):
     # Choices for User Role
     ROLE_CHOICES = [
         ('STUDENT', 'Student'),
-        ('TEACHER', 'Teacher'),
-        ('STAFF', 'Staff'),
+        ('FACULTY', 'Faculty'), 
+        ('ADMIN', 'Administrator'), # Changed from 'STAFF'
     ]
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='STUDENT') # <--- ADD THIS FIELD
 

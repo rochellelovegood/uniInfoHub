@@ -10,7 +10,8 @@ class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True, label="Email Address")
 
     # Add the new 'role' field to the form
-    role = forms.ChoiceField(choices=UserProfile.ROLE_CHOICES, label="Role", initial='STUDENT') # <--- ADD THIS FIELD
+    role = forms.ChoiceField(choices=UserProfile.ROLE_CHOICES, label="Role", initial='STUDENT',
+                             widget=forms.RadioSelect) 
 
     # Make roll_no not required by default in the form,
     # we'll enforce it conditionally in clean()
