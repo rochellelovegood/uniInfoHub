@@ -27,17 +27,21 @@
     .form-label {
         color: #e0e0e0;
         font-weight: 500;
+        display: block;
+        margin-bottom: 0.5rem;
     }
     
-    .form-control {
+    .form-control, .form-select {
         background-color: #2a2a3a;
         border: 1px solid #444;
         color: #f0f0f0;
         border-radius: 8px;
         padding: 0.75rem 1rem;
+        width: 100%;
+        margin-bottom: 0.5rem;
     }
     
-    .form-control:focus {
+    .form-control:focus, .form-select:focus {
         background-color: #2a2a3a;
         color: #fff;
         border-color: var(--text-accent);
@@ -54,6 +58,8 @@
         font-weight: 500;
         letter-spacing: 0.5px;
         box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+        width: 100%;
+        margin-top: 1rem;
     }
     
     .btn-gradient-primary:hover {
@@ -61,44 +67,52 @@
         box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
     }
     
-    .text-muted {
-        color: #8a8a8a !important;
-    }
-    
-    .alert {
-        border: none;
-        border-radius: 8px;
-    }
-    
-    .divider {
+    /* Role selection styling */
+    .role-options {
         display: flex;
-        align-items: center;
-        margin: 1.5rem 0;
-        color: #666;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
     }
     
-    .divider::before, .divider::after {
-        content: "";
-        flex: 1;
-        border-bottom: 1px solid #444;
+    .role-option {
+        background-color: #2a2a3a;
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 1rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
     }
     
-    .divider::before {
+    .role-option:hover {
+        border-color: var(--text-accent);
+    }
+    
+    .role-option.selected {
+        border-color: var(--text-accent);
+        background-color: rgba(138, 43, 226, 0.1);
+    }
+    
+    .role-option input[type="radio"] {
+        display: none;
+    }
+    
+    .role-icon {
+        font-size: 1.5rem;
         margin-right: 1rem;
     }
     
-    .divider::after {
-        margin-left: 1rem;
+    .student-option .role-icon { color: #6e8efb; }
+    .faculty-option .role-icon { color: #4facfe; }
+    .admin-option .role-icon { color: #a777e3; }
+    
+    /* Conditional fields */
+    .conditional-field {
+        display: none;
     }
     
-    a {
-        color: var(--text-accent);
-        text-decoration: none;
-        transition: color 0.2s ease;
-    }
-    
-    a:hover {
-        color: #a85cf9;
+    .conditional-field.show {
+        display: block;
     }
 </style>
 {% endblock %}
@@ -133,21 +147,161 @@
                             </div>
                         {% endif %}
                         
-                        {% for field in form %}
-                            <div class="mb-3">
-                                <label for="{{ field.id_for_label }}" class="form-label">
-                                    {{ field.label }}
-                                    {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                        <!-- Username Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">
+                                {{ form.username.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.username }}
+                            {% if form.username.help_text %}
+                                <div class="form-text text-muted">{{ form.username.help_text }}</div>
+                            {% endif %}
+                            {% for error in form.username.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Email Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.email.id_for_label }}" class="form-label">
+                                {{ form.email.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.email }}
+                            {% if form.email.help_text %}
+                                <div class="form-text text-muted">{{ form.email.help_text }}</div>
+                            {% endif %}
+                            {% for error in form.email.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Password Fields -->
+                        <div class="mb-3">
+                            <label for="{{ form.password1.id_for_label }}" class="form-label">
+                                {{ form.password1.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.password1 }}
+                            {% if form.password1.help_text %}
+                                <div class="form-text text-muted">{{ form.password1.help_text }}</div>
+                            {% endif %}
+                            {% for error in form.password1.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.password2.id_for_label }}" class="form-label">
+                                {{ form.password2.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.password2 }}
+                            {% if form.password2.help_text %}
+                                <div class="form-text text-muted">{{ form.password2.help_text }}</div>
+                            {% endif %}
+                            {% for error in form.password2.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Role Selection -->
+                        <div class="mb-4">
+                            <label class="form-label">
+                                Role
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="role-options">
+                                <label class="role-option student-option {% if form.role.value == 'STUDENT' %}selected{% endif %}">
+                                    <input type="radio" name="role" value="STUDENT" {% if form.role.value == 'STUDENT' %}checked{% endif %}>
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-mortarboard-fill role-icon"></i>
+                                        <div>
+                                            <h6 class="mb-1">Student</h6>
+                                            <p class="small text-muted mb-0">Looking for scholarships and opportunities</p>
+                                        </div>
+                                    </div>
                                 </label>
-                                {{ field }}
                                 
-                                {% for error in field.errors %}
+                                <label class="role-option faculty-option {% if form.role.value == 'FACULTY' %}selected{% endif %}">
+                                    <input type="radio" name="role" value="FACULTY" {% if form.role.value == 'FACULTY' %}checked{% endif %}>
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-person-video3 role-icon"></i>
+                                        <div>
+                                            <h6 class="mb-1">Faculty</h6>
+                                            <p class="small text-muted mb-0">Posting opportunities for students</p>
+                                        </div>
+                                    </div>
+                                </label>
+                                
+                                <label class="role-option admin-option {% if form.role.value == 'ADMIN' %}selected{% endif %}">
+                                    <input type="radio" name="role" value="ADMIN" {% if form.role.value == 'ADMIN' %}checked{% endif %}>
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-shield-lock role-icon"></i>
+                                        <div>
+                                            <h6 class="mb-1">Administrator</h6>
+                                            <p class="small text-muted mb-0">Manage system users and content</p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            {% if form.role.errors %}
+                                {% for error in form.role.errors %}
+                                    <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Conditional Student Fields -->
+                        <div id="student-fields" class="conditional-field {% if form.role.value == 'STUDENT' %}show{% endif %}">
+                            <!-- Roll Number Field -->
+                            <div class="mb-3">
+                                <label for="{{ form.roll_no.id_for_label }}" class="form-label">
+                                    {{ form.roll_no.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.roll_no }}
+                                {% if form.roll_no.help_text %}
+                                    <div class="form-text text-muted">{{ form.roll_no.help_text }}</div>
+                                {% endif %}
+                                {% for error in form.roll_no.errors %}
                                     <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
                                 {% endfor %}
                             </div>
-                        {% endfor %}
-                        
-                        <button type="submit" class="btn btn-gradient-primary w-100 mt-4 py-2">
+                            
+                            <!-- Major Field -->
+                            <div class="mb-3">
+                                <label for="{{ form.major.id_for_label }}" class="form-label">
+                                    {{ form.major.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.major }}
+                                {% if form.major.help_text %}
+                                    <div class="form-text text-muted">{{ form.major.help_text }}</div>
+                                {% endif %}
+                                {% for error in form.major.errors %}
+                                    <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            
+                            <!-- Semester Field -->
+                            <div class="mb-3">
+                                <label for="{{ form.semester.id_for_label }}" class="form-label">
+                                    {{ form.semester.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.semester }}
+                                {% if form.semester.help_text %}
+                                    <div class="form-text text-muted">{{ form.semester.help_text }}</div>
+                                {% endif %}
+                                {% for error in form.semester.errors %}
+                                    <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-gradient-primary py-2">
                             <i class="bi bi-person-check me-2"></i>Register
                         </button>
                     </form>
@@ -162,4 +316,36 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Show/hide student fields based on role selection
+    document.querySelectorAll('input[name="role"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const studentFields = document.getElementById('student-fields');
+            if (this.value === 'STUDENT') {
+                studentFields.classList.add('show');
+                // Make student fields required
+                document.querySelectorAll('#student-fields input, #student-fields select').forEach(field => {
+                    field.required = true;
+                });
+            } else {
+                studentFields.classList.remove('show');
+                // Remove required from student fields
+                document.querySelectorAll('#student-fields input, #student-fields select').forEach(field => {
+                    field.required = false;
+                });
+            }
+        });
+    });
+    
+    // Highlight selected role option
+    document.querySelectorAll('.role-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.role-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            this.classList.add('selected');
+        });
+    });
+</script>
 {% endblock %}

@@ -76,14 +76,30 @@ class Scholarship(models.Model):
 #khin update for userProfile
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    roll_no = models.CharField(max_length=20, unique=True, help_text="Your unique Roll Number (e.g., YKPT-XXXX)")
+
+    # Choices for User Role
+    ROLE_CHOICES = [
+        ('STUDENT', 'Student'),
+        ('TEACHER', 'Teacher'),
+        ('STAFF', 'Staff'),
+    ]
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='STUDENT') # <--- ADD THIS FIELD
+
+    roll_no = models.CharField(
+        max_length=20, 
+        unique=True, 
+        blank=True, 
+        null=True,  
+        help_text="Your unique Roll Number (e.g., YKPT-XXXX). Required for Students."
+    )
 
     MAJOR_CHOICES = [
-       
+      
         ('SE', 'B.C.Sc. (Software Engineering)'),
         ('BIS', 'B.C.Sc. (Business Information Systems)'),
         ('KE', 'B.C.Sc. (Knowledge Engineering)'),
         ('HPC', 'B.C.Sc. (High Performance Computing)'),
+     
         ('ES', 'B.C.Tech. (Embedded Systems)'),
         ('CN', 'B.C.Tech. (Communication and Networking)'),
         ('CSec', 'B.C.Tech. (Cyber Security)'),
@@ -94,5 +110,4 @@ class UserProfile(models.Model):
     semester = models.IntegerField(choices=SEMESTER_CHOICES, default=1)
 
     def __str__(self):
-        return f'{self.user.username} Profile'
-
+        return f'{self.user.username} Profile ({self.get_role_display()})' # Updated __str__
