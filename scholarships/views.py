@@ -7,11 +7,8 @@ from django.contrib import messages
 from django.db.models import Q # Keep this for scholarship_list
 from datetime import date # Keep this for scholarship_lis
 from .forms import UserRegisterForm # <--- This is now correct
-
 # uniHub/uniHub/views.py
-
 from django.shortcuts import render
-
 from django.shortcuts import render
 # from .models import Scholarship # You'll need this for scholarship_list later
 
