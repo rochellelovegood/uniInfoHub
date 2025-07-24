@@ -12,7 +12,7 @@ urlpatterns = [
     path('scholarships/', include('scholarships.urls', namespace='scholarships')),
     path('register/', register_view, name='register'), 
     path('accounts/', include('django.contrib.auth.urls')),
-
+    
    
 ]
 
