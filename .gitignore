@@ -5,11 +5,13 @@ __pycache__/
 *.pyd
 .Python
 env/
+uniHub/venv/
 venv/  # Your virtual environment folder
 .venv/ # Another common name for venv
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
+**/.git
 
 # Django specific
 db.sqlite3 # Your SQLite database file
