@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Scholarship Opportunities{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* All your existing CSS styles */
+    .hero-section {
+        background: radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.1) 0%, rgba(18, 18, 18, 0) 70%);
+        padding: 4rem 0;
+        border-bottom: 1px solid #333;
+    }
+    
+    .hero-title {
+        background: linear-gradient(90deg, #8a2be2, #00bfff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        font-weight: 800;
+        text-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+    }
+    
+    /* Rest of your CSS styles */
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container text-center py-4">
+        <h1 class="hero-title display-3 fw-bold mb-3">Scholarship Opportunities</h1>
+        <p class="lead text-muted">Discover funding opportunities for your academic journey</p>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <!-- Search Filters -->
+        <div class="col-lg-3 mb-4">
+            <div class="search-card">
+                <h5 class="text-white mb-4"><i class="bi bi-funnel-fill me-2"></i>Filters</h5>
+                
+                <form method="get">
+                    <div class="mb-3">
+                        <label class="form-label">Search</label>
+                        <input type="text" name="search" class="form-control" placeholder="Keywords..." value="{{ search_query|default:'' }}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Minimum GPA</label>
+                        <select name="min_gpa" class="form-select">
+                            <option value="">Any GPA</option>
+                            <option value="3.0" {% if selected_min_gpa == "3.0" %}selected{% endif %}>3.0+</option>
+                            <option value="3.5" {% if selected_min_gpa == "3.5" %}selected{% endif %}>3.5+</option>
+                            <option value="4.0" {% if selected_min_gpa == "4.0" %}selected{% endif %}>4.0+</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Deadline</label>
+                        <select name="deadline" class="form-select">
+                            <option value="">Any Time</option>
+                            <option value="week" {% if selected_deadline == "week" %}selected{% endif %}>Within 1 Week</option>
+                            <option value="month" {% if selected_deadline == "month" %}selected{% endif %}>Within 1 Month</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="semesterFilter" class="form-label ">Semester</label>
+                        <select class="form-select" id="semesterFilter" name="semester">
+                         <option value="">All Semesters</option>
+                        {% for sem_val, sem_label in semester_choices %}
+                            <option value="{{ sem_val }}" {% if sem_val|stringformat:"d" == semester|stringformat:"d" %}selected{% endif %}>{{ sem_label }}</option>
+                         {% endfor %}
+                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="major" class="form-label">Major</label>
+                                <select name="major" id="major" class="form-select">
+                                    <option value="">Select a major</option>
+                                    <option value="SE" {% if major == "SE" %}selected{% endif %}>B.C.Sc. (Software Engineering)</option>
+                                    <option value="BIS" {% if major == "BIS" %}selected{% endif %}>B.C.Sc. (Business Information Systems)</option>
+                                    <option value="KE" {% if major == "KE" %}selected{% endif %}>B.C.Sc. (Knowledge Engineering)</option>
+                                    <option value="HPC" {% if major == "HPC" %}selected{% endif %}>B.C.Sc. (High Performance Computing)</option>
+                                    <option value="ES" {% if major == "ES" %}selected{% endif %}>B.C.Tech. (Embedded Systems)</option>
+                                    <option value="CN" {% if major == "CN" %}selected{% endif %}>B.C.Tech. (Communication and Networking)</option>
+                                    <option value="CSec" {% if major == "CSec" %}selected{% endif %}>B.C.Tech. (Cyber Security)</option>
+                                </select>
+
+
+                    </div>
+                    
+                    <input type="hidden" name="sort" value="{{ sort_by }}">
+                    
+                    <button type="submit" class="btn btn-gradient-primary w-100 mt-2">
+                        <i class="bi bi-search me-2"></i>Apply Filters
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Scholarship Listings -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="text-white mb-0">Available Scholarships</h4>
+                <div>
+                    <span class="text-muted me-2">Sort by:</span>
+                    <select class="form-select form-select-sm d-inline-block w-auto" onchange="updateSort(this.value)">
+                        <option value="deadline" {% if sort_by == 'deadline' %}selected{% endif %}>Deadline</option>
+                        <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest</option>
+                    </select>
+                </div>
+            </div>
+            
+            {% if scholarships %}
+                {% for scholarship in scholarships %}
+                <div class="scholarship-card">
+                    <div class="scholarship-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{{ scholarship.title }}</h5>
+                        <span class="badge deadline-badge">Deadline: {{ scholarship.deadline|date:"M d, Y" }}</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap mb-3">
+                            {% if scholarship.min_gpa %}
+                                <span class="badge-custom me-2 mb-2">
+                                    <i class="bi bi-award me-1"></i> GPA {{ scholarship.min_gpa }}
+                                </span>
+                            {% endif %}
+                            <span class="badge-custom me-2 mb-2">
+                                <i class="bi bi-book me-1"></i> {{ scholarship.get_major_display }}
+                            </span>
+                            {% if scholarship.country %}
+                                <span class="badge-custom me-2 mb-2">
+                                    <i class="bi bi-geo-alt me-1"></i> {{ scholarship.country }}
+                                </span>
+                            {% endif %}
+                        </div>
+                        <p class="card-text">{{ scholarship.description|truncatewords:30 }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <small class="text-muted">
+                                <i class="bi bi-clock-history me-1"></i> Posted {{ scholarship.created_at|timesince }} ago
+                            </small>
+                            <div>
+                                {% if scholarship.brochure_pdf %}
+                                    <a href="{{ scholarship.brochure_pdf.url }}" class="btn btn-sm btn-outline-secondary me-2" download>
+                                        <i class="bi bi-file-earmark-pdf me-1"></i>Download PDF
+                                    </a>
+                                {% endif %}
+                                <a href="{% url 'scholarship_detail' scholarship.id %}" class="btn btn-view-details btn-sm">
+                                    <i class="bi bi-eye me-1"></i>View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>No scholarships found matching your criteria.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateSort(value) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('sort', value);
+        window.location.href = url.toString();
+    }
+</script>
+{% endblock %}

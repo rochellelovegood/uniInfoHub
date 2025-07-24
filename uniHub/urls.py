@@ -10,9 +10,11 @@ urlpatterns = [
 
     # App-specific URLs
     path('scholarships/', include('scholarships.urls', namespace='scholarships')),
-    path('register/', register_view, name='register'),
-    path('login/',custom_login,name='login'),
+     path('register/', register_view, name='register'), 
+
     path('accounts/', include('django.contrib.auth.urls')),
+
+   
 ]
 
 # Only serve media files in development mode

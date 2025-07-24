@@ -29,8 +29,21 @@ class Scholarship(models.Model):
         max_length=100, null=True, blank=True,
         help_text="Optional: The country for which this scholarship is intended (e.g., 'USA', 'Myanmar', 'UK')."
     )
+    MAJOR_CHOICES = [
+      
+        ('SE', 'B.C.Sc. (Software Engineering)'),
+        ('BIS', 'B.C.Sc. (Business Information Systems)'),
+        ('KE', 'B.C.Sc. (Knowledge Engineering)'),
+        ('HPC', 'B.C.Sc. (High Performance Computing)'),
+     
+        ('ES', 'B.C.Tech. (Embedded Systems)'),
+        ('CN', 'B.C.Tech. (Communication and Networking)'),
+        ('CSec', 'B.C.Tech. (Cyber Security)'),
+    ]
+    major = models.CharField(max_length=50, choices=MAJOR_CHOICES, default='SE')
+
     major_department = models.CharField(
-        max_length=200, null=True, blank=True,
+        max_length=50, choices=MAJOR_CHOICES, null=True, blank=True,
         help_text="Optional: Specific major(s) or department(s) for which the scholarship is applicable (e.g., 'Computer Science', 'Engineering', 'Any Field')."
     )
 
@@ -104,7 +117,7 @@ class UserProfile(models.Model):
         ('CN', 'B.C.Tech. (Communication and Networking)'),
         ('CSec', 'B.C.Tech. (Cyber Security)'),
     ]
-    major = models.CharField(max_length=50, choices=MAJOR_CHOICES, default='CS')
+    major = models.CharField(max_length=50, choices=MAJOR_CHOICES, default='SE')
 
     SEMESTER_CHOICES = [(i, f'Semester {i}') for i in range(1, 11)]
     semester = models.IntegerField(choices=SEMESTER_CHOICES, default=1)

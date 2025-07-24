@@ -75,9 +75,8 @@
                         <a class="nav-link" href="#">Login</a> {# Use Django's 'login' URL name #}
                     </li>
                     <li class="nav-item">
-                        {# IMPORTANT: This 'register' URL will lead to a 'Page Not Found' #}
-                        {# until you implement a custom registration view and assign it a URL name like 'register'. #}
-                        <a class="nav-link" href="#">Register</a> 
+                        
+                        <a class="nav-link" href="{% url 'register' %}">Register</a> 
                     </li>
                     {% endif %}
                     

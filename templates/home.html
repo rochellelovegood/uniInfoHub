@@ -9,7 +9,7 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: #121212;
             color: #e0e0e0;
-            background: linear-gradient(rgba(32, 0, 0, 0.651), rgba(115, 85, 120, 0.788)), url('{% static "slide_2.jpg" %}') no-repeat center center fixed;
+            background: linear-gradient(rgba(0, 0, 0, 0.658), rgba(40, 1, 47, 0.711)), url('{% static "slide_2.jpg" %}') no-repeat center center fixed;
             background-size: cover;
           
             min-height: 100vh;
@@ -27,9 +27,9 @@
 
     .hero-title {
         background: linear-gradient(90deg, #8a2be2, #00bfff);
-        /* Add this back in for the gradient text effect */
-        -webkit-text-fill-color: transparent;
-        letter-spacing: -0.5px;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
         font-weight: 800;
         text-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
     }
@@ -150,7 +150,7 @@
 {% block content %}
 <div class="hero-section">
     <div class="container text-center py-5">
-        <h1 class=" display-3 fw-bold mb-3">{{ page_title }}</h1>
+        <h1 class="hero-title display-3 fw-bold mb-3">{{ page_title }}</h1>
         <p class="hero-subtitle fs-4 mb-4">{{ intro_message }}</p>
 
         <div class="cta-buttons mt-4">
