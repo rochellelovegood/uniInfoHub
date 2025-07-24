@@ -22,7 +22,7 @@ def home_view(request):
         'intro_message': 'Discover scholarships, events, and resources to propel your academic and career journey at UCSY.', # This will be the subtitle
     }
     return render(request, 'home.html', context)
-def scholarship_list(request):
+def scholarship_list_view(request):
     """
     Displays a list of active scholarships, with options for filtering and searching.
     """
