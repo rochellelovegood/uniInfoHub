@@ -1,6 +1,6 @@
 # uniHub/scholarships/views.py
 
-from .models import Scholarship # Import your Scholarship model
+from .models import Scholarship,UserProfile # Import your Scholarship model
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib import messages
@@ -85,6 +85,8 @@ def scholarship_list(request):
         'country': country or '',
         'major': major or '',
         'deadline_before_str': deadline_before_str or '', # Pass back current deadline filter
+        'semester_choices': UserProfile.SEMESTER_CHOICES, # <--- Pass this to the template
+        'semester': request.GET.get('semester') 
     }
     return render(request, 'scholarships/scholarship_list.html', context)
 
