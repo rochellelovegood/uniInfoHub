@@ -11,5 +11,6 @@ app_name = 'scholarships' # This helps in namespacing URLs (e.g., 'scholarships:
 
 urlpatterns = [
     path('', views.scholarship_list, name='list'),
-    
+    path('register/', register_view, name='register'), # <--- ADD THIS LINE BACK HERE
+
 ]

@@ -2,7 +2,7 @@
 
 from .models import Scholarship,UserProfile # Import your Scholarship model
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import authenticate,login
 from django.contrib import messages
 from django.db.models import Q # Keep this for scholarship_list
 from datetime import date # Keep this for scholarship_lis
@@ -111,3 +111,38 @@ def register_view(request):
         'page_title': 'Register for OpportunityHub'
     }
     return render(request, 'registration/register.html', context)
+
+
+def custom_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        role = request.POST.get('role')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            # Verify the user's role matches selection
+            if user.role == role:
+                # Additional validation for students
+                if role == 'STUDENT':
+                    wifi_email = request.POST.get('wifi_email', '')
+                    if not wifi_email.startswith('WIFI'):
+                        messages.error(request, "Student email must start with 'WIFI'")
+                        return redirect('login')
+
+                login(request, user)
+
+                # Redirect based on role
+                if role == 'STUDENT':
+                    return redirect('student_dashboard')
+                elif role == 'FACULTY':
+                    return redirect('faculty_dashboard')
+                elif role == 'ADMIN':
+                    return redirect('admin_dashboard')
+            else:
+                messages.error(request, "This account doesn't have the selected role")
+        else:
+            messages.error(request, "Invalid username or password")
+
+    return render(request, 'registration/login.html')
