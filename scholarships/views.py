@@ -1,17 +1,27 @@
 # uniHub/scholarships/views.py
-
-from .models import Scholarship,UserProfile # Import your Scholarship model
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate,login
 from django.contrib import messages
 from django.db.models import Q # Keep this for scholarship_list
 from datetime import date # Keep this for scholarship_lis
-from .forms import UserRegisterForm # <--- This is now correct
-# uniHub/uniHub/views.py
+from .forms import UserRegisterForm, ScholarshipForm # <<< Import ScholarshipForm
+from .models import Scholarship, UserProfile# <--- This is now correct
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.shortcuts import render
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_protect
 # from .models import Scholarship # You'll need this for scholarship_list later
 
+
+def is_faculty_or_admin(user):
+    # Check if user is authenticated first
+    if not user.is_authenticated:
+        return False
+    # Ensure the user has a UserProfile
+    if not hasattr(user, 'userprofile'):
+        return False
+    # Check the role in the UserProfile
+    return user.userprofile.role in ['FACULTY', 'ADMIN']
 def home_view(request):
     """
     Renders the main home page of OpportunityHub.
@@ -110,36 +120,80 @@ def register_view(request):
     return render(request, 'registration/register.html', context)
 
 
+@csrf_protect
 def custom_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        role = request.POST.get('role')
+        role_selected_in_form = request.POST.get('role') # Get the role selected by the user in the form
 
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            # Verify the user's role matches selection
-            if user.role == role:
-                # Additional validation for students
-                if role == 'STUDENT':
-                    wifi_email = request.POST.get('wifi_email', '')
-                    if not wifi_email.startswith('WIFI'):
-                        messages.error(request, "Student email must start with 'WIFI'")
-                        return redirect('login')
+            # Check if the user has a UserProfile
+            if hasattr(user, 'userprofile'):
+                user_actual_role = user.userprofile.role # Get the actual role from the UserProfile
 
-                login(request, user)
+                # Verify the user's actual role matches the role selected in the login form
+                if user_actual_role == role_selected_in_form:
+                    # REMOVED: wifi_email validation as requested
+                    
+                    login(request, user) # Log the user in
 
-                # Redirect based on role
-                if role == 'STUDENT':
-                    return redirect('student_dashboard')
-                elif role == 'FACULTY':
-                    return redirect('faculty_dashboard')
-                elif role == 'ADMIN':
-                    return redirect('admin_dashboard')
+                    # Redirect based on the user's actual role
+                    if user_actual_role == 'STUDENT':
+                        messages.success(request, f'Welcome, {user.username} (Student)!')
+                        return redirect('student_dashboard') # Assuming 'student_dashboard' exists
+                    elif user_actual_role == 'FACULTY':
+                        messages.success(request, f'Welcome, {user.username} (Faculty)!')
+                        # Redirect Faculty to scholarships list page
+                        return redirect('scholarships:list') # Redirect to the scholarships list
+                    elif user_actual_role == 'ADMIN':
+                        messages.success(request, f'Welcome, {user.username} (Admin)!')
+                        return redirect('admin:index') # Redirect to Django admin page
+                else:
+                    messages.error(request, f"Your account is registered as {user_actual_role}, but you selected {role_selected_in_form}. Please select the correct role.")
             else:
-                messages.error(request, "This account doesn't have the selected role")
+                # This case should ideally not happen if every User has a UserProfile
+                messages.error(request, "User profile not found for this account.")
         else:
-            messages.error(request, "Invalid username or password")
+            messages.error(request, "Invalid username or password.")
 
-    return render(request, 'registration/login.html')
+    # Pass the role choices to the template for the dropdown/radio buttons
+    from .models import UserProfile
+    role_choices = UserProfile.ROLE_CHOICES
+    return render(request, 'registration/login.html', {'role_choices': role_choices})
+
+
+def scholarship_list_view(request):
+    """
+    Displays a list of active scholarships, with options for filtering, searching, and sorting.
+    """
+    scholarships = Scholarship.objects.filter(is_active=True).order_by('-created_at') # Order by most recent first
+    # Add filtering/searching logic later if needed
+    context = {
+        'scholarships': scholarships,
+        'is_faculty_or_admin': is_faculty_or_admin(request.user) if request.user.is_authenticated else False,
+    }
+    return render(request, 'scholarships/scholarship_list.html', context)
+
+
+# --- NEW: Post Scholarship View (Admin/Faculty Access) ---
+@login_required # User must be logged in
+@user_passes_test(is_faculty_or_admin, login_url='/login/') # Only faculty/admin can access. Redirects to login if not.
+@csrf_protect
+def post_scholarship_view(request):
+    if request.method == 'POST':
+        # Files are in request.FILES for FileField and ImageField
+        form = ScholarshipForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Scholarship posted successfully!')
+            return redirect('scholarships:list') # Redirect to the scholarship list page
+        else:
+            messages.error(request, 'Error posting scholarship. Please check the form.')
+    else:
+        form = ScholarshipForm() # Empty form for GET request
+    return render(request, 'scholarships/post_scholarship.html', {'form': form})
+
+# ... (Any other views like scholarship_detail_view, etc.) ...

@@ -31,3 +31,5 @@ yarn-error.log*
 db.sqlite3
 scholarships/migrations/0001_initial.py
 scholarships/migrations/0001_initial.py
+scholarships/migrations/0001_initial.py
+scholarships/migrations/0001_initial.py
