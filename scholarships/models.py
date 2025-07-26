@@ -117,10 +117,12 @@ class UserProfile(models.Model):
         ('CN', 'B.C.Tech. (Communication and Networking)'),
         ('CSec', 'B.C.Tech. (Cyber Security)'),
     ]
-    major = models.CharField(max_length=50, choices=MAJOR_CHOICES, default='SE')
+    major = models.CharField(max_length=50, choices=MAJOR_CHOICES, default='SE', blank=True, null=True)
+
 
     SEMESTER_CHOICES = [(i, f'Semester {i}') for i in range(1, 11)]
-    semester = models.IntegerField(choices=SEMESTER_CHOICES, default=1)
+    semester = models.IntegerField(choices=SEMESTER_CHOICES, default=1, blank=True, null=True)
+
 
     def __str__(self):
         return f'{self.user.username} Profile ({self.get_role_display()})' # Updated __str__
