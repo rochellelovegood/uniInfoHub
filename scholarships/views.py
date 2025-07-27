@@ -12,6 +12,7 @@ from .forms import UserRegisterForm # <--- This is now correct
 
 from django.shortcuts import render
 
+from django.shortcuts import render
 # from .models import Scholarship # You'll need this for scholarship_list later
 
 def home_view(request):
@@ -116,42 +117,32 @@ def custom_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        role_selected_in_form = request.POST.get('role')  # Get the role selected by the user in the form
+        role = request.POST.get('role')
 
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
-        # Check if the user has a UserProfile
-            if hasattr(user, 'userprofile'):
-                user_actual_role = user.userprofile.role  # Get the actual role from the UserProfile
+            # Verify the user's role matches selection
+            if user.role == role:
+                # Additional validation for students
+                if role == 'STUDENT':
+                    wifi_email = request.POST.get('wifi_email', '')
+                    if not wifi_email.startswith('WIFI'):
+                        messages.error(request, "Student email must start with 'WIFI'")
+                        return redirect('login')
 
-            # Verify the user's actual role matches the role selected in the login form
-                if user_actual_role == role_selected_in_form:
-                    login(request, user)  # Log the user in
+                login(request, user)
 
-                 # Redirect based on the user's actual role
-                    if user_actual_role == 'STUDENT':
-                        messages.success(request, f'Welcome, {user.username} (Student)!')
-                        return redirect('homepage')  # Assuming 'student_dashboard' exists
-                    elif user_actual_role == 'FACULTY':
-                        messages.success(request, f'Welcome, {user.username} (Faculty)!')
-                # Redirect Faculty to scholarships list page
-                        return redirect('scholarships:list')  # Redirect to the scholarships list
-                    elif user_actual_role == 'ADMIN':
-                        messages.success(request, f'Welcome, {user.username} (Admin)!')
-                        return redirect('admin:index')  # Redirect to Django admin page
-                    else:
-                         messages.error(request,f"Your account is registered as {user_actual_role}, but you selected {role_selected_in_form}. Please select the correct role.")
-                else:
-                 # This case should ideally not happen if every User has a UserProfile
-                    messages.error(request, "User profile not found for this account.")
+                # Redirect based on role
+                if role == 'STUDENT':
+                    return redirect('student_dashboard')
+                elif role == 'FACULTY':
+                    return redirect('faculty_dashboard')
+                elif role == 'ADMIN':
+                    return redirect('admin_dashboard')
             else:
-                messages.error(request, "Invalid username or password.")
-    return render(request,'registration/login.html')
+                messages.error(request, "This account doesn't have the selected role")
+        else:
+            messages.error(request, "Invalid username or password")
 
-
-def homepage(request):
-    return render(request,'scholarships/homepage.html')
-
-def scholarship_list(request):
-    # Your view logic here
-    return render(request, 'scholarships/scholarship_list.html')
+    return render(request, 'registration/login.html')

@@ -5,42 +5,68 @@
 
 {% block extra_css %}
 <style>
-            body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
-            background: linear-gradient(rgba(0, 0, 0, 0.658), rgba(40, 1, 47, 0.711)), url('{% static "slide_2.jpg" %}') no-repeat center center fixed;
-            background-size: cover;
-          
-            min-height: 100vh;
-          
-            justify-content: center;
-            align-items: center;
-        }
+    :root {
+        --primary-gradient: linear-gradient(135deg, #8a2be2, #4b0082);
+        --card-bg: rgba(30, 30, 45, 0.8);
+        --text-accent: #8a2be2;
+        --glass-border: rgba(255, 255, 255, 0.1);
+    }
+    
+    body {
+        background: 
+            linear-gradient(rgba(0, 0, 0, 0.85), rgba(40, 1, 47, 0.9)), 
+            url('{% static "slide_2.jpg" %}') no-repeat center center fixed;
+        background-size: cover;
+        color: #e0e0e0;
+    }
+    
     .hero-section {
-        background: radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.1) 0%, rgba(18, 18, 18, 0) 70%);
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
         position: relative;
         overflow: hidden;
-        padding: 5rem 0;
-        border-bottom: 1px solid #333;
+        padding: 4rem 0;
     }
-
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        background: var(--card-bg);
+        border-radius: 24px;
+        padding: 3rem;
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
     .hero-title {
         background: linear-gradient(90deg, #8a2be2, #00bfff);
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
         font-weight: 800;
-        text-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+        font-size: 3rem;
+        line-height: 1.2;
     }
-
+    
     .hero-subtitle {
-        color: #b0b0b0;
-        font-weight: 400;
-        max-width: 700px;
-        margin: 0 auto;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 300;
+        font-size: 1.25rem;
+        margin: 1.5rem 0;
     }
-
+    
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+    
     .btn-gradient-primary {
         background: var(--primary-gradient);
         color: white;
@@ -48,199 +74,326 @@
         transition: all 0.3s ease;
         border-radius: 50px;
         padding: 0.75rem 2rem;
-        box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+        font-size: 1rem;
+        box-shadow: 0 4px 20px rgba(138, 43, 226, 0.4);
     }
-
+    
     .btn-gradient-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+        box-shadow: 0 6px 25px rgba(138, 43, 226, 0.6);
     }
-
+    
     .btn-glass {
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border: 1px solid var(--glass-border);
+        color: white;
         transition: all 0.3s ease;
         border-radius: 50px;
         padding: 0.75rem 2rem;
-        color: #e0e0e0;
     }
-
+    
     .btn-glass:hover {
-        background: rgba(50, 50, 60, 0.6);
-        color: white;
-        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.2);
     }
-
-    .card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: none;
-        border-radius: 16px;
-        overflow: hidden;
-        background-color: var(--card-bg);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    
+    .opportunities-section {
+        padding: 5rem 0;
+        background: rgba(18, 18, 24, 0.9);
+        position: relative;
     }
-
-    .card-hover:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5) !important;
-    }
-
-    .card-icon-wrapper {
-        width: 60px;
-        height: 60px;
-        border-radius: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: auto;
-        color: white;
-        font-size: 1.5rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
-
+    
     .section-title {
         position: relative;
         display: inline-block;
         font-weight: 700;
         color: #e0e0e0;
         margin-bottom: 3rem;
+        font-size: 2rem;
     }
-
-    .section-title:after {
+    
+    .section-title::after {
         content: '';
         position: absolute;
-        bottom: -15px;
+        bottom: -10px;
         left: 50%;
         transform: translateX(-50%);
         width: 80px;
         height: 4px;
         background: var(--primary-gradient);
-        border-radius: 3px;
+        border-radius: 2px;
     }
-
-    .card-highlight {
+    
+    .opportunity-card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        border: 1px solid var(--glass-border);
+        height: 100%;
+        backdrop-filter: blur(5px);
+    }
+    
+    .opportunity-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 35px rgba(138, 43, 226, 0.3);
+        border-color: rgba(138, 43, 226, 0.3);
+    }
+    
+    .card-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        margin-bottom: 1rem;
+        justify-content: center;
+        margin: 1px auto 1.5rem;
+        color: white;
+        font-size: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
-
-    .text-accent {
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .card-title {
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: white;
+    }
+    
+    .card-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .badge {
+        border-radius: 50px;
+        padding: 0.4rem 0.8rem;
+        font-weight: 500;
+        font-size: 0.75rem;
+    }
+    
+    .badge-primary {
+        background: rgba(138, 43, 226, 0.15);
+        color: #b57aff;
+        border: 1px solid rgba(138, 43, 226, 0.3);
+    }
+    
+    .badge-danger {
+        background: rgba(255, 59, 48, 0.15);
+        color: #ff8a82;
+        border: 1px solid rgba(255, 59, 48, 0.3);
+    }
+    
+    .badge-success {
+        background: rgba(50, 205, 50, 0.15);
+        color: #7aff7a;
+        border: 1px solid rgba(50, 205, 50, 0.3);
+    }
+    
+    .card-text {
+        color: #b0b0b0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .card-features {
+        margin-bottom: 1.5rem;
+    }
+    
+    .feature-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .feature-icon {
+        margin-right: 0.5rem;
+        font-size: 1rem;
+    }
+    
+    .card-footer {
+        background: rgba(0, 0, 0, 0.2);
+        border-top: 1px solid var(--glass-border);
+        padding: 1rem 1.5rem;
+    }
+    
+    .login-prompt {
+        display: flex;
+        align-items: center;
         color: var(--text-accent);
         font-weight: 500;
+        font-size: 0.9rem;
     }
-
-    .hero-illustration {
-        margin-top: 3rem;
-        filter: drop-shadow(0 0 15px rgba(138, 43, 226, 0.5));
+    
+    .view-all-btn {
+        background: rgba(138, 43, 226, 0.1);
+        border: 1px solid rgba(138, 43, 226, 0.3);
+        color: #b57aff;
+        transition: all 0.3s ease;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
     }
-
-    /* Dark mode specific adjustments */
-    .text-muted {
-        color: #8a8a8a !important;
-    }
-
-    .badge {
-        font-weight: 500;
+    
+    .view-all-btn:hover {
+        background: rgba(138, 43, 226, 0.2);
+        color: #d1a6ff;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="hero-section">
-    <div class="container text-center py-5">
-        <h1 class="hero-title display-3 fw-bold mb-3">{{ page_title }}</h1>
-        <p class="hero-subtitle fs-4 mb-4">{{ intro_message }}</p>
-
-        <div class="cta-buttons mt-4">
-            {# Corrected Login URL #}
-            <a class="btn btn-gradient-primary btn-lg px-4 me-3" href="{% url 'login' %}" role="button">
-                <i class="bi bi-box-arrow-in-right me-2"></i>Login
-            </a>
-            {# Corrected Register URL (will still need a custom view/URL for it) #}
-            <a class="btn btn-glass btn-lg px-4" href="{% url 'register' %}" role="button"> {# <--- CHANGE THIS BACK #}
-                <i class="bi bi-person-plus me-2"></i>Register
-            </a>
-        </div>
-
-        <div class="hero-illustration mt-5">
-            <img src="https://img.icons8.com/nolan/200/rocket.png" alt="Launching Opportunities" class="img-fluid" style="max-height: 200px;">
+    <div class="container">
+        <div class="hero-content text-center">
+            <h1 class="hero-title">{{ page_title }}</h1>
+            <p class="hero-subtitle">{{ intro_message }}</p>
+            
+            <div class="cta-buttons">
+                <a href="{% url 'login' %}" class="btn btn-gradient-primary">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                </a>
+                <a href="{% url 'register' %}" class="btn btn-glass">
+                    <i class="bi bi-person-plus me-2"></i>Register
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="container my-5 p-5">
-    <h2 class="text-center mb-5 section-title">Discover What's Possible</h2>
-
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card card-hover h-100 shadow-lg">
-                <div class="card-icon-wrapper bg-primary-gradient">
-                    <i class="bi bi-award"></i>
-                </div>
-                <div class="card-body px-4 py-4">
-                    <h3 class="card-title h5 text-white">Global Excellence Grant</h3>
-                    <div class="card-highlight mb-3">
-                        <span class="badge bg-primary bg-opacity-10 text-primary">Scholarship</span>
-                        <span class="text-muted small">Deadline: Aug 15, 2025</span>
+<div class="opportunities-section">
+    <div class="container">
+        <h2 class="text-center section-title">Discover What's Possible</h2>
+        
+        <div class="row g-4">
+            <!-- Scholarship Card -->
+            <div class="col-lg-4 col-md-6">
+                <div class="opportunity-card">
+                    <div class="card-icon bg-primary-gradient">
+                        <i class="bi bi-award"></i>
                     </div>
-                    <p class="card-text">
-                        <i class="bi bi-check-circle-fill text-success me-2"></i>Minimum GPA 3.5<br>
-                        <i class="bi bi-check-circle-fill text-success me-2"></i>STEM undergraduates<br>
-                        <i class="bi bi-check-circle-fill text-success me-2"></i>All nationalities
-                    </p>
-                </div>
-                <div class="card-footer bg-transparent border-0 pt-0 px-4 pb-4">
-                    <small class="text-accent"><i class="bi bi-lock-fill me-1"></i>Login to apply</small>
+                    <div class="card-body">
+                        <h3 class="card-title">Global Excellence Grant</h3>
+                        <div class="card-badges">
+                            <span class="badge badge-primary">Scholarship</span>
+                            <span class="badge badge-danger">Deadline: Aug 15</span>
+                        </div>
+                        <p class="card-text">
+                            Prestigious award for outstanding students demonstrating academic excellence and leadership potential.
+                        </p>
+                        <div class="card-features">
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle-fill text-success feature-icon"></i>
+                                <span>Minimum GPA 3.5</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle-fill text-success feature-icon"></i>
+                                <span>STEM undergraduates</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle-fill text-success feature-icon"></i>
+                                <span>All nationalities</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="login-prompt">
+                            <i class="bi bi-lock-fill me-2"></i>
+                            <span>Login to view details</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+            
+            <!-- Event Card -->
+            <div class="col-lg-4 col-md-6">
+                <div class="opportunity-card">
+                    <div class="card-icon bg-info-gradient">
+                        <i class="bi bi-megaphone"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Club Announcements</h3>
+                        <div class="card-badges">
+                            <span class="badge badge-primary">Event</span>
+                            <span class="badge badge-danger">Sept 10-12</span>
+                        </div>
+                        <p class="card-text">
+                            Join us to make more friends and have fun. This is your place to practice English with your university friends
+                        </p>
+                        <div class="card-features">
+                            <div class="feature-item">
+                                <i class="bi bi-calendar-event text-info feature-icon"></i>
+                                <span>September 10-12, 2025</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-clock text-info feature-icon"></i>
+                                <span>3:00 PM - 4:00 PM</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-geo-alt text-info feature-icon"></i>
+                                <span>E-004</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="login-prompt">
+                            <i class="bi bi-lock-fill me-2"></i>
+                            <span>Login to RSVP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resource Card -->
+            <div class="col-lg-4 col-md-6">
+                <div class="opportunity-card">
+                    <div class="card-icon bg-info-gradient">
+                        <i class="bi bi-megaphone"></i>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Tech Career Fair 2025</h3>
+                        <div class="card-badges">
+                            <span class="badge badge-primary">Event</span>
+                            <span class="badge badge-danger">Sept 10-12</span>
+                        </div>
+                        <p class="card-text">
+                            Connect with top tech companies and discover internship opportunities at our annual career fair.
+                        </p>
+                        <div class="card-features">
+                            <div class="feature-item">
+                                <i class="bi bi-calendar-event text-info feature-icon"></i>
+                                <span>September 10-12, 2025</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-clock text-info feature-icon"></i>
+                                <span>9:00 AM - 5:00 PM</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-geo-alt text-info feature-icon"></i>
+                                <span>Main Building</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="login-prompt">
+                            <i class="bi bi-lock-fill me-2"></i>
+                            <span>Login to RSVP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
-
-        <div class="col-md-4">
-            <div class="card card-hover h-100 shadow-lg">
-                <div class="card-icon-wrapper bg-info-gradient">
-                    <i class="bi bi-megaphone"></i>
-                </div>
-                <div class="card-body px-4 py-4 ">
-                    <h3 class="card-title h5 text-white">Career Fair 2025</h3>
-                    <div class="card-highlight mb-3">
-                        <span class="badge bg-info bg-opacity-10 text-info">Event</span>
-                        <span class="text-muted small">Sept 10, 2025</span>
-                    </div>
-                    <p class="card-text">
-                        <i class="bi bi-calendar-event text-info me-2"></i>Annual University Career Fair<br>
-                        <i class="bi bi-clock text-info me-2"></i>9 AM to 4 PM<br>
-                        <i class="bi bi-geo-alt text-info me-2"></i>Grand Hall
-                    </p>
-                </div>
-                <div class="card-footer bg-transparent border-0 pt-0 px-4 pb-4">
-                    <small class="text-accent"><i class="bi bi-lock-fill me-1"></i>Login to RSVP</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card card-hover h-100 shadow-lg">
-                <div class="card-icon-wrapper bg-success-gradient">
-                    <i class="bi bi-file-earmark-text"></i>
-                </div>
-                <div class="card-body px-4 py-4">
-                    <h3 class="card-title h5 text-white">Essay Writing Guide</h3>
-                    <div class="card-highlight mb-3">
-                        <span class="badge bg-success bg-opacity-10 text-success">Resource</span>
-                        <span class="text-muted small">PDF Download</span>
-                    </div>
-                    <p class="card-text">
-                        <i class="bi bi-list-check text-success me-2"></i>Structure & formatting<br>
-                        <i class="bi bi-search text-success me-2"></i>Research techniques<br>
-                        <i class="bi bi-book text-success me-2"></i>Citation styles
-                    </p>
-                </div>
-                <div class="card-footer bg-transparent border-0 pt-0 px-4 pb-4">
-                    <small class="text-accent"><i class="bi bi-lock-fill me-1"></i>Login to download</small>
-                </div>
-            </div>
+        
+        <div class="text-center mt-5">
+            <a href="#" class="btn view-all-btn">
+                <i class="bi bi-arrow-right me-2"></i>View All Opportunities
+            </a>
         </div>
     </div>
 </div>

@@ -3,7 +3,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import UserProfile # Make sure UserProfile is imported
+from .models import UserProfile,Scholarship 
 import re
 
 class UserRegisterForm(UserCreationForm):
@@ -99,3 +99,31 @@ class UserRegisterForm(UserCreationForm):
             }
             UserProfile.objects.create(**profile_data)
         return user
+    
+class ScholarshipForm(forms.ModelForm):
+    class Meta:
+        model = Scholarship
+        fields = '__all__' # Use all fields from the Scholarship model
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Scholarship Title'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Detailed description...'}),
+            'eligibility': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Eligibility criteria...'}),
+            'application_link': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://example.com/apply'}),
+            'deadline': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}), # HTML5 date input
+            'min_gpa': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'e.g., 3.0'}),
+            'country': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., USA, Myanmar'}),
+            'major': forms.Select(attrs={'class': 'form-select'}), # For major in Scholarship model
+            'major_department': forms.Select(attrs={'class': 'form-select'}), # For major_department in Scholarship model
+            'brochure_pdf': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'banner_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+        labels = {
+            'min_gpa': 'Minimum GPA (Optional)',
+            'country': 'Target Country (Optional)',
+            'major': 'Target Major', # Or 'Target Degree Program'
+            'major_department': 'Specific Department/Field (Optional)',
+            'brochure_pdf': 'Brochure PDF (Optional)',
+            'banner_image': 'Banner Image (Optional)',
+            'is_active': 'Active Scholarship',
+        }
