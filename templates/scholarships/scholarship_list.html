@@ -5,168 +5,353 @@
 
 {% block extra_css %}
 <style>
-    /* All your existing CSS styles */
-    .hero-section {
-        background: radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.1) 0%, rgba(18, 18, 18, 0) 70%);
-        padding: 4rem 0;
-        border-bottom: 1px solid #333;
+    /* Success Stories Carousel */
+    .success-stories {
+    background: 
+        linear-gradient(rgba(20, 20, 20, 0.85), rgba(20, 20, 20, 0.85)), 
+        url('{% static "slide_2.jpg" %}') no-repeat center center fixed;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Optional: creates parallax effect */
+    padding: 4rem 0;
+    position: relative;
+}
+    
+    .section-title {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #ffffff;
+        font-weight: 600;
+        letter-spacing: 0.5px;
     }
     
-    .hero-title {
-        background: linear-gradient(90deg, #8a2be2, #00bfff);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        font-weight: 800;
-        text-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+    .carousel-container {
+        max-width: 800px;
+        margin: 0 auto;
     }
     
-    /* Rest of your CSS styles */
+    .carousel-item {
+        padding: 1rem;
+    }
+    
+    .recipient-card {
+        background-color: #252525;
+        border-radius: 8px;
+        padding: 2rem;
+        border-left: 4px solid #8a2be2;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .recipient-name {
+        color: #ffffff;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .recipient-major {
+        color: #00bfff;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+    }
+    
+    .scholarship-name {
+        color: #8a2be2;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .scholarship-amount {
+        color: #ffffff;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .graduation-year {
+        display: inline-block;
+        background-color: #333;
+        color: #bbbbbb;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .testimonial {
+        color: #e0e0e0;
+        font-style: italic;
+        line-height: 1.6;
+        padding: 1rem;
+        border-left: 2px solid #444;
+        background-color: #2a2a2a;
+        border-radius: 0 4px 4px 0;
+    }
+    
+    .carousel-control-prev, .carousel-control-next {
+        width: 5%;
+    }
+    
+    .carousel-control-prev-icon, 
+    .carousel-control-next-icon {
+        background-color: #8a2be2;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        background-size: 60%;
+    }
+    
+    .carousel-indicators button {
+        background-color: #555;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin: 0 5px;
+    }
+    
+    .carousel-indicators .active {
+        background-color: #8a2be2;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="hero-section">
-    <div class="container text-center py-4">
-        <h1 class="hero-title display-3 fw-bold mb-3">Scholarship Opportunities</h1>
-        <p class="lead text-muted">Discover funding opportunities for your academic journey</p>
-    </div>
-</div>
+<!-- Your existing hero section -->
 
-<div class="container my-5">
-    <div class="row">
-        <!-- Search Filters -->
-        <div class="col-lg-3 mb-4">
-            <div class="search-card">
-                <h5 class="text-white mb-4"><i class="bi bi-funnel-fill me-2"></i>Filters</h5>
+
+<!-- Success Stories Carousel -->
+<section class="success-stories">
+    <div class="container">
+        <h2 class="section-title">Success Stories From Our Scholarship Recipients</h2>
+        
+        <div class="carousel-container">
+            <div id="successCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#successCarousel" data-bs-slide-to="0" class="active"></button>
+                    <button type="button" data-bs-target="#successCarousel" data-bs-slide-to="1"></button>
+                    <button type="button" data-bs-target="#successCarousel" data-bs-slide-to="2"></button>
+                </div>
                 
-                <form method="get">
-                    <div class="mb-3">
-                        <label class="form-label">Search</label>
-                        <input type="text" name="search" class="form-control" placeholder="Keywords..." value="{{ search_query|default:'' }}">
+                <div class="carousel-inner">
+                    <!-- Recipient 1 -->
+                    <div class="carousel-item active">
+                        <div class="recipient-card">
+                            <h3 class="recipient-name">David Kim</h3>
+                            <p class="recipient-major">High Performance Computing</p>
+                            
+                            <h4 class="scholarship-name">Research Innovation Fellowship</h4>
+                            <p class="scholarship-amount">$6,000</p>
+                            <span class="graduation-year">Class of 2023</span>
+                            
+                            <blockquote class="testimonial">
+                                "This scholarship has been instrumental in helping me pursue my academic goals and focus on my studies without financial stress."
+                            </blockquote>
+                        </div>
                     </div>
                     
-                    <div class="mb-3">
-                        <label class="form-label">Minimum GPA</label>
-                        <select name="min_gpa" class="form-select">
-                            <option value="">Any GPA</option>
-                            <option value="3.0" {% if selected_min_gpa == "3.0" %}selected{% endif %}>3.0+</option>
-                            <option value="3.5" {% if selected_min_gpa == "3.5" %}selected{% endif %}>3.5+</option>
-                            <option value="4.0" {% if selected_min_gpa == "4.0" %}selected{% endif %}>4.0+</option>
-                        </select>
+                    <!-- Recipient 2 -->
+                    <div class="carousel-item">
+                        <div class="recipient-card">
+                            <h3 class="recipient-name">Aye Chan Moe</h3>
+                            <p class="recipient-major">Software Engineering</p>
+                            
+                            <h4 class="scholarship-name">Tech Excellence Award</h4>
+                            <p class="scholarship-amount">$5,000</p>
+                            <span class="graduation-year">Class of 2022</span>
+                            
+                            <blockquote class="testimonial">
+                                "The financial support allowed me to participate in international coding competitions and significantly improve my skills."
+                            </blockquote>
+                        </div>
                     </div>
                     
-                    <div class="mb-3">
-                        <label class="form-label">Deadline</label>
-                        <select name="deadline" class="form-select">
-                            <option value="">Any Time</option>
-                            <option value="week" {% if selected_deadline == "week" %}selected{% endif %}>Within 1 Week</option>
-                            <option value="month" {% if selected_deadline == "month" %}selected{% endif %}>Within 1 Month</option>
-                        </select>
+                    <!-- Recipient 3 -->
+                    <div class="carousel-item">
+                        <div class="recipient-card">
+                            <h3 class="recipient-name">Hlaing Htet Aung</h3>
+                            <p class="recipient-major">Cyber Security</p>
+                            
+                            <h4 class="scholarship-name">Digital Security Grant</h4>
+                            <p class="scholarship-amount">$4,500</p>
+                            <span class="graduation-year">Class of 2024</span>
+                            
+                            <blockquote class="testimonial">
+                                "Thanks to this scholarship, I could afford specialized security certifications that helped me land my dream job."
+                            </blockquote>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="semesterFilter" class="form-label ">Semester</label>
-                        <select class="form-select" id="semesterFilter" name="semester">
-                         <option value="">All Semesters</option>
-                        {% for sem_val, sem_label in semester_choices %}
-                            <option value="{{ sem_val }}" {% if sem_val|stringformat:"d" == semester|stringformat:"d" %}selected{% endif %}>{{ sem_label }}</option>
-                         {% endfor %}
-                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="major" class="form-label">Major</label>
-                                <select name="major" id="major" class="form-select">
-                                    <option value="">Select a major</option>
-                                    <option value="SE" {% if major == "SE" %}selected{% endif %}>B.C.Sc. (Software Engineering)</option>
-                                    <option value="BIS" {% if major == "BIS" %}selected{% endif %}>B.C.Sc. (Business Information Systems)</option>
-                                    <option value="KE" {% if major == "KE" %}selected{% endif %}>B.C.Sc. (Knowledge Engineering)</option>
-                                    <option value="HPC" {% if major == "HPC" %}selected{% endif %}>B.C.Sc. (High Performance Computing)</option>
-                                    <option value="ES" {% if major == "ES" %}selected{% endif %}>B.C.Tech. (Embedded Systems)</option>
-                                    <option value="CN" {% if major == "CN" %}selected{% endif %}>B.C.Tech. (Communication and Networking)</option>
-                                    <option value="CSec" {% if major == "CSec" %}selected{% endif %}>B.C.Tech. (Cyber Security)</option>
-                                </select>
+                </div>
+                
+                <button class="carousel-control-prev" type="button" data-bs-target="#successCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#successCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Your existing scholarship listings section -->
+<div class="container my-5">
+    {% if user.is_authenticated and is_faculty_or_admin %} {# Check if user is authenticated AND has faculty/admin role #}
+    <div class="text-end mb-3">
+        <a href="{% url 'scholarships:post_scholarship' %}" class="btn btn-success">
+            <i class="fas fa-plus-circle"></i> Post New Scholarship
+        </a>
+    </div>
+{% endif %}
+<div class="container my-5">
+<div class="row">
+    <!-- Search Filters -->
+    <div class="col-lg-3 mb-4">
+        <div class="search-card">
+            <h5 class="text-white mb-4"><i class="bi bi-funnel-fill me-2"></i>Filters</h5>
+            
+            <form method="get">
+                <div class="mb-3">
+                    <label class="form-label">Search</label>
+                    <input type="text" name="search" class="form-control" placeholder="Keywords..." value="{{ search_query|default:'' }}">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Minimum GPA</label>
+                    <select name="min_gpa" class="form-select">
+                        <option value="">Any GPA</option>
+                        <option value="3.0" {% if selected_min_gpa == "3.0" %}selected{% endif %}>3.0+</option>
+                        <option value="3.5" {% if selected_min_gpa == "3.5" %}selected{% endif %}>3.5+</option>
+                        <option value="4.0" {% if selected_min_gpa == "4.0" %}selected{% endif %}>4.0+</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Deadline</label>
+                    <select name="deadline" class="form-select">
+                        <option value="">Any Time</option>
+                        <option value="week" {% if selected_deadline == "week" %}selected{% endif %}>Within 1 Week</option>
+                        <option value="month" {% if selected_deadline == "month" %}selected{% endif %}>Within 1 Month</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="semesterFilter" class="form-label ">Semester</label>
+                    <select class="form-select" id="semesterFilter" name="semester">
+                     <option value="">All Semesters</option>
+                    {% for sem_val, sem_label in semester_choices %}
+                        <option value="{{ sem_val }}" {% if sem_val|stringformat:"d" == semester|stringformat:"d" %}selected{% endif %}>{{ sem_label }}</option>
+                     {% endfor %}
+                     </select>
+                </div>
+                <div class="mb-3">
+                    <label for="major" class="form-label">Major</label>
+                            <select name="major" id="major" class="form-select">
+                                <option value="">Select a major</option>
+                                <option value="SE" {% if major == "SE" %}selected{% endif %}>B.C.Sc. (Software Engineering)</option>
+                                <option value="BIS" {% if major == "BIS" %}selected{% endif %}>B.C.Sc. (Business Information Systems)</option>
+                                <option value="KE" {% if major == "KE" %}selected{% endif %}>B.C.Sc. (Knowledge Engineering)</option>
+                                <option value="HPC" {% if major == "HPC" %}selected{% endif %}>B.C.Sc. (High Performance Computing)</option>
+                                <option value="ES" {% if major == "ES" %}selected{% endif %}>B.C.Tech. (Embedded Systems)</option>
+                                <option value="CN" {% if major == "CN" %}selected{% endif %}>B.C.Tech. (Communication and Networking)</option>
+                                <option value="CSec" {% if major == "CSec" %}selected{% endif %}>B.C.Tech. (Cyber Security)</option>
+                            </select>
 
 
-                    </div>
-                    
-                    <input type="hidden" name="sort" value="{{ sort_by }}">
-                    
-                    <button type="submit" class="btn btn-gradient-primary w-100 mt-2">
-                        <i class="bi bi-search me-2"></i>Apply Filters
-                    </button>
-                </form>
+                </div>
+                
+                <input type="hidden" name="sort" value="{{ sort_by }}">
+                
+                <button type="submit" class="btn btn-gradient-primary w-100 mt-2">
+                    <i class="bi bi-search me-2"></i>Apply Filters
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Scholarship Listings -->
+    <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="text-white mb-0">Available Scholarships</h4>
+            <div>
+                <span class="text-muted me-2">Sort by:</span>
+                <select class="form-select form-select-sm d-inline-block w-auto" onchange="updateSort(this.value)">
+                    <option value="deadline" {% if sort_by == 'deadline' %}selected{% endif %}>Deadline</option>
+                    <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest</option>
+                </select>
             </div>
         </div>
         
-        <!-- Scholarship Listings -->
-        <div class="col-lg-9">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="text-white mb-0">Available Scholarships</h4>
-                <div>
-                    <span class="text-muted me-2">Sort by:</span>
-                    <select class="form-select form-select-sm d-inline-block w-auto" onchange="updateSort(this.value)">
-                        <option value="deadline" {% if sort_by == 'deadline' %}selected{% endif %}>Deadline</option>
-                        <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest</option>
-                    </select>
+        {% if scholarships %}
+            {% for scholarship in scholarships %}
+            <div class="scholarship-card">
+                <div class="scholarship-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{{ scholarship.title }}</h5>
+                    <span class="badge deadline-badge">Deadline: {{ scholarship.deadline|date:"M d, Y" }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap mb-3">
+                        {% if scholarship.min_gpa %}
+                            <span class="badge-custom me-2 mb-2">
+                                <i class="bi bi-award me-1"></i> GPA {{ scholarship.min_gpa }}
+                            </span>
+                        {% endif %}
+                        <span class="badge-custom me-2 mb-2">
+                            <i class="bi bi-book me-1"></i> {{ scholarship.get_major_display }}
+                        </span>
+                        {% if scholarship.country %}
+                            <span class="badge-custom me-2 mb-2">
+                                <i class="bi bi-geo-alt me-1"></i> {{ scholarship.country }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    <p class="card-text">{{ scholarship.description|truncatewords:30 }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <small class="text-muted">
+                            <i class="bi bi-clock-history me-1"></i> Posted {{ scholarship.created_at|timesince }} ago
+                        </small>
+                        <div>
+                            {% if scholarship.brochure_pdf %}
+                                <a href="{{ scholarship.brochure_pdf.url }}" class="btn btn-sm btn-outline-secondary me-2" download>
+                                    <i class="bi bi-file-earmark-pdf me-1"></i>Download PDF
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'scholarship_detail' scholarship.id %}" class="btn btn-view-details btn-sm">
+                                <i class="bi bi-eye me-1"></i>View Details
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            {% if scholarships %}
-                {% for scholarship in scholarships %}
-                <div class="scholarship-card">
-                    <div class="scholarship-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">{{ scholarship.title }}</h5>
-                        <span class="badge deadline-badge">Deadline: {{ scholarship.deadline|date:"M d, Y" }}</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex flex-wrap mb-3">
-                            {% if scholarship.min_gpa %}
-                                <span class="badge-custom me-2 mb-2">
-                                    <i class="bi bi-award me-1"></i> GPA {{ scholarship.min_gpa }}
-                                </span>
-                            {% endif %}
-                            <span class="badge-custom me-2 mb-2">
-                                <i class="bi bi-book me-1"></i> {{ scholarship.get_major_display }}
-                            </span>
-                            {% if scholarship.country %}
-                                <span class="badge-custom me-2 mb-2">
-                                    <i class="bi bi-geo-alt me-1"></i> {{ scholarship.country }}
-                                </span>
-                            {% endif %}
-                        </div>
-                        <p class="card-text">{{ scholarship.description|truncatewords:30 }}</p>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <small class="text-muted">
-                                <i class="bi bi-clock-history me-1"></i> Posted {{ scholarship.created_at|timesince }} ago
-                            </small>
-                            <div>
-                                {% if scholarship.brochure_pdf %}
-                                    <a href="{{ scholarship.brochure_pdf.url }}" class="btn btn-sm btn-outline-secondary me-2" download>
-                                        <i class="bi bi-file-earmark-pdf me-1"></i>Download PDF
-                                    </a>
-                                {% endif %}
-                                <a href="{% url 'scholarship_detail' scholarship.id %}" class="btn btn-view-details btn-sm">
-                                    <i class="bi bi-eye me-1"></i>View Details
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            {% else %}
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle me-2"></i>No scholarships found matching your criteria.
-                </div>
-            {% endif %}
-        </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>No scholarships found matching your criteria.
+            </div>
+        {% endif %}
     </div>
 </div>
+</div>
 
+</div>
+{% endblock %}
+
+{% block extra_js %}
 <script>
+    // Auto-rotate carousel every 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        var myCarousel = document.getElementById('successCarousel');
+        var carousel = new bootstrap.Carousel(myCarousel, {
+            interval: 5000,
+            wrap: true
+        });
+    });
     function updateSort(value) {
         const url = new URL(window.location.href);
         url.searchParams.set('sort', value);
         window.location.href = url.toString();
     }
+
 </script>
 {% endblock %}
