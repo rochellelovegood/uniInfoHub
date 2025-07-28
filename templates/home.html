@@ -6,16 +6,16 @@
 {% block extra_css %}
 <style>
     :root {
-        --primary-gradient: linear-gradient(135deg, #8a2be2, #4b0082);
-        --card-bg: rgba(30, 30, 45, 0.8);
-        --text-accent: #8a2be2;
-        --glass-border: rgba(255, 255, 255, 0.1);
-    }
+    --primary-gradient: linear-gradient(135deg, #7fffd4, #00ced1); /* Aquamarine gradient */
+    --card-bg: rgba(30, 45, 45, 0.8); /* Darker teal-ish background */
+    --text-accent: #00ced1; /* Dark turquoise accent */
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
     
     body {
         background: 
-            linear-gradient(rgba(0, 0, 0, 0.85), rgba(40, 1, 47, 0.9)), 
-            url('{% static "slide_2.jpg" %}') no-repeat center center fixed;
+        linear-gradient(rgba(0, 0, 0, 0.85), rgba(1, 47, 47, 0.9)), /* Dark teal overlay */
+        url('{% static "slide_2.jpg" %}') no-repeat center center fixed;
         background-size: cover;
         color: #e0e0e0;
     }
@@ -43,7 +43,7 @@
     }
     
     .hero-title {
-        background: linear-gradient(90deg, #8a2be2, #00bfff);
+        background: linear-gradient(90deg, #7fffd4, #00bfff); 
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
@@ -68,19 +68,20 @@
     }
     
     .btn-gradient-primary {
-        background: var(--primary-gradient);
+        background: var(--primary-gradient); /* Now uses aquamarine gradient */
+        box-shadow: 0 4px 20px rgba(0, 206, 209, 0.4);
         color: white;
         border: none;
         transition: all 0.3s ease;
         border-radius: 50px;
         padding: 0.75rem 2rem;
         font-size: 1rem;
-        box-shadow: 0 4px 20px rgba(138, 43, 226, 0.4);
+       
     }
     
     .btn-gradient-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 25px rgba(138, 43, 226, 0.6);
+        box-shadow: 0 6px 25px rgba(0, 206, 209, 0.6);
     }
     
     .btn-glass {
@@ -137,8 +138,8 @@
     
     .opportunity-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 12px 35px rgba(138, 43, 226, 0.3);
-        border-color: rgba(138, 43, 226, 0.3);
+        box-shadow: 0 12px 35px rgba(0, 206, 209, 0.3); /* Teal shadow */
+        border-color: rgba(0, 206, 209, 0.3); /* Teal border */
     }
     
     .card-icon {
@@ -179,9 +180,9 @@
     }
     
     .badge-primary {
-        background: rgba(138, 43, 226, 0.15);
-        color: #b57aff;
-        border: 1px solid rgba(138, 43, 226, 0.3);
+        background: rgba(0, 206, 209, 0.15); /* Teal */
+        color: #00e6e6; /* Bright teal */
+        border: 1px solid rgba(0, 206, 209, 0.3);
     }
     
     .badge-danger {
@@ -232,17 +233,17 @@
     }
     
     .view-all-btn {
-        background: rgba(138, 43, 226, 0.1);
-        border: 1px solid rgba(138, 43, 226, 0.3);
-        color: #b57aff;
+        background: rgba(0, 206, 209, 0.1); /* Teal */
+        border: 1px solid rgba(0, 206, 209, 0.3);
+        color: #00e6e6; /* Bright teal */
         transition: all 0.3s ease;
         padding: 0.75rem 2rem;
         border-radius: 50px;
     }
     
     .view-all-btn:hover {
-        background: rgba(138, 43, 226, 0.2);
-        color: #d1a6ff;
+        background: rgba(0, 206, 209, 0.2); /* Teal */
+        color: #7fffd4;
     }
 </style>
 {% endblock %}
