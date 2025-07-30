@@ -28,8 +28,3 @@ static_root/ # Collected static files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-db.sqlite3
-scholarships/migrations/0001_initial.py
-scholarships/migrations/0001_initial.py
-scholarships/migrations/0001_initial.py
-scholarships/migrations/0001_initial.py
