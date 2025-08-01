@@ -2,10 +2,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from scholarships.views import home_view, register_view, homepage,custom_login, InternshipsView
 
-from scholarships.views import home_view, register_view, homepage
-from scholarships.views import home_view, register_view, custom_login
-from scholarships.views import home_view  #
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view, name='home'),  # Homepage
@@ -18,6 +16,7 @@ urlpatterns = [
     path('register/', register_view, name='register'),
     path('login/',custom_login,name='login'),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('internships/', InternshipsView.as_view(), name='internships'),
 
 ]
 

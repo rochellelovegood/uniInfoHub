@@ -1,12 +1,13 @@
 # uniHub/scholarships/views.py
 
-from .models import Scholarship,UserProfile # Import your Scholarship model
+from .models import Scholarship,UserProfile,Company,Testimonial # Import your Scholarship model
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate,login
 from django.contrib import messages
 from django.db.models import Q # Keep this for scholarship_list
 from datetime import date # Keep this for scholarship_lis
 from .forms import UserRegisterForm # <--- This is now correct
+from django.views.generic import TemplateView
 
 # uniHub/uniHub/views.py
 
@@ -155,3 +156,12 @@ def homepage(request):
 def scholarship_list(request):
     # Your view logic here
     return render(request, 'scholarships/scholarship_list.html')
+
+class InternshipsView(TemplateView):
+    template_name = 'internships.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['companies'] = Company.objects.all()
+        context['testimonials'] = Testimonial.objects.all()
+        return context

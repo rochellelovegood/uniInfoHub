@@ -126,3 +126,37 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f'{self.user.username} Profile ({self.get_role_display()})' # Updated __str__
+
+from django.db import models
+
+class Company(models.Model):
+    name = models.CharField(max_length=100)
+    website = models.URLField()
+    logo = models.ImageField(upload_to='companies/')
+    display_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['display_order']
+        verbose_name_plural = "Companies"
+
+    def __str__(self):
+        return self.name
+
+
+class Testimonial(models.Model):
+    student_name = models.CharField(max_length=100)
+    graduation_info = models.CharField(max_length=100)
+    company = models.CharField(max_length=100)
+    role = models.CharField(max_length=100)
+    quote = models.TextField()
+    technologies = models.CharField(max_length=200)
+    outcome = models.CharField(max_length=200)
+    student_photo = models.ImageField(upload_to='testimonials/', blank=True, null=True)
+    display_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['display_order']
+
+    def __str__(self):
+        return f"{self.student_name} - {self.company}"
+
