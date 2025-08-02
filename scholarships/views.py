@@ -1,13 +1,15 @@
 # uniHub/scholarships/views.py
 
-from .models import Scholarship, UserProfile
+from .models import Scholarship, UserProfile, Company, Testimonial
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.db.models import Q
 from datetime import date
 from .forms import UserRegisterForm
+from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_protect
 
 def is_faculty_or_admin(user):
     """Checks if the user has a FACULTY or ADMIN role."""
@@ -28,12 +30,11 @@ def home_view(request):
     return render(request, 'home.html', context)
 
 
-def scholarship_list(request):
-    """Displays a list of active scholarships."""
+def scholarship_list_view(request):
+    """Displays a list of active scholarships, with options for filtering and searching."""
     today = date.today()
     scholarships = Scholarship.objects.filter(is_active=True, deadline__gte=today).order_by('deadline')
     
-    # --- Filter logic (unchanged) ---
     query = request.GET.get('q')
     min_gpa = request.GET.get('gpa')
     country = request.GET.get('country')
@@ -64,7 +65,6 @@ def scholarship_list(request):
             scholarships = scholarships.filter(deadline__lte=target_date)
         except ValueError:
             pass
-    # --- End filter logic ---
     
     context = {
         'scholarships': scholarships,
@@ -88,9 +88,8 @@ def register_view(request):
             login(request, user)
             messages.success(request, f'Account created for {user.username}! You are now logged in.')
             
-            # --- The critical redirect logic ---
             if hasattr(user, 'userprofile') and user.userprofile.role in ['FACULTY', 'ADMIN']:
-                return redirect('faculty:dashboard_home') # <--- Must match faculty/urls.py
+                return redirect('faculties:faculty_dashboard_home')
             else:
                 return redirect('scholarships:list')
         else:
@@ -107,6 +106,7 @@ def register_view(request):
     return render(request, 'registration/register.html', context)
 
 
+@csrf_protect
 def custom_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -114,6 +114,7 @@ def custom_login(request):
         role_selected_in_form = request.POST.get('role')
 
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             if hasattr(user, 'userprofile'):
                 user_actual_role = user.userprofile.role
@@ -121,36 +122,41 @@ def custom_login(request):
                     login(request, user)
                     if user_actual_role == 'STUDENT':
                         messages.success(request, f'Welcome, {user.username} (Student)!')
-                        return redirect('scholarships:list') 
+                        return redirect('scholarships:list')
                     elif user_actual_role == 'FACULTY':
                         messages.success(request, f'Welcome, {user.username} (Faculty)!')
-                        return redirect('faculty:dashboard_home') # <--- Must match faculty/urls.py
+                        return redirect('faculties:faculty_dashboard_home')
                     elif user_actual_role == 'ADMIN':
                         messages.success(request, f'Welcome, {user.username} (Admin)!')
                         return redirect('admin:index')
-                    else:
-                        messages.error(request, f"Your account is registered as {user_actual_role}, but you selected {role_selected_in_form}. Please select the correct role.")
                 else:
                     messages.error(request, f"Your account is registered as {user_actual_role}, but you selected {role_selected_in_form}. Please select the correct role.")
             else:
                 messages.error(request, "Invalid username or password.")
         else:
             messages.error(request, "Invalid username or password.")
-    return render(request, 'registration/login.html')
 
+    from .models import UserProfile
+    role_choices = UserProfile.ROLE_CHOICES
+    return render(request, 'registration/login.html', {'role_choices': role_choices})
 
-def homepage(request):
-    context = {
-        'is_faculty_or_admin': is_faculty_or_admin(request.user) if request.user.is_authenticated else False,
-    }
-    return render(request, 'scholarships/homepage.html', context)
 
 def logout_view(request):
-    """
-    Logs out the current user and redirects to the home view.
-    """
+    """Logs out the current user and redirects to the home view."""
     if request.user.is_authenticated:
         logout(request)
         messages.info(request, "You have been logged out successfully.")
     
     return redirect('home')
+
+
+class InternshipsView(TemplateView):
+    """A class-based view to display internships and testimonials."""
+    template_name = 'internships.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Fetch all active companies and testimonials to display
+        context['companies'] = Company.objects.all()
+        context['testimonials'] = Testimonial.objects.all()
+        return context

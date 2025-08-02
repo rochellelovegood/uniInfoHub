@@ -1,6 +1,105 @@
 # uniHub/scholarships/models.py
+
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+# Corrected UserProfile model with full details
+class UserProfile(models.Model):
+    """
+    Extends the Django User model to include additional user-specific information.
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    ROLE_CHOICES = [
+        ('STUDENT', 'Student'),
+        ('FACULTY', 'Faculty'),
+        ('ADMIN', 'Administrator'),
+    ]
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='STUDENT')
+
+    roll_no = models.CharField(
+        max_length=20,
+        unique=True,
+        blank=True,
+        null=True,
+        help_text="Your unique Roll Number (e.g., YKPT-XXXX). Required for Students."
+    )
+
+    MAJOR_CHOICES = [
+        ('SE', 'B.C.Sc. (Software Engineering)'),
+        ('BIS', 'B.C.Sc. (Business Information Systems)'),
+        ('KE', 'B.C.Sc. (Knowledge Engineering)'),
+        ('HPC', 'B.C.Sc. (High Performance Computing)'),
+        ('ES', 'B.C.Tech. (Embedded Systems)'),
+        ('CN', 'B.C.Tech. (Communication and Networking)'),
+        ('CSec', 'B.C.Tech. (Cyber Security)'),
+    ]
+    major = models.CharField(
+        max_length=50,
+        choices=MAJOR_CHOICES,
+        default='SE',
+        blank=True,
+        null=True
+    )
+
+    SEMESTER_CHOICES = [(i, f'Semester {i}') for i in range(1, 11)]
+    semester = models.IntegerField(
+        choices=SEMESTER_CHOICES,
+        default=1,
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+        return f'{self.user.username} Profile ({self.get_role_display()})'
+
+# Signals to automatically create a UserProfile for every new User
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.userprofile.save()
+
+
+# New models from the 'internships' branch, now merged
+class Company(models.Model):
+    name = models.CharField(max_length=100)
+    website = models.URLField()
+    logo = models.ImageField(upload_to='companies/')
+    display_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['display_order']
+        verbose_name_plural = "Companies"
+
+    def __str__(self):
+        return self.name
+
+
+class Testimonial(models.Model):
+    student_name = models.CharField(max_length=100)
+    graduation_info = models.CharField(max_length=100)
+    company = models.CharField(max_length=100)
+    role = models.CharField(max_length=100)
+    quote = models.TextField()
+    technologies = models.CharField(max_length=200)
+    outcome = models.CharField(max_length=200)
+    student_photo = models.ImageField(upload_to='testimonials/', blank=True, null=True)
+    display_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['display_order']
+
+    def __str__(self):
+        return f"{self.student_name} - {self.company}"
+
+
+# The existing Scholarship model, also now part of the file
 class Scholarship(models.Model):
     """
     Represents a scholarship opportunity available to students.
@@ -36,9 +135,9 @@ class Scholarship(models.Model):
         ('CSec', 'B.C.Tech. (Cyber Security)'),
     ]
     major = models.CharField(
-        max_length=50, 
-        choices=MAJOR_CHOICES, 
-        default='SE', 
+        max_length=50,
+        choices=MAJOR_CHOICES,
+        default='SE',
         help_text="The specific major(s) or department(s) for which the scholarship is applicable."
     )
 
@@ -76,38 +175,3 @@ class Scholarship(models.Model):
         ordering = ['deadline', 'title']
         verbose_name_plural = "Scholarships"
 
-# UserProfile model remains unchanged
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    ROLE_CHOICES = [
-        ('STUDENT', 'Student'),
-        ('FACULTY', 'Faculty'), 
-        ('ADMIN', 'Administrator'),
-    ]
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='STUDENT')
-
-    roll_no = models.CharField(
-        max_length=20, 
-        unique=True, 
-        blank=True, 
-        null=True, 
-        help_text="Your unique Roll Number (e.g., YKPT-XXXX). Required for Students."
-    )
-
-    MAJOR_CHOICES = [
-        ('SE', 'B.C.Sc. (Software Engineering)'),
-        ('BIS', 'B.C.Sc. (Business Information Systems)'),
-        ('KE', 'B.C.Sc. (Knowledge Engineering)'),
-        ('HPC', 'B.C.Sc. (High Performance Computing)'),
-        ('ES', 'B.C.Tech. (Embedded Systems)'),
-        ('CN', 'B.C.Tech. (Communication and Networking)'),
-        ('CSec', 'B.C.Tech. (Cyber Security)'),
-    ]
-    major = models.CharField(max_length=50, choices=MAJOR_CHOICES, default='SE', blank=True, null=True)
-
-    SEMESTER_CHOICES = [(i, f'Semester {i}') for i in range(1, 11)]
-    semester = models.IntegerField(choices=SEMESTER_CHOICES, default=1, blank=True, null=True)
-
-    def __str__(self):
-        return f'{self.user.username} Profile ({self.get_role_display()})'
