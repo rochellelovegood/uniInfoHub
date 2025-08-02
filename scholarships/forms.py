@@ -127,3 +127,4 @@ class ScholarshipForm(forms.ModelForm):
             'banner_image': 'Banner Image (Optional)',
             'is_active': 'Active Scholarship',
         }
+        exclude = ['posted_by', 'created_at', 'updated_at', 'is_active']

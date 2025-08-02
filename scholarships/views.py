@@ -1,8 +1,8 @@
 # uniHub/scholarships/views.py
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from django.db.models import Q # Keep this for scholarship_list
+from django.db.models import Q 
 from datetime import date # Keep this for scholarship_lis
 from .forms import UserRegisterForm, ScholarshipForm # <<< Import ScholarshipForm
 from .models import Scholarship, UserProfile# <--- This is now correct
@@ -147,7 +147,7 @@ def custom_login(request):
                     elif user_actual_role == 'FACULTY':
                         messages.success(request, f'Welcome, {user.username} (Faculty)!')
                         # Redirect Faculty to scholarships list page
-                        return redirect('scholarships:list') # Redirect to the scholarships list
+                        return redirect('faculties:faculty_dashboard_home') # Redirect to the scholarships list
                     elif user_actual_role == 'ADMIN':
                         messages.success(request, f'Welcome, {user.username} (Admin)!')
                         return redirect('admin:index') # Redirect to Django admin page
@@ -196,4 +196,12 @@ def post_scholarship_view(request):
         form = ScholarshipForm() # Empty form for GET request
     return render(request, 'scholarships/post_scholarship.html', {'form': form})
 
-# ... (Any other views like scholarship_detail_view, etc.) ...
+def logout_view(request):
+    """
+    Logs out the current user and redirects to the home view.
+    """
+    if request.user.is_authenticated:
+        logout(request)
+        messages.info(request, "You have been logged out successfully.")
+    
+    return redirect('home')

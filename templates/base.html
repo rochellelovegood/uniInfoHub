@@ -10,14 +10,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
         :root {
-    /* Change these from purple to aquamarine shades */
-    --primary-gradient: linear-gradient(135deg, #7fffd4, #00ced1); /* Aquamarine gradient */
-    --info-gradient: linear-gradient(135deg, #00bfff, #1e90ff); /* You can keep this blue or adjust */
-    --success-gradient: linear-gradient(135deg, #32cd32, #228b22); /* Keep or adjust green */
-    --primary-soft: rgba(127, 255, 212, 0.1); /* Aquamarine soft */
-    --text-accent: #00ced1; /* Dark turquoise accent */
-    /* Other variables can remain unchanged */
-}
+        --primary-dark: #0a192f;
+        --primary-light: #172a45;
+        --accent-color: #64ffda;
+        --text-primary: #ccd6f6;
+        --text-secondary: #8892b0;
+    }
+    
 
 
         body {
@@ -65,9 +64,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Welcome, {{ user.username }}!</a> {# Display username #}
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Logout</a> {# Use Django's 'logout' URL name #}
-                    </li>
+                    
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'login' %}">Login</a> {# Use Django's 'login' URL name #}
@@ -87,6 +84,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Resources</a> {# Placeholder for future app #}
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a> {# Use Django's 'logout' URL name #}
                     </li>
                 </ul>
             </div>
