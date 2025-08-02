@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'scholarships.apps.ScholarshipsConfig', # Make sure this line is here
+    'scholarships',
+    'faculties',  
 ]
 
 MIDDLEWARE = [
