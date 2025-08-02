@@ -10,7 +10,7 @@ from .forms import UserRegisterForm
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
-
+from django.core.exceptions import ValidationError
 def is_faculty_or_admin(user):
     """Checks if the user has a FACULTY or ADMIN role."""
     if not user.is_authenticated:
@@ -29,11 +29,12 @@ def home_view(request):
     }
     return render(request, 'home.html', context)
 def homepage(request):
-   
-   
-    return render(request, 'scholarships/homepage.html')
+    context = {
+        'is_faculty_or_admin': is_faculty_or_admin(request.user) if request.user.is_authenticated else False,
+    }
+    return render(request, 'scholarships/homepage.html', context)
 
-
+@login_required
 def scholarship_list_view(request):
     """Displays a list of active scholarships, with options for filtering and searching."""
     today = date.today()
@@ -83,7 +84,6 @@ def scholarship_list_view(request):
     }
     return render(request, 'scholarships/scholarship_list.html', context)
 
-
 def register_view(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -92,8 +92,9 @@ def register_view(request):
             login(request, user)
             messages.success(request, f'Account created for {user.username}! You are now logged in.')
             
+            # --- The critical redirect logic ---
             if hasattr(user, 'userprofile') and user.userprofile.role in ['FACULTY', 'ADMIN']:
-                return redirect('faculties:faculty_dashboard_home')
+                return redirect('faculties:faculty_dashboard_home') # <--- Must match faculty/urls.py
             else:
                 return redirect('scholarships:list')
         else:
@@ -105,7 +106,7 @@ def register_view(request):
 
     context = {
         'form': form,
-        'page_title': 'Register for OpportunityHub'
+        'page_title': 'Register for UCSYers Hub'
     }
     return render(request, 'registration/register.html', context)
 

@@ -2,14 +2,10 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+from django.core.exceptions import ValidationError
 
-# Corrected UserProfile model with full details
+
 class UserProfile(models.Model):
-    """
-    Extends the Django User model to include additional user-specific information.
-    """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     ROLE_CHOICES = [
@@ -39,34 +35,47 @@ class UserProfile(models.Model):
     major = models.CharField(
         max_length=50,
         choices=MAJOR_CHOICES,
-        default='SE',
         blank=True,
-        null=True
+        null=True,
+        help_text="Your major. Required for Students."
     )
 
     SEMESTER_CHOICES = [(i, f'Semester {i}') for i in range(1, 11)]
     semester = models.IntegerField(
         choices=SEMESTER_CHOICES,
-        default=1,
         blank=True,
-        null=True
+        null=True,
+        help_text="Your current semester. Required for Students."
     )
+
+    def clean(self):
+        if self.role == 'STUDENT':
+            if not self.roll_no:
+                raise ValidationError({'roll_no': "Roll number is required for students."})
+            if not self.major:
+                raise ValidationError({'major': "Major is required for students."})
+            if not self.semester:
+                raise ValidationError({'semester': "Semester is required for students."})
+        else:
+            if self.roll_no is not None:
+                self.roll_no = None
+            if self.major is not None:
+                self.major = None
+            if self.semester is not None:
+                self.semester = None
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.user.username} Profile ({self.get_role_display()})'
 
-# Signals to automatically create a UserProfile for every new User
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
 
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.userprofile.save()
+# The signal and receiver function have been completely removed.
+# You must now manually create the UserProfile object when a new User is created.
 
 
-# New models from the 'internships' branch, now merged
 class Company(models.Model):
     name = models.CharField(max_length=100)
     website = models.URLField()
@@ -99,11 +108,7 @@ class Testimonial(models.Model):
         return f"{self.student_name} - {self.company}"
 
 
-# The existing Scholarship model, also now part of the file
 class Scholarship(models.Model):
-    """
-    Represents a scholarship opportunity available to students.
-    """
     title = models.CharField(max_length=200, help_text="The official title or name of the scholarship.")
     description = models.TextField(help_text="A comprehensive description of the scholarship, its purpose, and what it covers.")
     eligibility = models.TextField(
@@ -116,7 +121,6 @@ class Scholarship(models.Model):
     )
     deadline = models.DateField(help_text="The final date by which applications must be submitted.")
 
-    # --- Fields for Filtering and Categorization ---
     min_gpa = models.DecimalField(
         max_digits=3, decimal_places=2, null=True, blank=True,
         help_text="Optional: The minimum GPA required for this scholarship (e.g., 3.0, 3.5). Leave blank if not applicable."
@@ -141,7 +145,6 @@ class Scholarship(models.Model):
         help_text="The specific major(s) or department(s) for which the scholarship is applicable."
     )
 
-    # --- Fields for Uploaded Files (Teacher-Provided) ---
     brochure_pdf = models.FileField(
         upload_to='scholarship_brochures/',
         null=True, blank=True,
@@ -153,7 +156,6 @@ class Scholarship(models.Model):
         help_text="Optional: Upload a relevant banner image or logo for the scholarship."
     )
 
-    # --- Administrative Fields ---
     posted_by = models.ForeignKey('auth.User', on_delete=models.CASCADE, default=1)
     is_active = models.BooleanField(
         default=True,
@@ -174,4 +176,3 @@ class Scholarship(models.Model):
     class Meta:
         ordering = ['deadline', 'title']
         verbose_name_plural = "Scholarships"
-

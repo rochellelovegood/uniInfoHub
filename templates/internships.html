@@ -4,76 +4,29 @@
 
 {% block extra_css %}
 <style>
-    /* Add CSS variables from homepage */
+    /* Futuristic Theme Variables */
     :root {
-        --primary: #6a11cb;
-        --secondary: #2575fc;
-        --dark: #1a1a2e;
-        --darker: #0d0d1a;
-        --card-bg: #2a2a3a;
-        --text: #e0e0e0; /* This is the text color variable */
-        --accent: #a777e3;
-        --light-accent: #c9a8ff;
+        --primary-dark: #0a192f;
+        --primary-light: #172a45;
+        --accent-color: #64ffda;
+        --text-primary: #ccd6f6;
+        --text-secondary: #8892b0;
+        --gradient-primary: linear-gradient(135deg, #64ffda 0%, #00a1ff 100%);
     }
 
-    /* Set global text color */
+    /* Base Styles */
     body {
-        color: var(--text) !important;
+        background-color: var(--primary-dark);
+        color: var(--text-primary);
     }
 
+    /* Hero Section */
     .hero-section {
         position: relative;
         height: 80vh;
         overflow: hidden;
-        width: 100%;
-    }
-
-    .slideshow-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-    }
-
-    .hero-slide {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        background-position: center;
-        opacity: 0;
-        transition: opacity 1.5s ease-in-out;
-        z-index: 1;
-    }
-
-    .hero-slide.active {
-        opacity: 1;
-        z-index: 2;
-    }
-
-    .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, rgba(15,12,41,0.8), rgba(48,43,99,0.8), rgba(36,36,62,0.8));
-        z-index: 3;
-    }
-
-    .hero-overlay::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
-        opacity: 0.2;
+        background: linear-gradient(rgba(10, 25, 47, 0.9), rgba(10, 25, 47, 0.9)), 
+                    url('{% static "images/hero1.jpg" %}') no-repeat center center/cover;
     }
 
     .hero-content {
@@ -85,123 +38,43 @@
         justify-content: center;
     }
 
-    /* Slideshow Indicators */
-    .slide-indicators {
-        position: absolute;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 12px;
-        z-index: 5;
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        background: linear-gradient(to right, #64ffda, #00a1ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1rem;
     }
 
-    .indicator {
-        width: 15px;
-        height: 15px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        cursor: pointer;
-        transition: all 0.3s ease;
+    .hero-subtitle {
+        font-size: 1.5rem;
+        color: var(--text-secondary);
+        max-width: 700px;
+        margin: 0 auto 2rem;
     }
 
-    .indicator.active {
-        background: #8a2be2;
-        transform: scale(1.3);
-    }
-
-    /* Navigation Arrows */
-    .slide-nav {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(0, 0, 0, 0.3);
-        color: white;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 5;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(5px);
-        border: 1px solid rgba(138, 43, 226, 0.3);
-    }
-
-    .slide-nav:hover {
-        background: rgba(138, 43, 226, 0.5);
-        transform: translateY(-50%) scale(1.1);
-    }
-
-    .prev {
-        left: 30px;
-    }
-
-    .next {
-        right: 30px;
-    }
-
-    /* Existing Styles */
-    .institution-name {
-        font-weight: 700;
-        font-size: 1.2rem;
-        margin-bottom: 10px;
-        text-align: center;
-        color: var(--text); /* Updated to use variable */
-    }
-
+    /* Company Grid */
     .company-grid {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 20px;
-        padding: 30px;
-    }
-
-    @media (max-width: 1200px) {
-        .company-grid {
-            grid-template-columns: repeat(4, 1fr);
-        }
-    }
-
-    @media (max-width: 992px) {
-        .company-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
-    }
-
-    @media (max-width: 768px) {
-        .company-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .slide-nav {
-            width: 40px;
-            height: 40px;
-        }
+        padding: 30px 0;
     }
 
     .company-card {
-        background: rgba(30, 30, 45, 0.7);
-        border-radius: 12px;
+        background: var(--primary-light);
+        border-radius: 8px;
         padding: 20px;
         text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 150px;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(138, 43, 226, 0.3);
+        border-left: 3px solid var(--accent-color);
         transition: all 0.3s ease;
     }
 
     .company-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 12px 25px rgba(138, 43, 226, 0.3);
-        border-color: #8a2be2;
-        background: rgba(40, 40, 60, 0.8);
+        box-shadow: 0 10px 30px rgba(100, 255, 218, 0.1);
     }
 
     .company-logo-grid {
@@ -211,23 +84,24 @@
         margin-bottom: 15px;
     }
 
-    .testimonial-card {
-        position: relative;
-        border-left: 3px solid var(--text-accent);
-        background: rgba(30, 30, 45, 0.7);
-        backdrop-filter: blur(10px);
-        border-radius: 12px;
+    .institution-name {
+        font-weight: 600;
+        color: var(--text-primary);
     }
 
-    .testimonial-card::before {
-        content: """;
-        position: absolute;
-        top: 10px;
-        left: 20px;
-        font-size: 5rem;
-        color: var(--text-accent);
-        opacity: 0.2;
-        font-family: Georgia, serif;
+    /* Testimonials */
+    .testimonial-card {
+        background: var(--primary-light);
+        border-radius: 8px;
+        border-left: 3px solid var(--accent-color);
+        padding: 1.5rem;
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(100, 255, 218, 0.1);
     }
 
     .student-img {
@@ -235,43 +109,28 @@
         height: 60px;
         border-radius: 50%;
         object-fit: cover;
-        border: 2px solid var(--text-accent);
+        border: 2px solid var(--accent-color);
     }
 
     .tech-badge {
-        background: rgba(138, 43, 226, 0.15);
-        color: #8a2be2;
+        background: rgba(100, 255, 218, 0.1);
+        color: var(--accent-color);
         padding: 3px 10px;
         border-radius: 20px;
         font-size: 0.8rem;
         margin: 2px;
+        display: inline-block;
     }
 
     .role-highlight {
-        background: rgba(0, 191, 255, 0.15);
+        background: rgba(0, 191, 255, 0.1);
         padding: 15px;
-        border-radius: 10px;
+        border-radius: 8px;
         margin: 10px 0;
+        border-left: 2px solid var(--accent-color);
     }
 
-    .hero-title {
-        font-size: 3.5rem;
-        font-weight: 800;
-        background: linear-gradient(to right, #8a2be2, #00bfff, #32cd32);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 1rem;
-    }
-
-    .hero-subtitle {
-        font-size: 1.5rem;
-        opacity: 0.9;
-        max-width: 700px;
-        margin: 0 auto 2rem;
-        color: var(--text); /* Updated to use variable */
-    }
-
+    /* Section Headers */
     .section-header {
         text-align: center;
         margin-bottom: 3rem;
@@ -280,43 +139,21 @@
     .section-header h2 {
         font-size: 2.5rem;
         margin-bottom: 1rem;
-        color: var(--text); /* Updated to use variable */
+        color: var(--text-primary);
     }
 
     .section-header p {
         font-size: 1.2rem;
-        opacity: 0.8;
+        color: var(--text-secondary);
         max-width: 700px;
         margin: 0 auto;
-        color: var(--text); /* Updated to use variable */
     }
 
-    .glow {
-        text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
-    }
-
-    @media (max-width: 768px) {
-        .hero-title {
-            font-size: 2.5rem;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-        }
-
-        .company-logo-grid {
-            height: 50px;
-        }
-    }
-
-    /* Footer - Matching Homepage */
+    /* Footer */
     footer {
-        background: rgba(26, 26, 46, 0.95) !important;
-        padding: 15px 0 !important;
-        border-bottom: 1px solid rgba(138, 43, 226, 0.2) !important;
-        backdrop-filter: blur(10px) !important;
-        position: relative;
-        z-index: 100;
+        background: var(--primary-light) !important;
+        padding: 2rem 0 !important;
+        border-top: 1px solid rgba(100, 255, 218, 0.1);
     }
 
     .footer-content {
@@ -329,11 +166,9 @@
     }
 
     .footer-logo {
-        display: flex;
-        align-items: center;
         font-size: 1.8rem;
         font-weight: 700;
-        background: linear-gradient(to right, var(--text), var(--accent));
+        background: linear-gradient(to right, var(--text-primary), var(--accent-color));
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
@@ -351,59 +186,61 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: rgba(167, 119, 227, 0.1);
-        color: var(--accent);
+        background: rgba(100, 255, 218, 0.1);
+        color: var(--accent-color);
         transition: all 0.3s;
-        text-decoration: none;
     }
 
     .social-links a:hover {
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        color: white;
+        background: var(--gradient-primary);
+        color: var(--primary-dark);
         transform: translateY(-3px);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+        }
+        
+        .company-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .company-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .hero-section {
+            height: 70vh;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .company-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .footer-content {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section with Slideshow -->
+<!-- Hero Section -->
 <section class="hero-section">
-    <!-- Slideshow Container -->
-    <div class="slideshow-container">
-        <!-- Slide 1 -->
-        <div class="hero-slide active" style="background-image: url('{% static 'images/hero1.jpg' %}');"></div>
-
-        <!-- Slide 2 -->
-        <div class="hero-slide" style="background-image: url('{% static 'images/hero2.jpg' %}');"></div>
-
-        <!-- Slide 3 -->
-        <div class="hero-slide" style="background-image: url('{% static 'images/hero3.jpg' %}');"></div>
-
-        <!-- Navigation Arrows -->
-        <div class="slide-nav prev">
-            <i class="bi bi-chevron-left"></i>
-        </div>
-        <div class="slide-nav next">
-            <i class="bi bi-chevron-right"></i>
-        </div>
-
-        <!-- Indicators -->
-        <div class="slide-indicators">
-            <div class="indicator active"></div>
-            <div class="indicator"></div>
-            <div class="indicator"></div>
-        </div>
-    </div>
-
-    <!-- Overlay with Gradient and Pattern -->
-    <div class="hero-overlay"></div>
-
-    <!-- Content Container -->
     <div class="hero-content">
         <div class="container text-center">
-            <div class="glow">
-                <h1 class="hero-title">Here's Internship Hub</h1>
-            </div>
+            <h1 class="hero-title">Internship Hub</h1>
             <p class="hero-subtitle">Connecting Computer Science Students with Industry Leaders</p>
         </div>
     </div>
@@ -413,12 +250,12 @@
 <section class="py-5" id="partners">
     <div class="container">
         <div class="section-header">
-            <h2>Our <span style="color: var(--accent);">Company Partnerships</span></h2>
+            <h2>Our <span style="color: var(--accent-color);">Company Partnerships</span></h2>
             <p>Leading companies where our students have secured internships</p>
         </div>
 
-        <div class="mb-5">
-            <p class="text-center mx-auto" style="max-width: 800px;">
+        <div class="mb-5 text-center">
+            <p style="max-width: 800px; margin: 0 auto;">
                 We partner with top tech companies to provide real-world internship opportunities.
                 Our students gain hands-on experience working with industry-leading technologies
                 and professionals.
@@ -428,12 +265,12 @@
         <div class="company-grid">
             {% for company in companies %}
             <a href="{{ company.website }}" target="_blank" class="company-card text-decoration-none">
-              <div class="d-flex flex-column align-items-center">
-              <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="company-logo-grid">
-              <div class="institution-name">
+                <div class="d-flex flex-column align-items-center">
+                    <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="company-logo-grid">
+                    <div class="institution-name mt-3">
                         {{ company.name }}
-              </div>
-              </div>
+                    </div>
+                </div>
             </a>
             {% empty %}
             <div class="col-12 text-center">
@@ -445,42 +282,40 @@
 </section>
 
 <!-- Senior Testimonials -->
-<section class="py-5" id="testimonials" style="background: rgba(0,0,0,0.3);">
+<section class="py-5" id="testimonials" style="background: rgba(10, 25, 47, 0.5);">
     <div class="container">
         <div class="section-header">
-            <h2>Senior <span style="color: var(--light-accent);">Experiences</span></h2>
+            <h2>Senior <span style="color: var(--accent-color);">Experiences</span></h2>
             <p>Hear from our graduates about their internship journeys</p>
         </div>
 
         <div class="row">
             {% for testimonial in testimonials %}
             <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card testimonial-card h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-4">
-                            {% if testimonial.student_photo %}
-                            <img src="{{ testimonial.student_photo.url }}" alt="{{ testimonial.student_name }}" class="student-img me-3">
-                            {% else %}
-                            <div class="student-img bg-secondary d-flex align-items-center justify-content-center me-3">
-                                <i class="bi bi-person-fill text-light" style="font-size: 1.5rem;"></i>
-                            </div>
-                            {% endif %}
-                            <div>
-                                <h5 class="mb-0">{{ testimonial.student_name }}</h5>
-                                <p class="text-muted mb-0">{{ testimonial.graduation_info }}</p>
-                                <div class="mt-1">
-                                    <span class="tech-badge">{{ testimonial.company }}</span>
-                                    <span class="tech-badge">{{ testimonial.role }}</span>
-                                </div>
+                <div class="testimonial-card">
+                    <div class="d-flex align-items-center mb-4">
+                        {% if testimonial.student_photo %}
+                        <img src="{{ testimonial.student_photo.url }}" alt="{{ testimonial.student_name }}" class="student-img me-3">
+                        {% else %}
+                        <div class="student-img bg-secondary d-flex align-items-center justify-content-center me-3">
+                            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <h5 class="mb-0">{{ testimonial.student_name }}</h5>
+                            <p class="text-muted mb-0">{{ testimonial.graduation_info }}</p>
+                            <div class="mt-1">
+                                <span class="tech-badge">{{ testimonial.company }}</span>
+                                <span class="tech-badge">{{ testimonial.role }}</span>
                             </div>
                         </div>
+                    </div>
 
-                        <p class="card-text">{{ testimonial.quote }}</p>
+                    <p class="card-text">{{ testimonial.quote }}</p>
 
-                        <div class="role-highlight mt-3">
-                            <p class="mb-1"><strong>Role:</strong> {{ testimonial.role }}</p>
-                            <p class="mb-1"><strong>Technologies:</strong> {{ testimonial.technologies }}</p>
-                        </div>
+                    <div class="role-highlight mt-3">
+                        <p class="mb-1"><strong>Role:</strong> {{ testimonial.role }}</p>
+                        <p class="mb-1"><strong>Technologies:</strong> {{ testimonial.technologies }}</p>
                     </div>
                 </div>
             </div>
@@ -493,12 +328,12 @@
     </div>
 </section>
 
-<!-- Footer - Matching Homepage -->
+<!-- Footer -->
 <footer>
     <div class="container">
         <div class="footer-content">
             <div class="footer-logo">
-                <i class="fas fa-graduation-cap"></i>
+                <i class="fas fa-graduation-cap me-2"></i>
                 OpportunityHub
             </div>
             <div class="social-links">
@@ -514,79 +349,25 @@
 
 {% block extra_js %}
 <script>
-    // Hero Slideshow Functionality
+    // Simple animation for cards on scroll
     document.addEventListener('DOMContentLoaded', function() {
-        const slides = document.querySelectorAll('.hero-slide');
-        const indicators = document.querySelectorAll('.indicator');
-        const prevBtn = document.querySelector('.prev');
-        const nextBtn = document.querySelector('.next');
-        let currentSlide = 0;
-        let slideInterval;
-
-        // Function to show a specific slide
-        function showSlide(index) {
-            // Remove active class from all slides and indicators
-            slides.forEach(slide => slide.classList.remove('active'));
-            indicators.forEach(indicator => indicator.classList.remove('active'));
-
-            // Add active class to current slide and indicator
-            slides[index].classList.add('active');
-            indicators[index].classList.add('active');
-
-            currentSlide = index;
-        }
-
-        // Function to go to next slide
-        function nextSlide() {
-            let newIndex = (currentSlide + 1) % slides.length;
-            showSlide(newIndex);
-        }
-
-        // Function to go to previous slide
-        function prevSlide() {
-            let newIndex = (currentSlide - 1 + slides.length) % slides.length;
-            showSlide(newIndex);
-        }
-
-        // Start automatic slideshow
-        function startSlideshow() {
-            slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
-        }
-
-        // Stop automatic slideshow
-        function stopSlideshow() {
-            clearInterval(slideInterval);
-        }
-
-        // Event listeners for navigation
-        nextBtn.addEventListener('click', function() {
-            stopSlideshow();
-            nextSlide();
-            startSlideshow();
-        });
-
-        prevBtn.addEventListener('click', function() {
-            stopSlideshow();
-            prevSlide();
-            startSlideshow();
-        });
-
-        // Event listeners for indicators
-        indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', function() {
-                stopSlideshow();
-                showSlide(index);
-                startSlideshow();
+        const cards = document.querySelectorAll('.company-card, .testimonial-card');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
             });
+        }, { threshold: 0.1 });
+        
+        cards.forEach(card => {
+            card.style.opacity = 0;
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.5s ease';
+            observer.observe(card);
         });
-
-        // Start the slideshow
-        startSlideshow();
-
-        // Pause slideshow when hovering over slideshow
-        const slideshowContainer = document.querySelector('.slideshow-container');
-        slideshowContainer.addEventListener('mouseenter', stopSlideshow);
-        slideshowContainer.addEventListener('mouseleave', startSlideshow);
     });
 </script>
 {% endblock %}
