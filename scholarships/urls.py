@@ -1,14 +1,21 @@
+# uniHub/scholarships/urls.py
 from django.urls import path
 from . import views
-from scholarships.views import home_view, register_view, custom_login, post_scholarship_view # <<< Ensure these are imported from views
-from django.urls import path, include
 
-app_name = 'scholarships' 
+# This is the standard way to define the app's name for Django's `reverse` function.
+app_name = 'scholarships'
 
 urlpatterns = [
-    path('', views.scholarship_list_view, name='list'), # Ensure this matches your view function name
-    path('register/', register_view, name='register'),
-    path('login/', custom_login, name='login'), 
-    path('post/', post_scholarship_view, name='post_scholarship'),# This is your custom login view
-    path('logout/', views.logout_view, name='logout')
+    # Public-facing views for scholarships
+    path('', views.scholarship_list, name='list'),
+
+    # User authentication-related views
+    path('register/', views.register_view, name='register'),
+    path('login/', views.custom_login, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+
+    # Faculty/Admin views for managing scholarships
+    path('post/', views.post_scholarship, name='post_scholarship'),
+    # The 'homepage' view from the 'main' branch, kept in case it's a separate view.
+    path('homepage/', views.homepage, name='homepage'),
 ]

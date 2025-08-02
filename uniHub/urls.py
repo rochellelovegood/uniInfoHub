@@ -1,29 +1,32 @@
+# uniHub/uniHub/urls.py
+
 from django.contrib import admin
 from django.urls import path, include
+from scholarships.views import home_view # Import your homepage view
+from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
-from scholarships.views import home_view, register_view, custom_login, logout_view
-
 
 urlpatterns = [
+    # The Django admin panel
     path('admin/', admin.site.urls),
-    path('', home_view, name='home'),  # Homepage
+    
+    # This is the main project homepage
+    path('', home_view, name='home'),
+    
+    # Include the URLs from the 'scholarships' app
+    path('scholarships/', include('scholarships.urls')),
 
-    # URL for the custom login view
-    path('login/', custom_login, name='login'),
-    
-    # All scholarship-related URLs are now handled by the scholarships app's urls.py
-    path('scholarships/', include('scholarships.urls', namespace='scholarships')),
-    
-    path('register/', register_view, name='register'),
-    
-    # The 'post_scholarship' URL is now expected to be in scholarships/urls.py
-    # path('post/', post_scholarship_view, name='post_scholarship'),  # <-- REMOVED
+    # Include the URLs from the 'faculty' app
+    # This path will be the base for all faculty URLs.
+    # The dashboard will be accessible at /faculty/dashboard/
+    path('faculty/', include('faculty.urls')),
 
-    path('faculties/', include('faculties.urls', namespace='faculties')), # Added a namespace for consistency
-    path('logout/', logout_view, name='logout'),
+    # Use Django's built-in logout view for simplicity and best practice
+    path('logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name='logout'),
 ]
 
 # Only serve media files in development mode
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
