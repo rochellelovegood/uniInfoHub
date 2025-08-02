@@ -28,6 +28,10 @@ def home_view(request):
         'is_faculty_or_admin': is_faculty_or_admin(request.user) if request.user.is_authenticated else False,
     }
     return render(request, 'home.html', context)
+def homepage(request):
+   
+   
+    return render(request, 'scholarships/homepage.html')
 
 
 def scholarship_list_view(request):
