@@ -1,0 +1,452 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}Faculty Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Futuristic theme variables */
+    :root {
+        --primary-dark: #0a192f;
+        --primary-light: #172a45;
+        --accent-color: #64ffda;
+        --text-primary: #ccd6f6;
+        --text-secondary: #8892b0;
+    }
+    
+    body {
+        background-color: var(--primary-dark);
+        color: var(--text-primary);
+    }
+    
+    .dashboard-header {
+        background: var(--primary-light);
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--accent-color);
+    }
+    
+    .nav-pills .nav-link {
+        color: var(--text-secondary);
+        border-radius: 4px;
+        margin-bottom: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-pills .nav-link.active {
+        background: transparent;
+        color: var(--accent-color);
+        border-left: 3px solid var(--accent-color);
+        border-radius: 0;
+    }
+    
+    .nav-pills .nav-link:hover:not(.active) {
+        background: rgba(100, 255, 218, 0.1);
+    }
+    
+    .opportunity-card {
+        background: var(--primary-light);
+        border: none;
+        border-left: 3px solid var(--accent-color);
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+    }
+    
+    .opportunity-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .btn-futuristic {
+        background: transparent;
+        color: var(--accent-color);
+        border: 1px solid var(--accent-color);
+        transition: all 0.3s ease;
+    }
+    
+    .btn-futuristic:hover {
+        background: rgba(100, 255, 218, 0.1);
+        color: var(--accent-color);
+    }
+    
+    .stat-card {
+        border-radius: 8px;
+        padding: 1.5rem;
+        background: var(--primary-light);
+        border-bottom: 3px solid var(--accent-color);
+        margin-bottom: 1rem;
+    }
+    
+    .card {
+        background: var(--primary-light);
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .list-group-item {
+        background: var(--primary-light);
+        color: var(--text-primary);
+        border: 1px solid rgba(100, 255, 218, 0.1);
+        margin-bottom: 8px;
+    }
+    
+    .list-group-item:hover {
+        background: rgba(100, 255, 218, 0.05);
+    }
+    
+    /* Form styles */
+    .django-form-container .form-control {
+        background: var(--primary-dark);
+        border: 1px solid var(--text-secondary);
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+    }
+    
+    .django-form-container .form-control:focus {
+        background: var(--primary-dark);
+        color: var(--text-primary);
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 0.25rem rgba(100, 255, 218, 0.25);
+    }
+    
+    .django-form-container label {
+        color: var(--text-secondary);
+    }
+    
+    .django-form-container ul.errorlist {
+        color: #ff6b6b;
+        list-style-type: none;
+        padding-left: 0;
+    }
+    
+    /* Futuristic elements */
+    .glow-effect {
+        position: relative;
+    }
+    
+    .glow-effect::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        box-shadow: 0 0 10px var(--accent-color);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .glow-effect:hover::after {
+        opacity: 0.3;
+    }
+    
+    /* Badge style */
+    .badge {
+        background: rgba(100, 255, 218, 0.1);
+        color: var(--accent-color);
+    }
+    
+    /* Alert style */
+    .alert-info {
+        background: rgba(0, 147, 147, 0.2);
+        border-color: var(--accent-color);
+        color: var(--text-primary);
+    }
+    /* Make sure buttons are clickable */
+.btn-group a, .btn-group button {
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+/* Remove any pointer-events blocking */
+.card-body {
+    pointer-events: auto;
+}
+
+/* Fix for tooltip positioning */
+.tooltip {
+    pointer-events: none;
+}
+
+/* Ensure buttons are visible */
+.btn-outline-accent, .btn-outline-danger {
+    opacity: 1;
+    position: relative;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="bi bi-cpu me-2"></i> Faculty Dashboard</h1>
+                <p class="mb-0 text-muted">Welcome back, Prof. {{ request.user.last_name|default:"[Faculty Name]" }}</p>
+            </div>
+            <img src="{% static 'faculty_icon.png' %}" alt="Faculty" style="height: 80px; filter: hue-rotate(120deg);">
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <ul class="nav nav-pills flex-column" id="dashboardTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="dashboard-tab" data-bs-toggle="pill" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="true">
+                                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="post-opportunity-tab" data-bs-toggle="pill" href="#post-opportunity" role="tab" aria-controls="post-opportunity" aria-selected="false">
+                                <i class="bi bi-node-plus me-2"></i> Post New
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="scholarships-tab" data-bs-toggle="pill" href="#scholarships" role="tab" aria-controls="scholarships" aria-selected="false">
+                                <i class="bi bi-award me-2"></i> Scholarships
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="announcements-tab" data-bs-toggle="pill" href="#announcements" role="tab" aria-controls="announcements" aria-selected="false">
+                                <i class="bi bi-megaphone me-2"></i> Announcements
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="internships-tab" data-bs-toggle="pill" href="#internships" role="tab" aria-controls="internships" aria-selected="false">
+                                <i class="bi bi-briefcase me-2"></i> Internships
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Stats</h5>
+                    <div class="stat-card mb-3">
+                        <h6 class="text-secondary">Total Posts</h6>
+                        <h3 class="text-accent">{{ my_scholarships.count }}</h3> 
+                    </div>
+                    <div class="stat-card">
+                        <h6 class="text-secondary">Applications</h6>
+                        <h3 class="text-accent">128</h3> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="tab-content" id="dashboardTabContent">
+                <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4 class="card-title">Recent Activity</h4>
+                            <div class="list-group">
+                                {% if my_scholarships %}
+                                    {% for scholarship in my_scholarships|slice:":3" %}
+                                        <a href="#" class="list-group-item list-group-item-action glow-effect">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1">Scholarship Posted/Updated</h6>
+                                                <small class="text-muted">{{ scholarship.updated_at|timesince }} ago</small>
+                                            </div>
+                                            <p class="mb-1">"{{ scholarship.title }}" - {% if scholarship.updated_at != scholarship.posted_at %}updated{% else %}posted{% endif %}</p>
+                                        </a>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="alert alert-info" role="alert">
+                                        No recent activity. Post your first scholarship!
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Quick Actions</h4>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <a href="{% url 'faculties:post_scholarship' %}" data-bs-toggle="pill" class="btn btn-futuristic w-100 py-3 glow-effect">
+                                        <i class="bi bi-award fs-4 d-block mb-2"></i>
+                                        Post Scholarship
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="#announcements" data-bs-toggle="pill" class="btn btn-futuristic w-100 py-3 glow-effect">
+                                        <i class="bi bi-megaphone fs-4 d-block mb-2"></i>
+                                        Post Announcement
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="#internships" data-bs-toggle="pill" class="btn btn-futuristic w-100 py-3 glow-effect">
+                                        <i class="bi bi-briefcase fs-4 d-block mb-2"></i>
+                                        Post Internship
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="post-opportunity" role="tabpanel" aria-labelledby="post-opportunity-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Post New Opportunity</h4>
+                            <form method="post" action="{% url 'faculties:post_scholarship' %}" enctype="multipart/form-data" class="django-form-container">
+                                {% csrf_token %}
+                                
+                                {% if form.non_field_errors %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {% for error in form.non_field_errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                <div class="mb-3">
+                                    <label class="form-label">Opportunity Type</label>
+                                    <select class="form-select">
+                                        <option selected>Scholarship</option>
+                                    </select>
+                                </div>
+                                
+                                {% for field in form %}
+                                    <div class="mb-3">
+                                        {{ field.label_tag }}
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                        {% if field.errors %}
+                                            <ul class="errorlist">
+                                                {% for error in field.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+
+                                <button type="submit" class="btn btn-futuristic glow-effect">Publish Opportunity</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- In the scholarships tab section -->
+<div class="tab-pane fade" id="scholarships" role="tabpanel" aria-labelledby="scholarships-tab">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4>Manage Your Scholarships</h4>
+        <a href="{% url 'faculties:post_scholarship' %}" class="btn btn-futuristic glow-effect">
+            <i class="bi bi-plus-lg me-1"></i> Add New Scholarship
+        </a>
+    </div>
+    
+    {% if my_scholarships %}
+        {% for scholarship in my_scholarships %}
+        <div class="card opportunity-card glow-effect">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5>{{ scholarship.title }}</h5>
+                        <p class="text-muted mb-2">
+                            Deadline: {{ scholarship.deadline|date:"Y-m-d" }} | 
+                            Posted: {{ scholarship.posted_at|date:"Y-m-d" }}
+                        </p>
+                    </div>
+                    <div class="btn-group" style="position: relative; z-index: 10;">
+                        <!-- Edit Button -->
+                        <a href="{% url 'faculties:edit_scholarship' scholarship.id %}" 
+                           class="btn btn-sm btn-outline-accent me-1"
+                           style="pointer-events: auto; position: relative;"
+                           data-bs-toggle="tooltip" 
+                           data-bs-placement="top" 
+                           title="Edit Scholarship">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        
+                        <!-- Delete Button -->
+                        <form method="post" 
+                              action="{% url 'faculties:delete_scholarship' scholarship.id %}" 
+                              class="d-inline"
+                              style="display: inline-block; position: relative;">
+                            {% csrf_token %}
+                            <button type="submit" 
+                                    class="btn btn-sm btn-outline-danger"
+                                    style="pointer-events: auto; position: relative;"
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="top" 
+                                    title="Delete Scholarship"
+                                    onclick="return confirm('Are you sure?')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <p>{{ scholarship.description|truncatechars:150 }}</p>
+            
+                {% if scholarship.country %}
+                    <span class="badge">{{ scholarship.country }}</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            You haven't posted any scholarships yet. Click "Add New Scholarship" to get started!
+        </div>
+    {% endif %}
+</div>
+                <div class="tab-pane fade" id="announcements" role="tabpanel" aria-labelledby="announcements-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Manage Announcements</h4>
+                            <p>This section is for managing announcements. You'll need to create an `Announcement` model, form, and views for this.</p>
+                            <button class="btn btn-futuristic glow-effect">Add New Announcement</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="internships" role="tabpanel" aria-labelledby="internships-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Manage Internships</h4>
+                            <p>This section is for managing internships. You'll need to create an `Internship` model, form, and views for this.</p>
+                            <button class="btn btn-futuristic glow-effect">Add New Internship</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(function () {
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+    
+    // Tab persistence - Activate tab based on URL hash
+    document.addEventListener('DOMContentLoaded', function() {
+        function activateTabFromHash() {
+            if (location.hash) {
+                const tabElement = document.querySelector(`a[href="${location.hash}"]`);
+                if (tabElement) {
+                    const tabTrigger = new bootstrap.Tab(tabElement);
+                    tabTrigger.show();
+                }
+            }
+        }
+
+        activateTabFromHash();
+        window.addEventListener('hashchange', activateTabFromHash);
+    });
+</script>
+{% endblock %}
