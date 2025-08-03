@@ -13,8 +13,6 @@ urlpatterns = [
     path('register/', views.register_view, name='register'),
     path('login/', views.custom_login, name='login'),
     path('logout/', views.logout_view, name='logout'),
-
-    
-    # The 'homepage' view from the 'main' branch, kept in case it's a separate view.
+    path('<int:pk>/', views.scholarship_detail, name='scholarship_detail'),
     path('homepage/', views.homepage, name='homepage'),
 ]

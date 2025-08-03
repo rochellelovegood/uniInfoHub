@@ -165,3 +165,16 @@ class InternshipsView(TemplateView):
         context['companies'] = Company.objects.all()
         context['testimonials'] = Testimonial.objects.all()
         return context
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Scholarship
+
+def scholarship_detail(request, pk):
+    scholarship = get_object_or_404(Scholarship, pk=pk)
+    
+    context = {
+        'scholarship': scholarship,
+        # Add any additional context you need
+    }
+    return render(request, 'scholarships/scholarship_detail.html', context)

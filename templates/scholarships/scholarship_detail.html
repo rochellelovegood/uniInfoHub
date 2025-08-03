@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ scholarship.title }} - Scholarship Details{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Scholarship Detail Styles - Futuristic Theme */
+    .detail-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        background-color: var(--primary-light);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--glass-border);
+    }
+    
+    .banner-image {
+        width: 100%;
+        max-height: 300px;
+        object-fit: cover;
+        border-bottom: 1px solid var(--glass-border);
+    }
+    
+    .detail-header {
+        background: var(--gradient-primary);
+        padding: 2rem;
+        color: var(--primary-dark);
+    }
+    
+    .detail-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    
+    .detail-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .detail-badge {
+        background-color: rgba(10, 25, 47, 0.3);
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        color: var(--text-primary);
+        border: 1px solid var(--glass-border);
+    }
+    
+    .detail-body {
+        padding: 2rem;
+    }
+    
+    .section-title {
+        color: var(--accent-color);
+        font-weight: 600;
+        margin: 1.5rem 0 1rem;
+        padding-bottom: 0.3rem;
+        border-bottom: 1px solid var(--glass-border);
+    }
+    
+    .info-box {
+        background-color: rgba(10, 25, 47, 0.2);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-left: 3px solid var(--accent-color);
+    }
+    
+    .info-title {
+        color: var(--accent-color);
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .back-btn {
+        margin-bottom: 1.5rem;
+        background: rgba(100, 255, 218, 0.1);
+        border: 1px solid var(--glass-border);
+        color: var(--accent-color);
+    }
+    
+    .back-btn:hover {
+        background: rgba(100, 255, 218, 0.2);
+    }
+    
+    .action-btns {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.85rem;
+    }
+    
+    .active-status {
+        background-color: rgba(50, 205, 50, 0.15);
+        color: #7aff7a;
+        border: 1px solid rgba(50, 205, 50, 0.3);
+    }
+    
+    .inactive-status {
+        background-color: rgba(255, 59, 48, 0.15);
+        color: #ff8a82;
+        border: 1px solid rgba(255, 59, 48, 0.3);
+    }
+    
+    /* Button styles */
+    .btn-primary {
+        background: var(--gradient-primary);
+        border: none;
+        color: var(--primary-dark);
+        font-weight: 500;
+    }
+    
+    .btn-warning {
+        background: linear-gradient(135deg, #ffb347, #ffcc33);
+        border: none;
+        color: #0a192f;
+        font-weight: 500;
+    }
+    
+    .btn-danger {
+        background: linear-gradient(135deg, #ff5f6d, #ffc371);
+        border: none;
+        color: #0a192f;
+        font-weight: 500;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .detail-container {
+            margin: 1rem;
+        }
+        
+        .detail-header {
+            padding: 1.5rem;
+        }
+        
+        .detail-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container p-4">
+    <a href="{% url 'scholarships:list' %}" class="btn back-btn ">
+        <i class="fas fa-arrow-left"></i> Back to Scholarships
+    </a>
+    
+    <div class="detail-container">
+        {% if scholarship.banner_image %}
+        <img src="{{ scholarship.banner_image.url }}" class="banner-image" alt="{{ scholarship.title }} banner">
+        {% endif %}
+        
+        <div class="detail-header">
+            <h1 class="detail-title">{{ scholarship.title }}</h1>
+            
+            <div class="detail-badges">
+                <span class="status-badge {% if scholarship.is_active %}active-status{% else %}inactive-status{% endif %}">
+                    <i class="fas fa-circle"></i> {% if scholarship.is_active %}Active{% else %}Inactive{% endif %}
+                </span>
+                
+                {% if scholarship.min_gpa %}
+                <span class="detail-badge">
+                    <i class="fas fa-award"></i> Min GPA: {{ scholarship.min_gpa }}
+                </span>
+                {% endif %}
+                
+                <span class="detail-badge">
+                    <i class="fas fa-graduation-cap"></i> {{ scholarship.get_major_display }}
+                </span>
+                
+                <span class="detail-badge">
+                    <i class="fas fa-calendar-times"></i> Deadline: {{ scholarship.deadline|date:"M d, Y" }}
+                </span>
+                
+                {% if scholarship.country %}
+                <span class="detail-badge">
+                    <i class="fas fa-map-marker-alt"></i> {{ scholarship.country }}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="detail-body">
+            <h3 class="section-title">Description</h3>
+            <p>{{ scholarship.description|linebreaks }}</p>
+            
+            <h3 class="section-title">Eligibility Requirements</h3>
+            <p>{{ scholarship.eligibility|linebreaks }}</p>
+            
+            <div class="info-box">
+                <h4 class="info-title"><i class="fas fa-link me-2"></i> Application Details</h4>
+                {% if scholarship.application_link %}
+                <p><strong>Online Application:</strong> <a href="{{ scholarship.application_link }}" target="_blank" class="text-accent">{{ scholarship.application_link }}</a></p>
+                {% endif %}
+                
+                {% if scholarship.brochure_pdf %}
+                <p><strong>Download Brochure:</strong> Contains full application details and requirements</p>
+                {% endif %}
+            </div>
+            
+            <div class="action-btns">
+                {% if scholarship.brochure_pdf %}
+                <a href="{{ scholarship.brochure_pdf.url }}" class="btn btn-primary" download>
+                    <i class="fas fa-file-pdf"></i> Download Brochure
+                </a>
+                {% endif %}
+                
+                {% if scholarship.application_link %}
+                <a href="{{ scholarship.application_link }}" class="btn btn-primary" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> Apply Online
+                </a>
+                {% endif %}
+                
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'scholarships:edit_scholarship' scholarship.id %}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{% url 'scholarships:delete_scholarship' scholarship.id %}" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+                {% endif %}
+            </div>
+            
+            <div class="mt-4 text-muted">
+                <small>
+                    Posted {{ scholarship.created_at|timesince }} ago
+                    {% if scholarship.posted_by %}
+                        by {{ scholarship.posted_by.get_full_name }}
+                    {% endif %}
+                    | Last updated: {{ scholarship.updated_at|date:"M d, Y" }}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

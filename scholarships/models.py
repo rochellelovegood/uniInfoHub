@@ -109,6 +109,13 @@ class Testimonial(models.Model):
 
 
 class Scholarship(models.Model):
+    banner_image = models.ImageField(
+        upload_to='scholarship_banners/',
+        blank=True,
+        null=True,
+        help_text="An optional banner image for the scholarship detail page."
+    )
+    
     title = models.CharField(max_length=200, help_text="The official title or name of the scholarship.")
     description = models.TextField(help_text="A comprehensive description of the scholarship, its purpose, and what it covers.")
     eligibility = models.TextField(

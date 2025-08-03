@@ -317,7 +317,7 @@
                                     <i class="bi bi-file-earmark-pdf me-1"></i>Download PDF
                                 </a>
                             {% endif %}
-                            <a href="#" class="btn btn-view-details btn-sm">
+                            <a href="{% url 'scholarships:scholarship_detail' scholarship.id %}" class="btn btn-view-details btn-sm">
                                 <i class="bi bi-eye me-1"></i>View Details
                             </a>
                         </div>
