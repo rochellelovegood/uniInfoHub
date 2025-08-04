@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Internship Opportunities{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Futuristic Theme Variables */
+    :root {
+        --primary-dark: #0a192f;
+        --primary-light: #172a45;
+        --accent-color: #64ffda;
+        --text-primary: #ccd6f6;
+        --text-secondary: #8892b0;
+        --gradient-primary: linear-gradient(135deg, #64ffda 0%, #00a1ff 100%);
+    }
+
+    /* Base Styles */
+    body {
+        background-color: var(--primary-dark);
+        color: var(--text-primary);
+    }
+
+    /* Hero Section */
+    .hero-section {
+        position: relative;
+        height: 80vh;
+        overflow: hidden;
+        background: linear-gradient(rgba(10, 25, 47, 0.9), rgba(10, 25, 47, 0.9)), 
+                    url('{% static "images/hero1.jpg" %}') no-repeat center center/cover;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 4;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        background: linear-gradient(to right, #64ffda, #00a1ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.5rem;
+        color: var(--text-secondary);
+        max-width: 700px;
+        margin: 0 auto 2rem;
+    }
+
+    /* Company Grid */
+    .company-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        padding: 30px 0;
+    }
+
+    .company-card {
+        background: var(--primary-light);
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        border-left: 3px solid var(--accent-color);
+        transition: all 0.3s ease;
+    }
+
+    .company-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(100, 255, 218, 0.1);
+    }
+
+    .company-logo-grid {
+        max-height: 60px;
+        max-width: 100%;
+        object-fit: contain;
+        margin-bottom: 15px;
+    }
+
+    .institution-name {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    /* Testimonials */
+    .testimonial-card {
+        background: var(--primary-light);
+        border-radius: 8px;
+        border-left: 3px solid var(--accent-color);
+        padding: 1.5rem;
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(100, 255, 218, 0.1);
+    }
+
+    .student-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--accent-color);
+    }
+
+    .tech-badge {
+        background: rgba(100, 255, 218, 0.1);
+        color: var(--accent-color);
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        margin: 2px;
+        display: inline-block;
+    }
+
+    .role-highlight {
+        background: rgba(0, 191, 255, 0.1);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 2px solid var(--accent-color);
+    }
+
+    /* Section Headers */
+    .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .section-header h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+    }
+
+    .section-header p {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    /* Footer */
+    footer {
+        background: var(--primary-light) !important;
+        padding: 2rem 0 !important;
+        border-top: 1px solid rgba(100, 255, 218, 0.1);
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .footer-logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(to right, var(--text-primary), var(--accent-color));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .social-links {
+        display: flex;
+        gap: 15px;
+    }
+
+    .social-links a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(100, 255, 218, 0.1);
+        color: var(--accent-color);
+        transition: all 0.3s;
+    }
+
+    .social-links a:hover {
+        background: var(--gradient-primary);
+        color: var(--primary-dark);
+        transform: translateY(-3px);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+        }
+        
+        .company-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .company-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .hero-section {
+            height: 70vh;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .company-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .footer-content {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="container text-center">
+            <h1 class="hero-title">Internship Hub</h1>
+            <p class="hero-subtitle">Connecting Computer Science Students with Industry Leaders</p>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Companies Section -->
+<section class="py-5" id="partners">
+    <div class="container">
+        <div class="section-header">
+            <h2>Our <span style="color: var(--accent-color);">Company Partnerships</span></h2>
+            <p>Leading companies where our students have secured internships</p>
+        </div>
+
+        <div class="mb-5 text-center">
+            <p style="max-width: 800px; margin: 0 auto;">
+                We partner with top tech companies to provide real-world internship opportunities.
+                Our students gain hands-on experience working with industry-leading technologies
+                and professionals.
+            </p>
+        </div>
+
+        <div class="company-grid">
+            {% for company in companies %}
+            <a href="{{ company.website }}" target="_blank" class="company-card text-decoration-none">
+                <div class="d-flex flex-column align-items-center">
+                    <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="company-logo-grid">
+                    <div class="institution-name mt-3">
+                        {{ company.name }}
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No companies available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Senior Testimonials -->
+<section class="py-5" id="testimonials" style="background: rgba(10, 25, 47, 0.5);">
+    <div class="container">
+        <div class="section-header">
+            <h2>Senior <span style="color: var(--accent-color);">Experiences</span></h2>
+            <p>Hear from our graduates about their internship journeys</p>
+        </div>
+
+        <div class="row">
+            {% for testimonial in testimonials %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="testimonial-card">
+                    <div class="d-flex align-items-center mb-4">
+                        {% if testimonial.student_photo %}
+                        <img src="{{ testimonial.student_photo.url }}" alt="{{ testimonial.student_name }}" class="student-img me-3">
+                        {% else %}
+                        <div class="student-img bg-secondary d-flex align-items-center justify-content-center me-3">
+                            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <h5 class="mb-0">{{ testimonial.student_name }}</h5>
+                            <p class="text-muted mb-0">{{ testimonial.graduation_info }}</p>
+                            <div class="mt-1">
+                                <span class="tech-badge">{{ testimonial.company }}</span>
+                                <span class="tech-badge">{{ testimonial.role }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="card-text">{{ testimonial.quote }}</p>
+
+                    <div class="role-highlight mt-3">
+                        <p class="mb-1"><strong>Role:</strong> {{ testimonial.role }}</p>
+                        <p class="mb-1"><strong>Technologies:</strong> {{ testimonial.technologies }}</p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No testimonials available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-graduation-cap me-2"></i>
+                OpportunityHub
+            </div>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Simple animation for cards on scroll
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.company-card, .testimonial-card');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        cards.forEach(card => {
+            card.style.opacity = 0;
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.5s ease';
+            observer.observe(card);
+        });
+    });
+</script>
+{% endblock %}

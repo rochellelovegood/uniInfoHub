@@ -1,0 +1,313 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}Post New Scholarship | uniHub{% endblock %}
+
+{% block extra_css %}
+<!-- Bootstrap Icons are used in your template but not loaded. We'll add them here. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+    /* Your custom styles have been preserved and moved here */
+    :root {
+        --card-bg: #1e1e2d;
+        --text-accent: #8a2be2;
+        --primary-gradient: linear-gradient(90deg, #8a2be2, #00bfff);
+    }
+    body {
+        --text-color: #f0f0f0;
+        --bg-color: #12121e;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+    }
+    .scholarship-form-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    .form-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .form-header h1 {
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        font-weight: 800;
+    }
+    
+    .form-header .subtitle {
+        color: #bbbbbb;
+    }
+    
+    .scholarship-form-card {
+        background-color: var(--card-bg);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        padding: 2rem;
+        border: 1px solid #333;
+    }
+    
+    .form-section {
+        margin-bottom: 2rem;
+        background-color: #2a2a3a;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #444;
+    }
+    
+    .form-section h3 {
+        color: #e0e0e0;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        color: #e0e0e0;
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    
+    .form-text {
+        color: #8a8a8a;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+    }
+    
+    .form-control, .form-select, .form-file-input {
+        background-color: #2a2a3a !important;
+        color: #f0f0f0 !important;
+        border: 1px solid #444 !important;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        width: 100%;
+        display: block;
+    }
+    
+    .form-control:focus, .form-select:focus, .form-file-input:focus {
+        background-color: #2a2a3a !important;
+        color: #fff !important;
+        border-color: var(--text-accent) !important;
+        box-shadow: 0 0 0 0.25rem rgba(138, 43, 226, 0.25) !important;
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    .btn {
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-post {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+    }
+    
+    .btn-post:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+    }
+    
+    .btn-cancel {
+        background: #2a2a3a;
+        border: 1px solid #444;
+        color: #e0e0e0;
+    }
+    
+    .btn-cancel:hover {
+        background: #333344;
+        border-color: #555;
+    }
+
+    /* Styles for Django form errors */
+    .errorlist {
+        color: #dc3545; /* Red for errors */
+        list-style-type: none;
+        padding-left: 0;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+    }
+    .form-group .is-invalid {
+        border-color: #dc3545 !important;
+    }
+    
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="scholarship-form-container">
+    <div class="form-header">
+        <h1><i class="bi bi-award me-2"></i>Create New Scholarship</h1>
+        <p class="subtitle">Share funding opportunities with UCSY students</p>
+    </div>
+
+    <div class="scholarship-form-card">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Display non-field errors at the top -->
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for error in form.non_field_errors %}
+                        <p class="mb-0">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Django Messages Container (retained from the previous version for consistency) -->
+            {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                        <div class="p-4 rounded-lg text-sm {% if message.tags == 'error' %}bg-red-100 text-red-700{% elif message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-blue-100 text-blue-700{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- Basic Information Section -->
+            <div class="form-section">
+                <h3><i class="bi bi-info-circle me-2"></i>Basic Information</h3>
+                {% for field in form %}
+                    {% if field.name in "title,description,application_link" %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}
+                                {% if field.field.required %}* {% endif %}
+                            </label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                            <small class="form-text">{{ field.help_text|safe }}</small>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Eligibility Criteria -->
+            <div class="form-section">
+                <h3><i class="bi bi-check-circle me-2"></i>Eligibility Criteria</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.min_gpa.id_for_label }}">{{ form.min_gpa.label }}</label>
+                            {{ form.min_gpa }}
+                            {% for error in form.min_gpa.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                            <small class="form-text">{{ form.min_gpa.help_text|safe }}</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.country.id_for_label }}">{{ form.country.label }}</label>
+                            {{ form.country }}
+                            {% for error in form.country.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                            <small class="form-text">{{ form.country.help_text|safe }}</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.eligibility.id_for_label }}">{{ form.eligibility.label }}*</label>
+                    {{ form.eligibility }}
+                    {% for error in form.eligibility.errors %}
+                        <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                    {% endfor %}
+                    <small class="form-text">{{ form.eligibility.help_text|safe }}</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.major.id_for_label }}">{{ form.major.label }}</label>
+                    {{ form.major }}
+                    {% for error in form.major.errors %}
+                        <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                    {% endfor %}
+                    <small class="form-text">{{ form.major.help_text|safe }}</small>
+                </div>
+            </div>
+
+            <!-- Dates & Files -->
+            <div class="form-section">
+                <h3><i class="bi bi-calendar-event me-2"></i>Important Dates & Files</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.deadline.id_for_label }}">{{ form.deadline.label }}*</label>
+                            {{ form.deadline }}
+                            {% for error in form.deadline.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                            <small class="form-text">{{ form.deadline.help_text|safe }}</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.is_active.id_for_label }}">{{ form.is_active.label }}</label>
+                            <div class="form-check form-switch">
+                                {{ form.is_active }}
+                                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                                    Active Scholarship
+                                </label>
+                            </div>
+                            <small class="form-text">{{ form.is_active.help_text|safe }}</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.brochure_pdf.id_for_label }}">{{ form.brochure_pdf.label }}</label>
+                            {{ form.brochure_pdf }}
+                            {% for error in form.brochure_pdf.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                            <small class="form-text">{{ form.brochure_pdf.help_text|safe }}</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.banner_image.id_for_label }}">{{ form.banner_image.label }}</label>
+                            {{ form.banner_image }}
+                            {% for error in form.banner_image.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                            <small class="form-text">{{ form.banner_image.help_text|safe }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-post">
+                    <i class="bi bi-send-check me-2"></i> Post Scholarship
+                </button>
+                <a href="{% url 'faculties:faculty_dashboard_home' %}" class="btn btn-cancel">
+                    <i class="bi bi-x-circle me-2"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

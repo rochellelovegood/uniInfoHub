@@ -5,7 +5,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import UserProfile,Scholarship 
 import re
-
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True, label="Email Address")
 
@@ -99,7 +98,6 @@ class UserRegisterForm(UserCreationForm):
             }
             UserProfile.objects.create(**profile_data)
         return user
-    
 class ScholarshipForm(forms.ModelForm):
     class Meta:
         model = Scholarship
@@ -127,3 +125,4 @@ class ScholarshipForm(forms.ModelForm):
             'banner_image': 'Banner Image (Optional)',
             'is_active': 'Active Scholarship',
         }
+        exclude = ['posted_by', 'created_at', 'updated_at', 'is_active']

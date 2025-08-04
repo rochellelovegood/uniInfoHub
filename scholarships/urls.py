@@ -1,22 +1,18 @@
 # uniHub/scholarships/urls.py
-from django.contrib import admin
-from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
-
-from scholarships.views import home_view, register_view, homepage
-
-from scholarships.views import home_view, register_view, custom_login
-
 from django.urls import path
 from . import views
 
-app_name = 'scholarships' # This helps in namespacing URLs (e.g., 'scholarships:list')
+# This is the standard way to define the app's name for Django's `reverse` function.
+app_name = 'scholarships'
 
 urlpatterns = [
-    path('', views.scholarship_list, name='list'),
-    path('register/', register_view, name='register'), # <--- ADD THIS LINE BACK HERE
-    path('homepage/',views.homepage,name='homepage'),
-    path('',views.scholarship_list,name='list'),
-    path('login/',custom_login,name='login'),
+    # Public-facing views for scholarships
+    path('', views.scholarship_list_view, name='list'),
+
+    # User authentication-related views
+    path('register/', views.register_view, name='register'),
+    path('login/', views.custom_login, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('<int:pk>/', views.scholarship_detail, name='scholarship_detail'),
+    path('homepage/', views.homepage, name='homepage'),
 ]

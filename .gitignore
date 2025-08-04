@@ -12,6 +12,7 @@ venv/  # Your virtual environment folder
 .pytest_cache/
 .mypy_cache/
 **/.git
+venv
 
 # Django specific
 db.sqlite3 # Your SQLite database file
@@ -28,3 +29,4 @@ static_root/ # Collected static files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+db.sqlite3

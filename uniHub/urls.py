@@ -1,24 +1,32 @@
+# uniHub/uniHub/urls.py
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from scholarships.views import home_view, register_view, custom_login, logout_view, InternshipsView
 
-from scholarships.views import home_view, register_view, homepage
-from scholarships.views import home_view, register_view, custom_login
-from scholarships.views import home_view  #
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home_view, name='home'),  # Homepage
+    path('', home_view, name='home'),
 
-    # App-specific URLs
+    # URL for the custom login view
+    path('login/', custom_login, name='login'),
+    
+    # All scholarship-related URLs are now handled by the scholarships app's urls.py
     path('scholarships/', include('scholarships.urls', namespace='scholarships')),
-     path('register/', register_view, name='register'), 
-    path('homepage/', homepage,name='homepage'),
-    path('accounts/', include('django.contrib.auth.urls')),
+    
+    # URL for the custom registration view
     path('register/', register_view, name='register'),
-    path('login/',custom_login,name='login'),
-    path('accounts/', include('django.contrib.auth.urls')),
-
+    
+    # URLs for the faculties app
+    path('faculties/', include('faculties.urls', namespace='faculties')),
+    
+    # URL for the custom logout view
+    path('logout/', logout_view, name='logout'),
+    
+    # URL for the internships view
+    path('internships/', InternshipsView.as_view(), name='internships'),
 ]
 
 # Only serve media files in development mode
