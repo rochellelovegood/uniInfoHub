@@ -2,31 +2,33 @@
 
 from django.contrib import admin
 from django.urls import path, include
-from scholarships.views import home_view # Import your homepage view
-from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
+from scholarships.views import home_view, register_view, custom_login, logout_view, InternshipsView
 
 urlpatterns = [
-    # The Django admin panel
     path('admin/', admin.site.urls),
-    
-    # This is the main project homepage
     path('', home_view, name='home'),
+
+    # URL for the custom login view
+    path('login/', custom_login, name='login'),
     
-    # Include the URLs from the 'scholarships' app
-    path('scholarships/', include('scholarships.urls')),
-
-    # Include the URLs from the 'faculty' app
-    # This path will be the base for all faculty URLs.
-    # The dashboard will be accessible at /faculty/dashboard/
-    path('faculty/', include('faculty.urls')),
-
-    # Use Django's built-in logout view for simplicity and best practice
-    path('logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name='logout'),
+    # All scholarship-related URLs are now handled by the scholarships app's urls.py
+    path('scholarships/', include('scholarships.urls', namespace='scholarships')),
+    
+    # URL for the custom registration view
+    path('register/', register_view, name='register'),
+    
+    # URLs for the faculties app
+    path('faculties/', include('faculties.urls', namespace='faculties')),
+    
+    # URL for the custom logout view
+    path('logout/', logout_view, name='logout'),
+    
+    # URL for the internships view
+    path('internships/', InternshipsView.as_view(), name='internships'),
 ]
 
 # Only serve media files in development mode
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
