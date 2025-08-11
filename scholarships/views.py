@@ -1,16 +1,18 @@
 # uniHub/scholarships/views.py
 
 from .models import Scholarship, UserProfile, Company, Testimonial
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.db.models import Q
 from datetime import date
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm,CustomPasswordChangeForm,StudentProfileForm
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
 from django.core.exceptions import ValidationError
+
+
 def is_faculty_or_admin(user):
     """Checks if the user has a FACULTY or ADMIN role."""
     if not user.is_authenticated:
@@ -161,14 +163,10 @@ class InternshipsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Fetch all active companies and testimonials to display
         context['companies'] = Company.objects.all()
         context['testimonials'] = Testimonial.objects.all()
         return context
 
-
-from django.shortcuts import render, get_object_or_404
-from .models import Scholarship
 
 def scholarship_detail(request, pk):
     scholarship = get_object_or_404(Scholarship, pk=pk)
@@ -178,3 +176,137 @@ def scholarship_detail(request, pk):
         # Add any additional context you need
     }
     return render(request, 'scholarships/scholarship_detail.html', context)
+
+
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+
+@login_required
+@login_required
+def student_dashboard(request):
+    user = request.user
+    profile = user.userprofile  # Get the user's profile
+    wishlist_scholarships = user.wishlist.all()
+
+    # Initialize both forms
+    password_form = CustomPasswordChangeForm(user=user)
+    profile_form = StudentProfileForm(instance=profile)  # Add profile form
+
+    if request.method == 'POST' and 'form_type' in request.POST:
+        form_type = request.POST['form_type']
+
+        if form_type == 'password_change':
+            password_form = CustomPasswordChangeForm(user=user, data=request.POST)
+
+            if password_form.is_valid():
+                old_password = password_form.cleaned_data['old_password']
+                new_password = password_form.cleaned_data['new_password1']
+
+                if not user.check_password(old_password):
+                    messages.error(request, "Old password is incorrect")
+                else:
+                    # Save new password
+                    user = password_form.save()
+
+                    if user.check_password(new_password):
+                        messages.success(request, "Password updated successfully!")
+                        update_session_auth_hash(request, user)
+                    else:
+                        messages.error(request, "Password update failed!")
+
+                return redirect('student_dashboard')
+
+            else:
+
+                context = {
+                    'user': user,
+                    'password_form': password_form,
+                    'profile_form': profile_form,
+                    'wishlist_scholarships': wishlist_scholarships,
+                }
+                return render(request, 'student_dashboard.html', context)
+
+        elif form_type == 'profile_update':
+            profile_form = StudentProfileForm(request.POST, instance=profile)
+
+            if profile_form.is_valid():
+                # Save the profile changes
+                profile_form.save()
+                messages.success(request, "Profile updated successfully!")
+                return redirect('student_dashboard')
+
+            else:
+
+                messages.error(request, "Please correct the errors below")
+                context = {
+                    'user': user,
+                    'password_form': password_form,
+                    'profile_form': profile_form,
+                    'wishlist_scholarships': wishlist_scholarships,
+                }
+                return render(request, 'student_dashboard.html', context)
+
+
+    context = {
+        'user': user,
+        'wishlist_scholarships': wishlist_scholarships,
+        'password_form': password_form,
+        'profile_form': profile_form,  # Add profile form to context
+    }
+    return render(request, 'student_dashboard.html', context)
+
+from django.http import JsonResponse
+
+
+@login_required
+def toggle_wishlist(request, scholarship_id):
+    scholarship = get_object_or_404(Scholarship, id=scholarship_id)
+    user = request.user
+
+    # Check if scholarship is in user's wishlist
+    if user.wishlist.filter(id=scholarship_id).exists():
+        user.wishlist.remove(scholarship)
+        action = 'removed'
+        message = f"Removed {scholarship.title} from your wishlist"
+    else:
+        user.wishlist.add(scholarship)
+        action = 'added'
+        message = f"Added {scholarship.title} to your wishlist"
+
+    return JsonResponse({
+        'status': 'success',
+        'action': action,
+        'message': message,
+        'wishlist_count': user.wishlist.count()
+    })
+
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from .models import Scholarship
+
+
+@require_POST
+@login_required
+def remove_from_wishlist(request, scholarship_id):
+    try:
+        scholarship = Scholarship.objects.get(id=scholarship_id)
+        request.user.wishlist.remove(scholarship)
+
+        return JsonResponse({
+            'success': True,
+            'wishlist_count': request.user.wishlist.count()
+        })
+
+    except Scholarship.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'error': 'Scholarship not found'
+        }, status=404)
+
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)

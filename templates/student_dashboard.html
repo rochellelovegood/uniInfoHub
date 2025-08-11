@@ -1,0 +1,642 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Student Dashboard - Opportunity Hub{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Dashboard-specific styles */
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .dashboard-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 20px;
+        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        border-radius: 15px;
+        border: 1px solid #333;
+    }
+
+    .dashboard-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        background: linear-gradient(90deg, #8a2be2, #00bfff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .dashboard-card {
+        background-color: #1e1e2d;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s;
+        border: 1px solid #2c2c3a;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #8a2be2;
+        display: flex;
+        align-items: center;
+    }
+
+    .section-title i {
+        margin-right: 15px;
+        background: linear-gradient(135deg, #8a2be2, #00bfff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Profile info styles */
+    .profile-info {
+        padding: 15px 0;
+    }
+
+    .info-item {
+        display: flex;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #2c2c3a;
+    }
+
+    .info-label {
+        width: 180px;
+        font-weight: 600;
+        color: #8a2be2;
+    }
+
+    .info-value {
+        flex: 1;
+        color: #e0e0e0;
+    }
+
+    .info-icon {
+        margin-right: 12px;
+        color: #8a2be2;
+        min-width: 24px;
+    }
+
+    /* Password section */
+    .password-section {
+        margin-top: 30px;
+        padding-top: 30px;
+        border-top: 1px solid #333;
+    }
+
+    .password-strength {
+        height: 5px;
+        border-radius: 2.5px;
+        margin-top: 0.25rem;
+        background: #333;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .password-strength-meter {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 0;
+        transition: width 0.3s;
+    }
+
+    .password-form .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .password-form label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #ccc;
+    }
+
+    .password-form .form-control {
+        background-color: #1a1a2a;
+        border: 1px solid #333;
+        color: #e0e0e0;
+        padding: 0.75rem;
+    }
+
+    .password-form .form-control:focus {
+        border-color: #8a2be2;
+        box-shadow: 0 0 0 0.2rem rgba(138, 43, 226, 0.25);
+    }
+
+    .text-danger {
+        color: #f87171;
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+    }
+
+    /* Style form fields with errors */
+    .is-invalid {
+        border-color: #f87171 !important;
+    }
+
+    .is-invalid:focus {
+        box-shadow: 0 0 0 0.2rem rgba(248, 113, 113, 0.25) !important;
+    }
+
+    .save-btn {
+        background: linear-gradient(135deg, #8a2be2, #4b0082);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s;
+        margin-top: 10px;
+    }
+
+    .save-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+    }
+
+    /* Scholarship wishlist styles */
+    .scholarship-card {
+        background: rgba(30, 30, 45, 0.7);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #333;
+        transition: all 0.3s;
+        position: relative;
+    }
+
+    .scholarship-card:hover {
+        border-color: #8a2be2;
+        background: rgba(40, 40, 55, 0.8);
+    }
+
+    .scholarship-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #e0e0e0;
+    }
+
+    .scholarship-details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 15px;
+        color: #aaa;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .detail-item i {
+        margin-right: 8px;
+        color: #8a2be2;
+    }
+
+    .scholarship-description {
+        color: #bbb;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    .card-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .action-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+    }
+
+    .action-btn i {
+        margin-right: 7px;
+    }
+
+    .edit-btn {
+        background: rgba(0, 191, 255, 0.1);
+        border: 1px solid #00bfff;
+        color: #00bfff;
+    }
+
+    .edit-btn:hover {
+        background: rgba(0, 191, 255, 0.2);
+    }
+
+    .remove-btn {
+        background: rgba(248, 113, 113, 0.1);
+        border: 1px solid #f87171;
+        color: #f87171;
+    }
+
+    .remove-btn:hover {
+        background: rgba(248, 113, 113, 0.2);
+    }
+
+    .apply-btn {
+        background: rgba(50, 205, 50, 0.1);
+        border: 1px solid #32cd32;
+        color: #32cd32;
+    }
+
+    .apply-btn:hover {
+        background: rgba(50, 205, 50, 0.2);
+    }
+
+    .status-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .status-active {
+        background: rgba(50, 205, 50, 0.1);
+        color: #32cd32;
+        border: 1px solid #32cd32;
+    }
+
+    .status-expired {
+        background: rgba(248, 113, 113, 0.1);
+        color: #f87171;
+        border: 1px solid #f87171;
+    }
+
+    /* Empty wishlist state */
+    .empty-wishlist {
+        text-align: center;
+        padding: 50px 20px;
+        color: #777;
+    }
+
+    .empty-wishlist i {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        color: #444;
+        opacity: 0.5;
+    }
+
+    .empty-wishlist h3 {
+        margin-bottom: 15px;
+        color: #aaa;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .dashboard-title {
+            font-size: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .scholarship-details {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .card-actions {
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            flex-direction: column;
+        }
+
+        .info-label {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Student Dashboard</h1>
+        <h3 class="lead">Welcome back, {{ user.username }}! </h3>
+    </div>
+
+    <div class="row">
+        <!-- Left Column - Profile Section -->
+        <div class="col-lg-6">
+            <div class="dashboard-card">
+                <h2 class="section-title"><i class="bi bi-person-circle"></i>Profile Information</h2>
+
+            <form method="post" action="">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="profile_update">
+                <div class="profile-info">
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-person-badge info-icon"></i>
+                            Username
+                        </div>
+                        <div class="info-value">
+                            {{ user.username }}
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-envelope info-icon"></i>
+                            Email
+                        </div>
+                        <div class="info-value">
+                            {{ user.email }}
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-card-heading info-icon"></i>
+                            Roll Number
+                        </div>
+                        <div class="info-value">
+                            {{ user.userprofile.roll_no }}
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-mortarboard info-icon"></i>
+                            Major
+                        </div>
+                        <div class="info-value">
+                            {{ profile_form.major }}
+                            {{ profile_form.major.errors }}
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="bi bi-collection info-icon"></i>
+                            Semester
+                        </div>
+                        <div class="info-value">
+                            {{ profile_form.semester }}
+                            {{ profile_form.semester.errors }}
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">
+                <i class="bi bi-save"></i> Update Profile
+                </button>
+            </form>
+
+                <div class="password-section">
+                    <h3 class="mb-4"><i class="bi bi-shield-lock"></i> Change Password</h3>
+                    <form class="password-form" method="post" action="{% url 'student_dashboard' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="password_change">
+                        <div class="form-group">
+                            <label for="id_old_password">Current Password</label>
+                            <input type="password" class="form-control  {% if password_form.old_password.errors %}is-invalid{% endif %}"  id="id_old_password" name="old_password" required>
+                            {% for error in password_form.old_password.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_new_password1">New Password</label>
+                            <input type="password" class="form-control {% if password_form.new_password1.errors %}is-invalid{% endif %}" id="id_new_password1" name="new_password1" required>
+                            <div class="password-strength">
+                                <div class="password-strength-meter" id="passwordStrengthMeter"></div>
+                            </div>
+                            {% for error in password_form.new_password1.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_new_password2">Confirm New Password</label>
+                            <input type="password" class="form-control {% if password_form.new_password2.errors %}is-invalid{% endif %}" id="id_new_password2" name="new_password2" required>
+                            {% for error in password_form.new_password2.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        {% if password_form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {% for error in password_form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary save-btn">Change Password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="dashboard-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="section-title"><i class="bi bi-bookmark-star"></i>Wishlist</h2>
+                    <span class="badge bg-primary">{{ wishlist_scholarships|length }} saved</span>
+                </div>
+
+                <div class="scholarship-list">
+                    {% if wishlist_scholarships %}
+                        {% for scholarship in wishlist_scholarships %}
+                        <div class="scholarship-card">
+                            <div class="scholarship-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">{{ scholarship.title }}</h5>
+                                <span class="badge deadline-badge {% if not scholarship.is_active %}bg-secondary{% endif %}">
+                                     Deadline: {{ scholarship.deadline|date:"M d, Y" }}
+                                </span>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <span class="badge {% if scholarship.is_active %}bg-success{% else %}bg-danger{% endif %}">
+                                    {% if scholarship.is_active %}Active{% else %}Expired{% endif %}
+                                </span>
+                            </div>
+
+                            <div class="d-flex flex-wrap mb-3">
+                                {% if scholarship.min_gpa %}
+                                    <span class="badge-custom me-2 mb-2">
+                                         <i class="bi bi-award me-1"></i> GPA {{ scholarship.min_gpa }}
+                                    </span>
+                                {% endif %}
+                                <span class="badge-custom me-2 mb-2">
+                                    <i class="bi bi-book me-1"></i> {{ scholarship.get_major_display }}
+                                </span>
+                                {% if scholarship.country %}
+                                    <span class="badge-custom me-2 mb-2">
+                                        <i class="bi bi-geo-alt me-1"></i> {{ scholarship.country }}
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <p class="card-text">{{ scholarship.description|truncatewords:30 }}</p>
+
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                            <small class="text-muted">
+                                <i class="bi bi-clock-history me-1"></i> Posted {{ scholarship.created_at|timesince }} ago
+                            </small>
+
+                            <div>
+
+                                <button class="btn btn-sm btn-outline-danger remove-btn me-2"
+                                        data-scholarship-id="{{ scholarship.id }}">
+                                    <i class="bi bi-trash me-1"></i> Remove
+                                </button>
+
+
+                                <a href="{% url 'scholarships:scholarship_detail' scholarship.id %}"
+                                   class="btn btn-sm btn-outline-secondary ms-2">
+                                    <i class="bi bi-eye me-1"></i> Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-wishlist">
+                        <i class="bi bi-bookmark-x"></i>
+                        <h3>No Scholarships</h3>
+                        <p>You haven't saved any scholarships yet.</p>
+                        <a href="{% url 'scholarships:list' %}" class="btn btn-primary mt-3">
+                            <i class="bi bi-search me-2 fs-6"></i>Browse Scholarships
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Password strength meter
+        const newPasswordInput = document.getElementById('id_new_password1');
+        const passwordStrengthMeter = document.getElementById('passwordStrengthMeter');
+
+        if (newPasswordInput && passwordStrengthMeter) {
+            newPasswordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                const requirements = {
+                    length: password.length >= 8,
+                    uppercase: /[A-Z]/.test(password),
+                    digit: /\d/.test(password),
+                    special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+                };
+
+                const metCount = Object.values(requirements).filter(Boolean).length;
+                strength = metCount * 25; // 4 requirements = 100%
+
+                passwordStrengthMeter.style.width = `${strength}%`;
+                passwordStrengthMeter.style.backgroundColor = strength < 50 ? '#f87171' :
+                    strength < 75 ? '#facc15' : '#4ade80';
+            });
+        }
+
+        // Scholarship removal functionality
+        document.querySelectorAll('.remove-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const scholarshipId = this.dataset.scholarshipId;
+                const card = this.closest('.scholarship-card');
+                const url = `/scholarships/remove/${scholarshipId}/`;
+
+                // Show loading state
+                const originalHTML = this.innerHTML;
+                this.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Removing...';
+                this.disabled = true;
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Animation for removal
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateX(100px)';
+                        card.style.transition = 'all 0.3s ease';
+
+                        setTimeout(() => {
+                            card.remove();
+
+                            // Update scholarship count
+                            const countBadge = document.querySelector('.badge.bg-primary');
+                            if (countBadge) {
+                                countBadge.textContent = data.wishlist_count + ' saved';
+                            }
+
+                            // Show empty state if no scholarships left
+                            if (data.wishlist_count === 0) {
+                                document.querySelector('.scholarship-list').innerHTML = `
+                                    <div class="empty-wishlist">
+                                        <i class="bi bi-bookmark-x"></i>
+                                        <h3>No Saved Scholarships</h3>
+                                        <p>You haven't saved any scholarships yet.</p>
+                                        <a href="{% url 'scholarships:list' %}" class="btn btn-primary mt-3">
+                                            <i class="bi bi-search me-2 fs-6"></i>Browse Scholarships
+                                        </a>
+                                    </div>
+                                `;
+                            }
+                        }, 300);
+                    } else {
+                        // Reset button state
+                        this.innerHTML = originalHTML;
+                        this.disabled = false;
+                        alert('Error: ' + (data.error || 'Failed to remove scholarship'));
+                    }
+                })
+                .catch(error => {
+                    // Reset button state
+                    this.innerHTML = originalHTML;
+                    this.disabled = false;
+                    console.error('Error:', error);
+                    alert('An error occurred: ' + error.message);
+                });
+            });
+        });
+
+        // Password form submission handler
+        document.querySelector('.password-form')?.addEventListener('submit', function(e) {
+            // Validation is handled by Django, so we just submit
+        });
+    });
+</script>
+{% endblock %}

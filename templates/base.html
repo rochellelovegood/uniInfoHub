@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
@@ -21,26 +20,91 @@
             --card-bg: #1e1e2d;
         }
 
-
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: #121212;
-            color: #e0e0e0;}
+            color: #e0e0e0;
+            padding-top: 70px; /* Space for fixed navbar */
+        }
         .navbar {
             background-color: #1a1a1a !important;
             border-bottom: 1px solid #333;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
 
         .navbar-brand {
             font-weight: 700;
             background: linear-gradient(90deg, #8a2be2, #00bfff);
-           
+            -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .theme-switcher {
             cursor: pointer;
             color: var(--text-accent);
+        }
+
+        /* Profile icon styles */
+        .profile-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 5px 10px;
+            border-radius: 30px;
+            text-decoration: none !important;
+        }
+
+        .profile-container:hover {
+            background: rgba(138, 43, 226, 0.1);
+        }
+
+        .profile-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .profile-name {
+            margin-left: 10px;
+            font-weight: 500;
+            color: #e0e0e0;
+        }
+
+        /* Logout link styling */
+        .logout-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-radius: 5px;
+        }
+
+        .logout-link:hover {
+            background: rgba(248, 113, 113, 0.1);
+            color: #f87171;
+        }
+
+        /* Hide username on small screens */
+        @media (max-width: 768px) {
+            .profile-name {
+                display: none;
+            }
+            .logout-link span {
+                display: none;
+            }
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -51,7 +115,7 @@
             <a class="" href="{% url 'home' %}">
                 <img src="{% static 'logo.png' %}" class="img-fluid" style="max-height: 40px;" alt="Logo">
             </a>
-            
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -65,32 +129,38 @@
                     {# Conditional display based on user authentication status #}
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Welcome, {{ user.username }}!</a> {# Display username #}
+                        <a class="profile-container" href="{% url 'student_dashboard' %}">
+                            <div class="profile-icon">
+                                <i class="bi bi-person"></i>
+                            </div>
+                            <span class="profile-name">{{ user.username }}</span>
+                        </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Logout</a> {# Use Django's 'logout' URL name #}
+
+                    <li class="nav-item ms-2">
+                        <a class="logout-link" href="{% url 'logout' %}">
+                            <i class="bi bi-box-arrow-right me-1"></i>
+                            <span>Logout</span>
+                        </a>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a> {# Use Django's 'login' URL name #}
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
                     </li>
                     <li class="nav-item">
-                        
-                        <a class="nav-link" href="{% url 'register' %}">Register</a> 
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
                     </li>
                     {% endif %}
-                    
-                    {# Add your other app navigation links here #}
-                    <!-- In your base.html or navigation template -->
 
+                    {# Add your other app navigation links here #}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'Homepage' %}">Scholarships</a> {# Link to your scholarships app list page #}
+                        <a class="nav-link" href="{% url 'scholarships:homepage' %}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Announcements</a> {# Placeholder for future app #}
+                        <a class="nav-link" href="#">Announcements</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact us</a> {# Placeholder for future app #}
+                        <a class="nav-link" href="#">Contact us</a>
                     </li>
                 </ul>
             </div>

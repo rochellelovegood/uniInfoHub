@@ -1,10 +1,13 @@
 # uniHub/scholarships/forms.py
 
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm,PasswordChangeForm
 from django.contrib.auth.models import User
-from .models import UserProfile,Scholarship 
-import re
+from .models import UserProfile,Scholarship
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+
+
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True, label="Email Address")
 
@@ -80,9 +83,7 @@ class UserRegisterForm(UserCreationForm):
 
 
     def save(self, commit=True):
-        """
-        Overrides the save method to create both the User and UserProfile.
-        """
+
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
         if commit:
@@ -98,6 +99,8 @@ class UserRegisterForm(UserCreationForm):
             }
             UserProfile.objects.create(**profile_data)
         return user
+
+
 class ScholarshipForm(forms.ModelForm):
     class Meta:
         model = Scholarship
@@ -126,3 +129,26 @@ class ScholarshipForm(forms.ModelForm):
             'is_active': 'Active Scholarship',
         }
         exclude = ['posted_by', 'created_at', 'updated_at', 'is_active']
+
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    def clean_new_password1(self):
+        password = self.cleaned_data.get('new_password1')
+        try:
+            # Validate against Django's password validators
+            validate_password(password, self.user)
+        except ValidationError as e:
+            # Add validation errors to the form
+            self.add_error('new_password1', e)
+        return password
+
+
+
+class StudentProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['major', 'semester']
+        widgets = {
+            'semester': forms.Select(choices=UserProfile.SEMESTER_CHOICES),
+            'major': forms.Select(choices=UserProfile.MAJOR_CHOICES),
+        }
