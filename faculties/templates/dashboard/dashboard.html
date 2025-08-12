@@ -223,6 +223,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" id="users-tab" data-bs-toggle="pill" href="#users" role="tab" aria-controls="users" aria-selected="false">
+                                <i class="bi bi-people me-2"></i> User
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" id="post-opportunity-tab" data-bs-toggle="pill" href="#post-opportunity" role="tab" aria-controls="post-opportunity" aria-selected="false">
                                 <i class="bi bi-node-plus me-2"></i> Post New
                             </a>
@@ -265,6 +270,104 @@
         
         <div class="col-md-9">
             <div class="tab-content" id="dashboardTabContent">
+               <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="card-title">User Management</h4>
+                            <a href="{% url 'faculties:create_user' %}" class="btn btn-futuristic">
+                                <i class="bi bi-plus-lg me-1"></i> Create New User
+                            </a>
+                        </div>
+            
+                        <!-- Debug Info -->
+                        <div class="alert alert-info mb-3">
+                            Displaying page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                            (Total users: {{ page_obj.paginator.count }})
+                        </div>
+            
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Student Info</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for profile in user_profiles %}
+                                    <tr>
+                                        <td>{{ profile.user.username }}</td>
+                                       
+                                        <td>{{ profile.user.email }}</td>
+                                        <td>
+                                            <span class="badge bg-{% if profile.role == 'STUDENT' %}info{% elif profile.role == 'FACULTY' %}warning{% else %}danger{% endif %}">
+                                                {{ profile.get_role_display }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if profile.role == 'STUDENT' %}
+                                                {{ profile.major }} - Sem {{ profile.semester }} ({{ profile.roll_no }})
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{% if profile.user.is_active %}success{% else %}secondary{% endif %}">
+                                                {% if profile.user.is_active %}Active{% else %}Inactive{% endif %}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="6" class="text-center">No users found</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            
+
+                        </div>
+                        <div class="alert alert-info">
+                            Total users in database: {{ page_obj.paginator.count }}<br>
+                            Users on this page: {{ user_profiles|length }}
+                        </div>
+            
+                        <!-- Pagination -->
+                        {% if page_obj.paginator.num_pages > 1 %}
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                                
+                                {% for num in page_obj.paginator.page_range %}
+                                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                                {% endfor %}
+                                
+                                {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
                 <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
                     <div class="card mb-4">
                         <div class="card-body">
