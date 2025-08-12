@@ -1,7 +1,10 @@
 # uniHub/scholarships/views.py
 
+
 from .models import Scholarship, UserProfile, Company, Testimonial
 from django.shortcuts import render, redirect,get_object_or_404
+from .models import Scholarship, UserProfile, Company, Testimonial, Announcement
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.db.models import Q
@@ -129,7 +132,7 @@ def custom_login(request):
                     login(request, user)
                     if user_actual_role == 'STUDENT':
                         messages.success(request, f'Welcome, {user.username} (Student)!')
-                        return redirect('scholarships:list')
+                        return redirect('scholarships:homepage')
                     elif user_actual_role == 'FACULTY':
                         messages.success(request, f'Welcome, {user.username} (Faculty)!')
                         return redirect('faculties:faculty_dashboard_home')
@@ -176,6 +179,7 @@ def scholarship_detail(request, pk):
         # Add any additional context you need
     }
     return render(request, 'scholarships/scholarship_detail.html', context)
+
 
 
 from django.contrib.auth import update_session_auth_hash
@@ -310,3 +314,16 @@ def remove_from_wishlist(request, scholarship_id):
             'success': False,
             'error': str(e)
         }, status=500)
+
+@login_required(login_url='login')
+def announcements_list(request):
+    """
+    Displays a list of all announcements in a card format for students.
+    """
+    announcements = Announcement.objects.all().order_by('-posted_at')
+    context = {
+        'announcements': announcements,
+        'title': 'Announcements'
+    }
+    return render(request, 'announcements_list.html', context)
+

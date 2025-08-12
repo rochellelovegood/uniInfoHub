@@ -8,6 +8,9 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
 
+
+from .models import UserProfile,Scholarship, Announcement
+import re
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True, label="Email Address")
 
@@ -131,6 +134,7 @@ class ScholarshipForm(forms.ModelForm):
         exclude = ['posted_by', 'created_at', 'updated_at', 'is_active']
 
 
+
 class CustomPasswordChangeForm(PasswordChangeForm):
     def clean_new_password1(self):
         password = self.cleaned_data.get('new_password1')
@@ -151,4 +155,16 @@ class StudentProfileForm(forms.ModelForm):
         widgets = {
             'semester': forms.Select(choices=UserProfile.SEMESTER_CHOICES),
             'major': forms.Select(choices=UserProfile.MAJOR_CHOICES),
+        }
+
+class AnnouncementForm(forms.ModelForm):
+    class Meta:
+        model = Announcement
+        fields = ['title', 'content', 'place', 'time']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+            'place': forms.TextInput(attrs={'class': 'form-control'}),
+            'time': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'})
+
         }

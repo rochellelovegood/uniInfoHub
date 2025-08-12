@@ -1,13 +1,18 @@
-# uniHub/faculty_dashboard/views.py
+# faculties/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
-from scholarships.forms import ScholarshipForm
-from scholarships.models import Scholarship, UserProfile
+from scholarships.forms import ScholarshipForm, AnnouncementForm
+from scholarships.models import Scholarship, UserProfile, Announcement
 from datetime import date
 from django.db.models import Q 
-
+from django.shortcuts import render, redirect
+from .forms import CompanyForm
+from scholarships.models import Company  
+from django.shortcuts import render, redirect
+from .forms import CompanyForm
+from django.shortcuts import render, get_object_or_404
 # This helper function is specific to faculty access, so it lives here
 def is_faculty_or_admin(user):
     """
@@ -30,13 +35,14 @@ def faculty_dashboard_home(request):
         messages.error(request, "You do not have permission to view this page.")
         return redirect('scholarships:list') # Redirect to the public list
 
-    # Retrieve all scholarships posted by the current user
-    # CORRECTION: The field is 'created_at', not 'posted_at'.
+  
     my_scholarships = Scholarship.objects.filter(posted_by=request.user).order_by('-created_at')
+    my_companies = Company.objects.all().order_by('display_order')
     
     context = {
         'page_title': 'Faculty Dashboard',
         'my_scholarships': my_scholarships,
+        
     }
     return render(request, 'dashboard/dashboard.html', context)
 
@@ -52,19 +58,7 @@ def post_scholarship(request):
         return redirect('scholarships:list')
 
     if request.method == 'POST':
-        # Pass request.POST and request.FILES to the form for file uploads
-        # IMPORTANT: The "Posted by: This field is required." error is happening here.
-        # This is because the 'posted_by' field is in your ScholarshipForm, but it's not
-        # present in the form data. To fix this, you must go to your ScholarshipForm
-        # in scholarships/forms.py and explicitly exclude 'posted_by' from the form fields.
-        #
-        # Example fix for scholarships/forms.py:
-        # class ScholarshipForm(forms.ModelForm):
-        #     class Meta:
-        #         model = Scholarship
-        #         fields = [...] # A list of all fields EXCEPT 'posted_by'
-        #         # OR:
-        #         # exclude = ['posted_by']
+       
         form = ScholarshipForm(request.POST, request.FILES)
         if form.is_valid():
             try:
@@ -245,3 +239,58 @@ def scholarship_list_view(request):
         'semester': request.GET.get('semester') 
     }
     return render(request, 'scholarships.html', context)
+
+
+
+@login_required(login_url='login')
+def post_company(request):
+    """
+    Handles posting a new company opportunity.
+    """
+    if request.method == 'POST':
+        # IMPORTANT: You must pass request.FILES for file uploads.
+        form = CompanyForm(request.POST, request.FILES) 
+        if form.is_valid():
+            company = form.save(commit=False)
+            company.user = request.user 
+            company.save()
+            return redirect('faculties:faculty_dashboard_home') 
+        else:
+            # For debugging, you can print the form errors to your console.
+            print("Form is not valid:", form.errors)
+    else:
+        form = CompanyForm()
+        
+    context = {'form': form, 'title': 'Post New Company'}
+    return render(request, 'dashboard/post_company.html', context)
+
+# In views.py
+def delete_company(request, pk):
+    company = get_object_or_404(Company, pk=pk)
+    if request.method == 'POST':
+        company.delete()
+        return redirect('faculties:faculty_dashboard')
+    return redirect('faculties:faculty_dashboard')
+# You'll need this import later to display them
+
+
+@login_required(login_url='login')
+def post_announcement(request):
+    """
+    Handles posting a new announcement.
+    """
+    if request.method == 'POST':
+        form = AnnouncementForm(request.POST)
+        if form.is_valid():
+            announcement = form.save(commit=False)
+            announcement.posted_by = request.user
+            announcement.save()
+            return redirect('faculties:faculty_dashboard_home') # Redirect to the dashboard
+    else:
+        form = AnnouncementForm()
+
+    context = {'form': form, 'title': 'Post New Announcement'}
+    # Template path is now in the faculties app
+    return render(request, 'dashboard/post_announcement.html', context)
+
+
