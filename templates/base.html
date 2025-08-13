@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Opportunity Hub{% endblock %}</title>
+    <title>{% block title %}UcsyerHub{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
@@ -25,6 +25,9 @@
             background-color: #121212;
             color: #e0e0e0;
             padding-top: 70px; /* Space for fixed navbar */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         .navbar {
             background-color: #1a1a1a !important;
@@ -106,6 +109,89 @@
                 display: none;
             }
         }
+
+        /* Footer styling */
+        footer {
+            margin-top: auto;
+            background-color: #1a1a1a;
+            border-top: 1px solid #333;
+        }
+        .footer-section {
+            padding: 50px 0 30px;
+        }
+        .footer-heading {
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #8a2be2, #00bfff);
+            border-radius: 3px;
+        }
+        .footer-logo {
+            max-height: 45px;
+            margin-bottom: 15px;
+        }
+        .footer-text {
+            color: #aaa;
+            line-height: 1.7;
+        }
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .contact-icon {
+            color: #8a2be2;
+            font-size: 1.2rem;
+            min-width: 30px;
+            padding-top: 3px;
+        }
+        .contact-details {
+            color: #aaa;
+        }
+        .contact-details strong {
+            color: #ddd;
+        }
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #2c2c3a;
+            color: #e0e0e0;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .social-icon:hover {
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
+            transform: translateY(-3px);
+            color: white;
+        }
+        .newsletter-form {
+            margin-top: 20px;
+        }
+        .copyright {
+            background-color: #121212;
+            padding: 20px 0;
+            border-top: 1px solid #333;
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -167,13 +253,99 @@
         </div>
     </nav>
 
-    <main>
+    <main class="flex-grow-1">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-dark py-4 mt-5 border-top border-dark">
-        <div class="container text-center">
-            <p class="mb-0 text-muted">&copy; {% now "Y" %} OpportunityHub. All rights reserved.</p>
+    <footer>
+        <div class="footer-section">
+            <div class="container">
+                <div class="row g-5">
+                    <!-- About Us -->
+                    <div class="col-md-4">
+                        <h4 class="footer-heading">About Us</h4>
+                        <p class="footer-text">
+                            UcsyerHub is a comprehensive platform connecting students with scholarships,
+                            internships and activities for Ucsyer. Our mission is to access scholarships and internships opportunities in time to achieve Ucsyer's academic dreams.
+                        </p>
+                    </div>
+
+                    <!-- Contact Us -->
+                    <div class="col-md-4">
+                        <h4 class="footer-heading">Contact Us</h4>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="bi bi-geo-alt-fill"></i>
+                            </div>
+                            <div class="contact-details">
+                                <strong>University Address</strong><br>
+                                No.(4) Main Road , Shwe Pyi Thar Township,<br>
+                                Yangon, Myanmar
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="bi bi-envelope-fill"></i>
+                            </div>
+                            <div class="contact-details">
+                                <strong>Email</strong><br>
+                                ucsy.admin@ucsy.edu.mm
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="bi bi-telephone-fill"></i>
+                            </div>
+                            <div class="contact-details">
+                                <strong>Studnet Affair </strong><br>
+                                (+95) 9 443440479
+                            </div>
+
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="bi bi-clock-fill"></i>
+                            </div>
+                            <div class="contact-details">
+                                <strong>Office Hours</strong><br>
+                                Monday - Friday, 09:00 AM - 04:00 PM
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Connect With Us -->
+                    <div class="col-md-4">
+                        <h4 class="footer-heading">Connect With Us</h4>
+                        <p class="footer-text">
+                            Follow us on social media to stay updated with the latest scholarship opportunities,
+                            announcements, and educational resources.
+                        </p>
+                        <div class="social-links">
+                            <a href="https://www.facebook.com/ucsygn/" class="social-icon">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <i class="bi bi-twitter"></i>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <i class="bi bi-linkedin"></i>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="copyright">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 text-center">
+                        <p class="mb-0 text-muted">&copy; {% now "Y" %}UcsyerHub. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
 
