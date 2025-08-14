@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-
+import datetime
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -192,3 +192,15 @@ class Scholarship(models.Model):
     class Meta:
         ordering = ['deadline', 'title']
         verbose_name_plural = "Scholarships"
+
+class Announcement(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    posted_at = models.DateTimeField(auto_now_add=True)
+    place = models.CharField(max_length=200, help_text="e.g., Auditorium A, Online")
+    time = models.TimeField(default=datetime.time(9, 0), help_text="Time of the event")
+   
+    posted_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='announcements')
+
+    def __str__(self):
+        return self.title
