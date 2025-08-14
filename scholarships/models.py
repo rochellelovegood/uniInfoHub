@@ -1,5 +1,5 @@
 # uniHub/scholarships/models.py
-
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -47,6 +47,8 @@ class UserProfile(models.Model):
         null=True,
         help_text="Your current semester. Required for Students."
     )
+
+
 
     def clean(self):
         if self.role == 'STUDENT':
@@ -176,6 +178,13 @@ class Scholarship(models.Model):
         auto_now=True,
         help_text="Automatically updates the date and time whenever the record is modified."
     )
+
+    wishlisted_by = models.ManyToManyField(
+        get_user_model(),
+        related_name='wishlist',
+        blank=True
+    )
+
 
     def __str__(self):
         return self.title

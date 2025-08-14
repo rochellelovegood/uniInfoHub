@@ -121,15 +121,13 @@
 
 
 <!-- Success Stories Carousel -->
-<section class="success-stories">
-    
-</section>
 
-<!-- Your existing scholarship listings section -->
+
+
 <div class="container my-5">
     {% if user.is_authenticated and is_faculty_or_admin %} {# Check if user is authenticated AND has faculty/admin role #}
     <div class="text-end mb-3">
-        <a href="{% url 'scholarships:post_scholarship' %}" class="btn btn-success">
+        <a href="#" class="btn btn-success">
             <i class="fas fa-plus-circle"></i> Post New Scholarship
         </a>
     </div>
@@ -240,6 +238,12 @@
                         <small class="text-muted">
                             <i class="bi bi-clock-history me-1"></i> Posted {{ scholarship.created_at|timesince }} ago
                         </small>
+
+                        <button class="btn btn-sm wishlist-btn {% if scholarship in request.user.wishlist.all %}btn-outline-secondary{% else %}btn-outline-primary{% endif %}" data-scholarship-id="{{ scholarship.id }}">
+                            <i class="bi {% if scholarship in request.user.wishlist.all %}bi-bookmark-heart-fill{% else %}bi-bookmark-heart{% endif %}"></i>
+                            {% if scholarship in request.user.wishlist.all %}Added{% else %}Add to wishlist{% endif %}
+                        </button>
+
                         <div>
                             {% if scholarship.brochure_pdf %}
                                 <a href="{{ scholarship.brochure_pdf.url }}" class="btn btn-sm btn-outline-secondary me-2" download>
@@ -281,6 +285,72 @@
         url.searchParams.set('sort', value);
         window.location.href = url.toString();
     }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    // Wishlist toggle
+    document.querySelectorAll('.wishlist-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const scholarshipId = this.dataset.scholarshipId;
+            const button = this;
+            const icon = button.querySelector('i');
+
+            fetch(`/scholarships/toggle-wishlist/${scholarshipId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Update button appearance
+                    if (data.action === 'added') {
+                        button.classList.replace('btn-outline-secondary', 'btn-outline-primary');
+                        icon.className = 'bi bi-bookmark-heart-fill';
+                        button.innerHTML = '<i class="bi bi-bookmark-heart-fill"></i> Added';
+                    } else {
+                        button.classList.replace('btn-outline-primary', 'btn-outline-secondary');
+                        icon.className = 'bi bi-bookmark-heart';
+                        button.innerHTML = '<i class="bi bi-bookmark-heart"></i> Add to wishlist';
+                    }
+                }
+            });
+        });
+    });
+
+    // CSRF helper function
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
 
 </script>
 {% endblock %}
