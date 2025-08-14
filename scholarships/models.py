@@ -197,7 +197,7 @@ class Announcement(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
     posted_at = models.DateTimeField(auto_now_add=True)
-    place = models.CharField(max_length=200, help_text="e.g., Auditorium A, Online")
+    place = models.CharField(max_length=200, help_text="e.g., Main hall, Online")
     time = models.TimeField(default=datetime.time(9, 0), help_text="Time of the event")
    
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='announcements')
