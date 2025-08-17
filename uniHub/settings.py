@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'scholarships',
     'faculties',  
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [
