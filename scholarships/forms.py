@@ -6,20 +6,13 @@ from django.contrib.auth.models import User
 from .models import UserProfile,Scholarship
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-
-
-
 from .models import UserProfile,Scholarship, Announcement
 import re
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True, label="Email Address")
-
-    # Add the new 'role' field to the form
     role = forms.ChoiceField(choices=UserProfile.ROLE_CHOICES, label="Role", initial='STUDENT',
                              widget=forms.RadioSelect) 
 
-    # Make roll_no not required by default in the form,
-    # we'll enforce it conditionally in clean()
     roll_no = forms.CharField(
         max_length=20, 
         label="Your Roll No",

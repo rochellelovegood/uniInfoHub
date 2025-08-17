@@ -30,6 +30,7 @@ urlpatterns = [
 
     path('student_dashboard/', student_dashboard, name='student_dashboard'),
 
+
 ]
 
 # Only serve media files in development mode

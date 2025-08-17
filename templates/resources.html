@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Scholarship Resources - UcsyerHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .resources-hero {
+        background: linear-gradient(135deg, rgba(74, 20, 140, 0.2) 0%, rgba(138, 43, 226, 0.15) 100%);
+        padding: 3rem 2rem;
+        border-radius: 15px;
+        border: 1px solid #333;
+        margin-top: 1rem;
+    }
+
+    .resource-section {
+        background-color: rgba(30, 30, 40, 0.7);
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 30px;
+        border: 1px solid #333;
+    }
+
+    .resource-card {
+        background-color: rgba(40, 40, 50, 0.7);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #444;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .resource-card:hover {
+        background-color: rgba(50, 50, 60, 0.8);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    .visit-btn {
+        background: linear-gradient(135deg, #8a2be2, #00bfff);
+        border: none;
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 500;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+        color: white;
+    }
+
+    .visit-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+        color: white;
+    }
+
+    .resource-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #8a2be2, #00bfff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+
+    .category-header {
+        position: relative;
+        padding-left: 20px;
+        margin-bottom: 25px;
+    }
+
+    .category-header::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 40px;
+        background: linear-gradient(135deg, #8a2be2, #00bfff);
+        border-radius: 4px;
+    }
+
+    .resource-counter {
+        background: rgba(30, 30, 40, 0.5);
+        border-radius: 30px;
+        padding: 5px 15px;
+        font-size: 0.9rem;
+        margin-left: 15px;
+        border: 1px solid #444;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Hero Section -->
+    <div class="resources-hero text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3">Scholarship Resources Hub</h1>
+        <p class="lead mb-4">Essential tools and guides for scholarship success</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="#english-resources" class="btn btn-primary px-4 py-2 rounded-pill">
+                <i class="bi bi-translate me-2"></i>English Preparation
+            </a>
+            <a href="#skill-resources" class="btn btn-success px-4 py-2 rounded-pill">
+                <i class="bi bi-lightning-charge me-2"></i>Skill Development
+            </a>
+        </div>
+    </div>
+
+    <!-- Resource Counter -->
+    <div class="d-flex justify-content-end mb-4">
+        <div class="d-flex align-items-center">
+            <span>Total resources:</span>
+            <span class="resource-counter">{{ english_resources.count|add:skill_resources.count }}</span>
+        </div>
+    </div>
+
+    <!-- English Preparation Resources -->
+    <section id="english-resources" class="resource-section">
+        <h2 class="category-header">English Preparation Resources</h2>
+        <p class="mb-4">Master English proficiency tests with these comprehensive resources and practice materials.</p>
+
+        <div class="row">
+            {% for resource in english_resources %}
+            <div class="col-md-4 mb-4">
+                <div class="resource-card">
+                    <div class="resource-icon mx-auto">
+                        <i class="{{ resource.icon_class }} fs-4"></i>
+                    </div>
+                    <h3>{{ resource.title }}</h3>
+                    <p>{{ resource.description }}</p>
+                    <a href="{{ resource.url }}" target="_blank" class="visit-btn mt-3">
+                        <i class="bi bi-box-arrow-up-right me-2"></i>Visit Resources
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Skill Development Sessions -->
+    <section id="skill-resources" class="resource-section">
+        <h2 class="category-header">Skill Development Sessions</h2>
+        <p class="mb-4">Enhance your skills with these workshops and learning resources.</p>
+
+        <div class="row">
+            {% for resource in skill_resources %}
+            <div class="col-md-4 mb-4">
+                <div class="resource-card">
+                    <div class="resource-icon mx-auto">
+                        <i class="{{ resource.icon_class }} fs-4"></i>
+                    </div>
+                    <h3>{{ resource.title }}</h3>
+                    <p>{{ resource.description }}</p>
+                    <a href="{{ resource.url }}" target="_blank" class="visit-btn mt-3">
+                        <i class="bi bi-box-arrow-up-right me-2"></i>Learn More
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}
+

@@ -19,3 +19,38 @@ class CompanyForm(forms.ModelForm):
             'logo': 'Company Logo',
             'display_order': 'Display Order (Lower numbers appear first)',
         }
+
+
+from django import forms
+from django.contrib.auth import get_user_model
+from scholarships.models import UserProfile
+from django.contrib.auth.models import User
+
+from django import forms
+from scholarships.models import UserProfile
+
+
+class FacultyUserEditForm(forms.Form):
+    username = forms.CharField(max_length=150)
+    email = forms.EmailField()
+    is_active = forms.BooleanField(required=False)
+    role = forms.ChoiceField(choices=UserProfile.ROLE_CHOICES)
+    roll_no = forms.CharField(max_length=20, required=False)
+    major = forms.ChoiceField(choices=UserProfile.MAJOR_CHOICES, required=False)
+    semester = forms.ChoiceField(choices=UserProfile.SEMESTER_CHOICES, required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.profile = kwargs.pop('profile', None)
+        super().__init__(*args, **kwargs)
+
+    def save(self, user, profile):
+        # Update user
+        user.username = self.cleaned_data['username']
+        user.email = self.cleaned_data['email']
+        user.is_active = self.cleaned_data['is_active']
+        user.save()
+        profile.role = self.cleaned_data['role']
+        profile.roll_no = self.cleaned_data['roll_no']
+        profile.major = self.cleaned_data['major']
+        profile.semester = self.cleaned_data['semester']
+        profile.save()

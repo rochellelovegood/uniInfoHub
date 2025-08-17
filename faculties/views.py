@@ -8,11 +8,18 @@ from scholarships.models import Scholarship, UserProfile, Announcement
 from datetime import date
 from django.db.models import Q 
 from django.shortcuts import render, redirect
-from .forms import CompanyForm
+from .forms import CompanyForm,FacultyUserEditForm
 from scholarships.models import Company  
 from django.shortcuts import render, redirect
 from .forms import CompanyForm
 from django.shortcuts import render, get_object_or_404
+from django.core.exceptions import PermissionDenied
+# ALWAYS use this pattern:
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
+
+
+
 # This helper function is specific to faculty access, so it lives here
 def is_faculty_or_admin(user):
     """
@@ -294,3 +301,66 @@ def post_announcement(request):
     return render(request, 'dashboard/post_announcement.html', context)
 
 
+@login_required
+def manage_users(request):
+    if not request.user.is_authenticated or not request.user.userprofile.role == 'FACULTY':
+        raise PermissionDenied
+
+    # Get all student users
+    student_users = User.objects.filter(
+        userprofile__role='STUDENT'
+    ).select_related('userprofile').order_by('-date_joined')
+
+    return render(request, 'manage_users.html', {
+        'users': student_users
+    })
+
+@login_required
+def edit_user(request, user_id):
+    # Ensure only faculty/admin can access
+    try:
+        profile = request.user.userprofile
+        if profile.role not in ['FACULTY', 'ADMIN']:
+            raise PermissionDenied
+    except UserProfile.DoesNotExist:
+        raise PermissionDenied
+
+    user = get_object_or_404(User, id=user_id)
+    user_profile = user.userprofile
+
+    # Prevent editing superusers
+    if user.is_superuser:
+        raise PermissionDenied("Cannot edit superuser accounts")
+
+    if request.method == 'POST':
+        # Create form with POST data and profile instance
+        form = FacultyUserEditForm(request.POST, profile=user_profile)
+        if form.is_valid():
+            form.save(user, user_profile)
+            return redirect('faculties:manage_users')
+    else:
+        # Initialize form with initial data
+        form = FacultyUserEditForm(profile=user_profile, initial={
+            'username': user.username,
+            'email': user.email,
+            'is_active': user.is_active,
+            'role': user_profile.role,
+            'roll_no': user_profile.roll_no,
+            'major': user_profile.major,
+            'semester': user_profile.semester,
+        })
+
+    return render(request, 'dashboard/edit_user.html', {
+        'form': form,
+        'user': user
+    })
+
+
+
+@login_required
+def delete_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    username = user.username
+    user.delete()
+    messages.success(request, f"Account {username} has been deleted successfully")
+    return redirect('faculties:manage_users')
