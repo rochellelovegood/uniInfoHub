@@ -208,11 +208,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item me-3">
-                        <span class="theme-switcher nav-link" id="themeToggle">
-                            <i class="bi bi-sun-fill"></i>
-                        </span>
-                    </li>
+
                     {# Conditional display based on user authentication status #}
                     {% if user.is_authenticated %}
                     <li class="nav-item">
@@ -239,7 +235,6 @@
                     </li>
                     {% endif %}
 
-                    {# Add your other app navigation links here #}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'scholarships:homepage' %}">Home</a>
                     </li>
@@ -314,7 +309,7 @@
                         </div>
                     </div>
 
-                    <!-- Connect With Us -->
+
                     <div class="col-md-4">
                         <h4 class="footer-heading">Connect With Us</h4>
                         <p class="footer-text">
