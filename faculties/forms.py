@@ -26,15 +26,11 @@ from django.contrib.auth import get_user_model
 from scholarships.models import UserProfile
 from django.contrib.auth.models import User
 
-from django import forms
-from scholarships.models import UserProfile
-
-
 class FacultyUserEditForm(forms.Form):
     username = forms.CharField(max_length=150)
     email = forms.EmailField()
     is_active = forms.BooleanField(required=False)
-    role = forms.ChoiceField(choices=UserProfile.ROLE_CHOICES)
+    role = forms.CharField(max_length=20, required=False)
     roll_no = forms.CharField(max_length=20, required=False)
     major = forms.ChoiceField(choices=UserProfile.MAJOR_CHOICES, required=False)
     semester = forms.ChoiceField(choices=UserProfile.SEMESTER_CHOICES, required=False)

@@ -1,25 +1,5 @@
 {% extends 'main.html' %}
 
-{% block extra_css %}
-<style>
-    /* Add to your existing style section */
-    .search-form {
-        width: 300px;
-    }
-
-    @media (max-width: 768px) {
-        .card-header .d-flex {
-            flex-direction: column;
-            align-items: flex-start !important;
-        }
-        .search-form {
-            width: 100%;
-            margin-top: 15px;
-        }
-    }
-</style>
-{% endblock %}
-
 {% block content %}
 <div class="container-fluid mt-4">
     <div class="card shadow">
@@ -156,6 +136,22 @@
     .pagination .page-item .page-link {
         border-radius: 4px;
         margin: 0 3px;
+    }
+
+
+    .search-form {
+        width: 300px;
+    }
+
+    @media (max-width: 768px) {
+        .card-header .d-flex {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+        .search-form {
+            width: 100%;
+            margin-top: 15px;
+        }
     }
 </style>
 
