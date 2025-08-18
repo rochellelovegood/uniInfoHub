@@ -319,3 +319,6 @@ def announcements_list(request):
     }
     return render(request, 'announcements_list.html', context)
 
+
+def resources(request):
+    return render(request, 'resources.html')

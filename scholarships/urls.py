@@ -19,5 +19,6 @@ urlpatterns = [
     path('toggle-wishlist/<int:scholarship_id>/',views.toggle_wishlist,name='toggle_wishlist'),
     path('remove/<int:scholarship_id>/',views.remove_from_wishlist,name='remove_from_wishlist'),
     path('announcements/', views.announcements_list, name='announcements_list'),
+    path('resources/', views.resources, name='resources'),
 
 ]
