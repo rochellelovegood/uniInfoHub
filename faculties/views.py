@@ -306,10 +306,19 @@ def manage_users(request):
     if not request.user.is_authenticated or not request.user.userprofile.role == 'FACULTY':
         raise PermissionDenied
 
-    # Get all student users
+    # Get search query from URL parameters
+    search_query = request.GET.get('roll_no', '').strip()
+
+    # Start with all student users
     student_users = User.objects.filter(
         userprofile__role='STUDENT'
     ).select_related('userprofile').order_by('-date_joined')
+
+    # Apply search filter if query exists
+    if search_query:
+        student_users = student_users.filter(
+            Q(userprofile__roll_no__icontains=search_query)
+        )
 
     return render(request, 'manage_users.html', {
         'users': student_users

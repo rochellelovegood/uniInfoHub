@@ -1,5 +1,25 @@
 {% extends 'main.html' %}
 
+{% block extra_css %}
+<style>
+    /* Add to your existing style section */
+    .search-form {
+        width: 300px;
+    }
+
+    @media (max-width: 768px) {
+        .card-header .d-flex {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+        .search-form {
+            width: 100%;
+            margin-top: 15px;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid mt-4">
     <div class="card shadow">
@@ -8,8 +28,18 @@
                 <h3 class="mb-0">
                     <i class="fas fa-users me-2"></i> Student Accounts Management
                 </h3>
-
-
+                <form method="GET" action="{% url 'faculties:manage_users' %}" class="d-flex search-form">
+                    <div class="input-group">
+                        <input type="text"
+                               name="roll_no"
+                               class="form-control"
+                               placeholder="Search by Roll No (YKPT-...)"
+                               value="{{ request.GET.roll_no }}">
+                        <button class="btn btn-light" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
 
             </div>
 

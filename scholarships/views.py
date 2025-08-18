@@ -56,13 +56,6 @@ def scholarship_list_view(request):
             Q(title__icontains=query) | Q(description__icontains=query) | Q(eligibility__icontains=query) | Q(country__icontains=query) | Q(major_department__icontains=query)
         ).distinct()
 
-    if min_gpa:
-        try:
-            min_gpa_float = float(min_gpa)
-            scholarships = scholarships.filter(Q(min_gpa__lte=min_gpa_float) | Q(min_gpa__isnull=True))
-        except ValueError:
-            pass
-
     if country:
         scholarships = scholarships.filter(country__icontains=country)
 
@@ -79,7 +72,6 @@ def scholarship_list_view(request):
     context = {
         'scholarships': scholarships,
         'query': query or '',
-        'min_gpa': min_gpa or '',
         'country': country or '',
         'major': major or '',
         'deadline_before_str': deadline_before_str or '',
