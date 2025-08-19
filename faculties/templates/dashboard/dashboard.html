@@ -27,23 +27,38 @@
 
 .company-card-admin {
     background: var(--primary-light);
-    padding: 1.5rem;
     border-radius: 8px;
+    padding: 1rem;
     transition: all 0.3s ease;
-    position: relative;
     border-left: 3px solid var(--accent-color);
-}
-
-.company-card-admin:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    max-width: 200px; /* ensures image stays inside */
+    overflow: hidden;  /* prevent overflow */
+    margin: 0.5rem;    /* spacing between cards */
 }
 
 .company-logo-grid {
-    height: 80px;
-    width: auto;
+    max-height: 100px;  /* constrain height */
+    max-width: 100%;    /* fit inside card */
     object-fit: contain;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+}
+
+.delete-company-form {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+.delete-company-form .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
 }
 
 .institution-name {
@@ -222,16 +237,8 @@
                                 <i class="bi bi-speedometer2 me-2"></i> Dashboard
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="users-tab" data-bs-toggle="pill" href="#users" role="tab" aria-controls="users" aria-selected="false">
-                                <i class="bi bi-people me-2"></i> User
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="post-opportunity-tab" data-bs-toggle="pill" href="#post-opportunity" role="tab" aria-controls="post-opportunity" aria-selected="false">
-                                <i class="bi bi-node-plus me-2"></i> Post New
-                            </a>
-                        </li>
+                        
+                        
                         <li class="nav-item">
                             <a class="nav-link" id="scholarships-tab" data-bs-toggle="pill" href="#scholarships" role="tab" aria-controls="scholarships" aria-selected="false">
                                 <i class="bi bi-award me-2"></i> Scholarships
@@ -242,7 +249,7 @@
                                 <i class="bi bi-megaphone me-2"></i> Announcements
                             </a>
                         </li>
-                       
+                      
                             <li class="nav-item">
                                 <a class="nav-link" id="internships-tab" data-bs-toggle="pill" href="#companies" role="tab" aria-controls="companies" aria-selected="false">
                                     <i class="bi bi-briefcase me-2"></i> Internships
@@ -258,7 +265,7 @@
                     <h5 class="card-title">Quick Stats</h5>
                     <div class="stat-card mb-3">
                         <h6 class="text-secondary">Total Posts</h6>
-                        <h3 class="text-accent">{{ my_scholarships.count }}+</h3> 
+                        <h3 class="text-accent">{{ total_count }}+</h3> 
                     </div>
                     <div class="stat-card">
                         <h6 class="text-secondary">Applications</h6>
@@ -270,128 +277,39 @@
         
         <div class="col-md-9">
             <div class="tab-content" id="dashboardTabContent">
-               <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h4 class="card-title">User Management</h4>
-                            <a href="{% url 'faculties:create_user' %}" class="btn btn-futuristic">
-                                <i class="bi bi-plus-lg me-1"></i> Create New User
-                            </a>
-                        </div>
-            
-                        <!-- Debug Info -->
-                        <div class="alert alert-info mb-3">
-                            Displaying page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                            (Total users: {{ page_obj.paginator.count }})
-                        </div>
-            
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Username</th>
-                                        
-                                        <th>Email</th>
-                                        <th>Role</th>
-                                        <th>Student Info</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for profile in user_profiles %}
-                                    <tr>
-                                        <td>{{ profile.user.username }}</td>
-                                       
-                                        <td>{{ profile.user.email }}</td>
-                                        <td>
-                                            <span class="badge bg-{% if profile.role == 'STUDENT' %}info{% elif profile.role == 'FACULTY' %}warning{% else %}danger{% endif %}">
-                                                {{ profile.get_role_display }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            {% if profile.role == 'STUDENT' %}
-                                                {{ profile.major }} - Sem {{ profile.semester }} ({{ profile.roll_no }})
-                                            {% else %}
-                                                -
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-{% if profile.user.is_active %}success{% else %}secondary{% endif %}">
-                                                {% if profile.user.is_active %}Active{% else %}Inactive{% endif %}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    {% empty %}
-                                    <tr>
-                                        <td colspan="6" class="text-center">No users found</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                            
-
-                        </div>
-                        <div class="alert alert-info">
-                            Total users in database: {{ page_obj.paginator.count }}<br>
-                            Users on this page: {{ user_profiles|length }}
-                        </div>
-            
-                        <!-- Pagination -->
-                        {% if page_obj.paginator.num_pages > 1 %}
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center">
-                                {% if page_obj.has_previous %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                {% endif %}
-                                
-                                {% for num in page_obj.paginator.page_range %}
-                                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                                </li>
-                                {% endfor %}
-                                
-                                {% if page_obj.has_next %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </nav>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
                 <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
                     <div class="card mb-4">
                         <div class="card-body">
                             <h4 class="card-title">Recent Activity</h4>
                             <div class="list-group">
-                                {% if my_scholarships %}
-                                    {% for scholarship in my_scholarships|slice:":3" %}
-                                        <a href="#" class="list-group-item list-group-item-action glow-effect">
+                                {% if recent_activities %}
+                                    {% for activity in recent_activities %}
+                                        <div class="list-group-item list-group-item-action glow-effect">
                                             <div class="d-flex w-100 justify-content-between">
-                                                <h6 class="mb-1">Scholarship Posted/Updated</h6>
-                                                <small class="text-muted">{{ scholarship.updated_at|timesince }} ago</small>
+                                                <h6 class="mb-1">
+                                                    {% if activity.type == 'scholarship' %}
+                                                        <i class="bi bi-award me-2"></i>Scholarship {{ activity.action|title }}
+                                                    {% elif activity.type == 'announcement' %}
+                                                        <i class="bi bi-megaphone me-2"></i>Announcement Posted
+                                                    {% elif activity.type == 'company' %}
+                                                        <i class="bi bi-briefcase me-2"></i>Internship Opportunity Updated
+                                                    {% endif %}
+                                                </h6>
+                                                <small class="text-muted">{{ activity.date|timesince }} ago</small>
                                             </div>
                                             <p class="mb-1">"{{ scholarship.title }}" - {% if scholarship.updated_at != scholarship.posted_at %}updated{% else %}posted{% endif %}</p>
                                         </a>
                                     {% endfor %}
                                 {% else %}
                                     <div class="alert alert-info" role="alert">
-                                        No recent activity. Post your first scholarship!
+                                        No recent activity. Post your first opportunity!
                                     </div>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
                     
+                    <!-- Rest of your dashboard content remains the same -->
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Quick Actions</h4>
@@ -402,8 +320,9 @@
                                         Post Scholarship
                                     </a>
                                 </div>
+                            
                                 <div class="col-md-4">
-                                    <a href="#announcements" data-bs-toggle="pill" class="btn btn-futuristic w-100 py-3 glow-effect">
+                                    <a href="{% url 'faculties:post_announcement' %}" class="btn btn-futuristic w-100 py-3 glow-effect">
                                         <i class="bi bi-megaphone fs-4 d-block mb-2"></i>
                                         Post Announcement
                                     </a>
@@ -418,51 +337,7 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="tab-pane fade" id="post-opportunity" role="tabpanel" aria-labelledby="post-opportunity-tab">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Post New Opportunity</h4>
-                            <form method="post" action="{% url 'faculties:post_scholarship' %}" enctype="multipart/form-data" class="django-form-container">
-                                {% csrf_token %}
-                                
-                                {% if form.non_field_errors %}
-                                    <div class="alert alert-danger" role="alert">
-                                        {% for error in form.non_field_errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-
-                                <div class="mb-3">
-                                    <label class="form-label">Opportunity Type</label>
-                                    <select class="form-select">
-                                        <option selected>Scholarship</option>
-                                    </select>
-                                </div>
-                                
-                                {% for field in form %}
-                                    <div class="mb-3">
-                                        {{ field.label_tag }}
-                                        {{ field }}
-                                        {% if field.help_text %}
-                                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                                        {% endif %}
-                                        {% if field.errors %}
-                                            <ul class="errorlist">
-                                                {% for error in field.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                        {% endif %}
-                                    </div>
-                                {% endfor %}
-
-                                <button type="submit" class="btn btn-futuristic glow-effect">Publish Opportunity</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+             
                 
                 <div class="tab-pane fade" id="scholarships" role="tabpanel" aria-labelledby="scholarships-tab">
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -524,7 +399,8 @@
                         </div>
                     {% endif %}
                 </div>
-                
+               
+
                 <div class="tab-pane fade" id="announcements" role="tabpanel" aria-labelledby="announcements-tab">
                     <div class="card">
                         <div class="card-body">
@@ -547,19 +423,16 @@
                     <div class="company-grid">
                         {% if my_companies %}
                             {% for company in my_companies %}
-                            <div class="company-card-admin position-relative">
-                                <a href="{{ company.website }}" target="_blank" class="text-decoration-none">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="company-logo-grid">
-                                        <div class="institution-name mt-3">
-                                            {{ company.name }}
-                                        </div>
-                                    </div>
+                            <div class="company-card-admin d-flex flex-column align-items-center position-relative p-3">
+                                <a href="{{ company.website }}" target="_blank" class="text-decoration-none w-100 text-center">
+                                    <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="company-logo-grid mb-2">
+                                    <div class="institution-name mt-2">{{ company.name }}</div>
                                 </a>
+                    
                                 <!-- Delete Button -->
                                 <form method="post" 
                                       action="{% url 'faculties:delete_company' company.id %}" 
-                                      class="position-absolute top-0 end-0 mt-2 me-2">
+                                      class="delete-company-form">
                                     {% csrf_token %}
                                     <button type="submit" 
                                             class="btn btn-sm btn-outline-danger"
@@ -575,6 +448,7 @@
                             </div>
                         {% endif %}
                     </div>
+                    
                 </div>
             </div>
         </div>

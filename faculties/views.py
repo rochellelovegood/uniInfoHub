@@ -5,21 +5,21 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from scholarships.models import UserProfile
-from .forms import UserCreationForm, UserEditForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
 from scholarships.forms import ScholarshipForm, AnnouncementForm
-from scholarships.models import Scholarship, UserProfile, Announcement
+from scholarships.models import Scholarship, UserProfile, Announcement,Company
 from datetime import date
 from django.db.models import Q 
 from django.shortcuts import render, redirect
 from .forms import CompanyForm
-from scholarships.models import Company  
 from django.shortcuts import render, redirect
-from .forms import CompanyForm
+from .forms import CompanyForm, ResourceForm
 from django.shortcuts import render, get_object_or_404
+from itertools import chain
+from operator import attrgetter
 # This helper function is specific to faculty access, so it lives here
 def is_faculty_or_admin(user):
     """
@@ -32,27 +32,41 @@ def is_faculty_or_admin(user):
         return False
     return user.userprofile.role in ['FACULTY', 'ADMIN']
 
-
 @login_required
 def faculty_dashboard_home(request):
-    """
-    The main landing page for the faculty dashboard.
-    """
-    if not is_faculty_or_admin(request.user):
-        messages.error(request, "You do not have permission to view this page.")
-        return redirect('scholarships:list') # Redirect to the public list
-
-  
-    my_scholarships = Scholarship.objects.filter(posted_by=request.user).order_by('-created_at')
-    my_companies = Company.objects.all().order_by('display_order')
-    
-    context = {
-        'page_title': 'Faculty Dashboard',
-        'my_scholarships': my_scholarships,
+    # Only faculty can access this dashboard
+    if not hasattr(request.user, 'userprofile') or request.user.userprofile.role != 'FACULTY':
+        # You'll want to handle this with a redirect or an error page
+        return redirect('home')
         
-    }
-    return render(request, 'dashboard/dashboard.html', context)
+    # Fetch recent objects, filtered by the current user
+    # Note: We can't filter the Company model by user as it lacks the 'posted_by' field.
+    my_scholarships = Scholarship.objects.filter(posted_by=request.user)
+    for obj in my_scholarships:
+        obj.type = 'Scholarship'
+    
+    my_announcements = Announcement.objects.filter(posted_by=request.user)
+    for obj in my_announcements:
+        obj.type = 'Announcement'
 
+    all_activities = sorted(
+        chain(my_scholarships, my_announcements),
+        key=attrgetter('created_at'), # The Announcement model has this field.
+        reverse=True
+    )
+
+    # Get the 3 most recent activities for the dashboard
+    recent_activities = all_activities[:3]
+  
+    context = {
+        'my_scholarships': my_scholarships,
+        'my_companies': Company.objects.all(), # Keep this for the separate tab
+        'recent_activities': recent_activities, 
+      
+        'total_count':   my_scholarships.count() + my_announcements.count()+ Company.objects.count(),
+    }
+
+    return render(request, 'dashboard/dashboard.html', context)
 
 @login_required
 def post_scholarship(request):

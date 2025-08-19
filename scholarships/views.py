@@ -228,6 +228,7 @@ def remove_from_wishlist(request, scholarship_id):
 # ---------- Announcements ----------
 @login_required(login_url='login')
 def announcements_list(request):
-    announcements = Announcement.objects.all().order_by('-posted_at')
+    announcements = Announcement.objects.all().order_by('-created_at')
     context = {'announcements': announcements, 'title': 'Announcements'}
     return render(request, 'announcements_list.html', context)
+

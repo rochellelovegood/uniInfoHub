@@ -196,7 +196,7 @@ class Scholarship(models.Model):
 class Announcement(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
-    posted_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     place = models.CharField(max_length=200, help_text="e.g., Auditorium A, Online")
     time = models.TimeField(default=datetime.time(9, 0), help_text="Time of the event")
    
@@ -204,3 +204,4 @@ class Announcement(models.Model):
 
     def __str__(self):
         return self.title
+    

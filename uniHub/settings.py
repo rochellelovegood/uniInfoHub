@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'scholarships',
     'faculties',  
-    'widget_tweaks'
+    'widget_tweaks',
+    'crispy_forms',
+    
 ]
 
 MIDDLEWARE = [
@@ -135,3 +137,5 @@ LOGIN_URL = 'scholarships:login'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
