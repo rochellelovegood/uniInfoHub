@@ -164,13 +164,13 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="semesterFilter" class="form-label ">Semester</label>
-                    <select class="form-select" id="semesterFilter" name="semester">
-                     <option value="">All Semesters</option>
-                    {% for sem_val, sem_label in semester_choices %}
-                        <option value="{{ sem_val }}" {% if sem_val|stringformat:"d" == semester|stringformat:"d" %}selected{% endif %}>{{ sem_label }}</option>
-                     {% endfor %}
-                     </select>
+                    <label for="levelFilter" class="form-label ">Academic Level</label>
+                    <select class="form-select" id="levelFilter" name="level">
+                        <option value="">All Academic Levels</option>
+                    {% for level_val, level_label in academic_level_choices %}
+                        <option value="{{ level_val }}" {% if level_val == selected_level %}selected{% endif %}>{{ level_label }}</option>
+                    {% endfor %}
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label for="major" class="form-label">Major</label>

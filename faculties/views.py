@@ -16,7 +16,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from .forms import CompanyForm
 from django.shortcuts import render, redirect
-from .forms import CompanyForm, ResourceForm
+from .forms import CompanyForm
 from django.shortcuts import render, get_object_or_404
 from itertools import chain
 from operator import attrgetter
@@ -60,7 +60,8 @@ def faculty_dashboard_home(request):
   
     context = {
         'my_scholarships': my_scholarships,
-        'my_companies': Company.objects.all(), # Keep this for the separate tab
+        'my_companies': Company.objects.all(), 
+        'my_announcements': my_announcements,# Keep this for the separate tab
         'recent_activities': recent_activities, 
       
         'total_count':   my_scholarships.count() + my_announcements.count()+ Company.objects.count(),
@@ -255,9 +256,8 @@ def scholarship_list_view(request):
         'min_gpa': min_gpa or '',
         'country': country or '',
         'major': major or '',
-        'deadline_before_str': deadline_before_str or '', # Pass back current deadline filter
-        'semester_choices': UserProfile.SEMESTER_CHOICES, # <--- Pass this to the template
-        'semester': request.GET.get('semester') 
+        'deadline_before_str': deadline_before_str or '' # Pass back current deadline filter
+        
     }
     return render(request, 'scholarships.html', context)
 
@@ -316,3 +316,24 @@ def post_announcement(request):
 
 def is_faculty(user):
     return user.userprofile.role in ['FACULTY', 'ADMIN']
+
+def edit_announcement(request, pk):
+    announcement = get_object_or_404(Announcement, pk=pk, posted_by=request.user)
+    if request.method == 'POST':
+        form = AnnouncementForm(request.POST, instance=announcement)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Announcement updated successfully!')
+            return redirect('faculties:faculty_dashboard_home')
+    else:
+        form = AnnouncementForm(instance=announcement)
+    
+    return render(request, 'dashboard/post_announcement.html', {'form': form, 'announcement': announcement})
+
+# NEW: View to handle deleting an announcement
+def delete_announcement(request, pk):
+    announcement = get_object_or_404(Announcement, pk=pk, posted_by=request.user)
+    if request.method == 'POST':
+        announcement.delete()
+        messages.success(request, 'Announcement deleted successfully.')
+    return redirect('faculties:faculty_dashboard_home')
