@@ -5,21 +5,21 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from scholarships.models import UserProfile
-from .forms import UserCreationForm, UserEditForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
 from scholarships.forms import ScholarshipForm, AnnouncementForm
-from scholarships.models import Scholarship, UserProfile, Announcement
+from scholarships.models import Scholarship, UserProfile, Announcement,Company
 from datetime import date
 from django.db.models import Q 
 from django.shortcuts import render, redirect
 from .forms import CompanyForm
-from scholarships.models import Company  
 from django.shortcuts import render, redirect
 from .forms import CompanyForm
 from django.shortcuts import render, get_object_or_404
+from itertools import chain
+from operator import attrgetter
 # This helper function is specific to faculty access, so it lives here
 def is_faculty_or_admin(user):
     """
@@ -32,27 +32,42 @@ def is_faculty_or_admin(user):
         return False
     return user.userprofile.role in ['FACULTY', 'ADMIN']
 
-
 @login_required
 def faculty_dashboard_home(request):
-    """
-    The main landing page for the faculty dashboard.
-    """
-    if not is_faculty_or_admin(request.user):
-        messages.error(request, "You do not have permission to view this page.")
-        return redirect('scholarships:list') # Redirect to the public list
-
-  
-    my_scholarships = Scholarship.objects.filter(posted_by=request.user).order_by('-created_at')
-    my_companies = Company.objects.all().order_by('display_order')
-    
-    context = {
-        'page_title': 'Faculty Dashboard',
-        'my_scholarships': my_scholarships,
+    # Only faculty can access this dashboard
+    if not hasattr(request.user, 'userprofile') or request.user.userprofile.role != 'FACULTY':
+        # You'll want to handle this with a redirect or an error page
+        return redirect('home')
         
-    }
-    return render(request, 'dashboard/dashboard.html', context)
+    # Fetch recent objects, filtered by the current user
+    # Note: We can't filter the Company model by user as it lacks the 'posted_by' field.
+    my_scholarships = Scholarship.objects.filter(posted_by=request.user)
+    for obj in my_scholarships:
+        obj.type = 'Scholarship'
+    
+    my_announcements = Announcement.objects.filter(posted_by=request.user)
+    for obj in my_announcements:
+        obj.type = 'Announcement'
 
+    all_activities = sorted(
+        chain(my_scholarships, my_announcements),
+        key=attrgetter('created_at'), # The Announcement model has this field.
+        reverse=True
+    )
+
+    # Get the 3 most recent activities for the dashboard
+    recent_activities = all_activities[:3]
+  
+    context = {
+        'my_scholarships': my_scholarships,
+        'my_companies': Company.objects.all(), 
+        'my_announcements': my_announcements,# Keep this for the separate tab
+        'recent_activities': recent_activities, 
+      
+        'total_count':   my_scholarships.count() + my_announcements.count()+ Company.objects.count(),
+    }
+
+    return render(request, 'dashboard/dashboard.html', context)
 
 @login_required
 def post_scholarship(request):
@@ -241,9 +256,8 @@ def scholarship_list_view(request):
         'min_gpa': min_gpa or '',
         'country': country or '',
         'major': major or '',
-        'deadline_before_str': deadline_before_str or '', # Pass back current deadline filter
-        'semester_choices': UserProfile.SEMESTER_CHOICES, # <--- Pass this to the template
-        'semester': request.GET.get('semester') 
+        'deadline_before_str': deadline_before_str or '' # Pass back current deadline filter
+        
     }
     return render(request, 'scholarships.html', context)
 
@@ -303,105 +317,23 @@ def post_announcement(request):
 def is_faculty(user):
     return user.userprofile.role in ['FACULTY', 'ADMIN']
 
-@login_required
-@user_passes_test(is_faculty)
-def user_management(request):
-    user_profiles = UserProfile.objects.all().order_by('-user__date_joined')
-    # Pagination
-    print("All UserProfiles:", UserProfile.objects.all().values_list('user__username', flat=True))
-    paginator = Paginator(user_profiles, 10)  # Show 10 users per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    
-    return render(request, 'dashboard/faculty_dashboard_home.html', {
-        'user_profiles': page_obj,
-        'page_obj': page_obj,
-    })
-
-@login_required
-@user_passes_test(is_faculty)
-def create_user(request):
+def edit_announcement(request, pk):
+    announcement = get_object_or_404(Announcement, pk=pk, posted_by=request.user)
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            UserProfile.objects.create(
-                user=user,
-                role=form.cleaned_data['role'],
-                roll_no=form.cleaned_data.get('roll_no'),
-                major=form.cleaned_data.get('major'),
-                semester=form.cleaned_data.get('semester')
-            )
-            messages.success(request, 'User created successfully!')
-            return redirect('faculties:user_management')
-    else:
-        form = UserCreationForm()
-    
-    return render(request, 'create_user.html', {'form': form})
-
-@login_required
-@user_passes_test(is_faculty)
-def edit_user(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    user_profile = user.userprofile
-    
-    if request.method == 'POST':
-        form = UserEditForm(request.POST, instance=user)
+        form = AnnouncementForm(request.POST, instance=announcement)
         if form.is_valid():
             form.save()
-            user_profile.role = form.cleaned_data['role']
-            
-            if form.cleaned_data['role'] == 'STUDENT':
-                user_profile.roll_no = form.cleaned_data['roll_no']
-                user_profile.major = form.cleaned_data['major']
-                user_profile.semester = form.cleaned_data['semester']
-            else:
-                user_profile.roll_no = None
-                user_profile.major = None
-                user_profile.semester = None
-            
-            user_profile.save()
-            messages.success(request, 'User updated successfully!')
-            return redirect('faculties:user_management')
+            messages.success(request, 'Announcement updated successfully!')
+            return redirect('faculties:faculty_dashboard_home')
     else:
-        initial_data = {
-            'role': user_profile.role,
-            'roll_no': user_profile.roll_no,
-            'major': user_profile.major,
-            'semester': user_profile.semester,
-        }
-        form = UserEditForm(instance=user, initial=initial_data)
+        form = AnnouncementForm(instance=announcement)
     
-    return render(request, 'faculties/edit_user.html', {
-        'form': form,
-        'user': user
-    })
+    return render(request, 'dashboard/post_announcement.html', {'form': form, 'announcement': announcement})
 
-@login_required
-@user_passes_test(is_faculty)
-def activate_user(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    user.is_active = True
-    user.save()
-    messages.success(request, f'User {user.username} has been activated.')
-    return redirect('faculties:user_management')
-
-@login_required
-@user_passes_test(is_faculty)
-def deactivate_user(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    user.is_active = False
-    user.save()
-    messages.warning(request, f'User {user.username} has been deactivated.')
-    return redirect('faculties:user_management')
-
-@login_required
-@user_passes_test(is_faculty)
-def reset_password(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    new_password = User.objects.make_random_password()
-    user.set_password(new_password)
-    user.save()
-    messages.info(request, f'Password for {user.username} has been reset to: {new_password}')
-    return redirect('faculties:user_management')
-
+# NEW: View to handle deleting an announcement
+def delete_announcement(request, pk):
+    announcement = get_object_or_404(Announcement, pk=pk, posted_by=request.user)
+    if request.method == 'POST':
+        announcement.delete()
+        messages.success(request, 'Announcement deleted successfully.')
+    return redirect('faculties:faculty_dashboard_home')

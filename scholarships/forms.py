@@ -1,22 +1,37 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User
-from .models import UserProfile, Scholarship, Announcement
+# Make sure to import the models
+from .models import UserProfile, Scholarship, Announcement, ACADEMIC_LEVEL_CHOICES
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True, label="Email Address")
-    role = forms.ChoiceField(choices=UserProfile.ROLE_CHOICES, label="Role", initial='STUDENT',
-                             widget=forms.RadioSelect) 
+    role = forms.ChoiceField(
+        choices=UserProfile.ROLE_CHOICES,
+        label="Role",
+        initial='STUDENT',
+        widget=forms.RadioSelect
+    )
     roll_no = forms.CharField(
-        max_length=20, 
+        max_length=20,
         label="Your Roll No",
         required=False,
         help_text="Must start with 'YKPT' (e.g., YKPT-XXXX). Required for Students."
     )
-    major = forms.ChoiceField(choices=UserProfile.MAJOR_CHOICES, label="Major", required=False)
-    semester = forms.ChoiceField(choices=UserProfile.SEMESTER_CHOICES, label="Semester", required=False)
+    major = forms.ChoiceField(
+        choices=UserProfile.MAJOR_CHOICES,
+        label="Major",
+        required=False
+    )
+    # CORRECTED: Replaced the duplicate major field with the new academic_level field.
+    academic_level = forms.ChoiceField(
+        choices=ACADEMIC_LEVEL_CHOICES,
+        label="Academic Level",
+        required=False,
+        help_text="Undergraduate or Graduate. Required for Students."
+    )
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -42,19 +57,22 @@ class UserRegisterForm(UserCreationForm):
         role = cleaned_data.get('role')
         roll_no = cleaned_data.get('roll_no')
         major = cleaned_data.get('major')
-        semester = cleaned_data.get('semester')
+        # UPDATED: Getting the new academic_level data
+        academic_level = cleaned_data.get('academic_level')
 
         if role == 'STUDENT':
             if not roll_no:
                 self.add_error('roll_no', "Roll number is required for Students.")
             if not major:
                 self.add_error('major', "Major is required for Students.")
-            if not semester:
-                self.add_error('semester', "Semester is required for Students.")
+            # UPDATED: Now checks academic_level instead of semester
+            if not academic_level:
+                self.add_error('academic_level', "Academic level is required for Students.")
         else:
             cleaned_data['roll_no'] = None
             cleaned_data['major'] = None
-            cleaned_data['semester'] = None
+            # UPDATED: Clears academic_level for non-students
+            cleaned_data['academic_level'] = None
 
         return cleaned_data
 
@@ -68,7 +86,8 @@ class UserRegisterForm(UserCreationForm):
                 'role': self.cleaned_data['role'],
                 'roll_no': self.cleaned_data.get('roll_no'),
                 'major': self.cleaned_data.get('major'),
-                'semester': self.cleaned_data.get('semester'),
+                # UPDATED: Passes the new academic_level data to the UserProfile
+                'academic_level': self.cleaned_data.get('academic_level'),
             }
             UserProfile.objects.create(**profile_data)
         return user
@@ -77,6 +96,7 @@ class UserRegisterForm(UserCreationForm):
 class ScholarshipForm(forms.ModelForm):
     class Meta:
         model = Scholarship
+        # Note: '__all__' automatically includes the new 'level' field
         fields = '__all__'
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Scholarship Title'}),
@@ -87,21 +107,25 @@ class ScholarshipForm(forms.ModelForm):
             'min_gpa': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'e.g., 3.0'}),
             'country': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., USA, Myanmar'}),
             'major': forms.Select(attrs={'class': 'form-select'}),
-            'major_department': forms.Select(attrs={'class': 'form-select'}),
+           
+            'level': forms.Select(attrs={'class': 'form-select'}),
             'brochure_pdf': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'banner_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            # REMOVED: major_department widget, as it does not exist in the model
         }
         labels = {
             'min_gpa': 'Minimum GPA (Optional)',
             'country': 'Target Country (Optional)',
             'major': 'Target Major',
-            'major_department': 'Specific Department/Field (Optional)',
+            # ADDED: New label for the 'level' field
+            'level': 'Academic Level',
             'brochure_pdf': 'Brochure PDF (Optional)',
             'banner_image': 'Banner Image (Optional)',
             'is_active': 'Active Scholarship',
+            # REMOVED: major_department label, as it does not exist in the model
         }
-        exclude = ['posted_by', 'created_at', 'updated_at', 'is_active']
+        exclude = ['posted_by', 'created_at', 'updated_at', 'is_active', 'wishlisted_by']
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):
@@ -117,10 +141,12 @@ class CustomPasswordChangeForm(PasswordChangeForm):
 class StudentProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['major', 'semester']
+        # UPDATED: Replaced 'semester' with 'academic_level'
+        fields = ['major', 'academic_level']
         widgets = {
-            'semester': forms.Select(choices=UserProfile.SEMESTER_CHOICES),
             'major': forms.Select(choices=UserProfile.MAJOR_CHOICES),
+            # UPDATED: Replaced 'semester' widget with 'academic_level'
+            'academic_level': forms.Select(choices=ACADEMIC_LEVEL_CHOICES),
         }
 
 
