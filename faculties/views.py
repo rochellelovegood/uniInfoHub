@@ -20,6 +20,13 @@ from .forms import CompanyForm
 from django.shortcuts import render, get_object_or_404
 from itertools import chain
 from operator import attrgetter
+from django.core.exceptions import PermissionDenied
+# ALWAYS use this pattern:
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
+
+
+
 # This helper function is specific to faculty access, so it lives here
 def is_faculty_or_admin(user):
     """
@@ -57,7 +64,7 @@ def faculty_dashboard_home(request):
 
     # Get the 3 most recent activities for the dashboard
     recent_activities = all_activities[:3]
-  
+ 
     context = {
         'my_scholarships': my_scholarships,
         'my_companies': Company.objects.all(), 
@@ -80,7 +87,7 @@ def post_scholarship(request):
         return redirect('scholarships:list')
 
     if request.method == 'POST':
-       
+        
         form = ScholarshipForm(request.POST, request.FILES)
         if form.is_valid():
             try:
@@ -307,8 +314,8 @@ def post_announcement(request):
             announcement.posted_by = request.user
             announcement.save()
             return redirect('faculties:faculty_dashboard_home') # Redirect to the dashboard
-    else:
-        form = AnnouncementForm()
+        else:
+            form = AnnouncementForm()
 
     context = {'form': form, 'title': 'Post New Announcement'}
     # Template path is now in the faculties app

@@ -1,3 +1,6 @@
+# uniHub/scholarships/views.py
+
+
 from .models import Scholarship, UserProfile, Company, Testimonial, Announcement, ACADEMIC_LEVEL_CHOICES
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
@@ -245,3 +248,7 @@ def announcements_list(request):
     announcements = Announcement.objects.all().order_by('-created_at')
     context = {'announcements': announcements, 'title': 'Announcements'}
     return render(request, 'announcements_list.html', context)
+
+
+def resources(request):
+    return render(request, 'resources.html')

@@ -1,4 +1,5 @@
 # uniHub/scholarships/models.py
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.auth.models import User
@@ -12,7 +13,11 @@ ACADEMIC_LEVEL_CHOICES = [
 ]
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='userprofile'
+    )
 
     ROLE_CHOICES = [
         ('STUDENT', 'Student'),

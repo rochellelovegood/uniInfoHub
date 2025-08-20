@@ -22,5 +22,5 @@ urlpatterns = [
 
     # From main branch
     path('announcements/', views.announcements_list, name='announcements_list'),
-   
+    path('resources/', views.resources, name='resources'),
 ]

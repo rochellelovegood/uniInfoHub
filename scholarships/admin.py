@@ -17,3 +17,5 @@ class TestimonialAdmin(admin.ModelAdmin):
     list_editable = ('display_order',)
     search_fields = ('student_name', 'company')
     ordering = ('display_order',)
+
+

@@ -17,5 +17,8 @@ urlpatterns = [
     path('post-announcement/', views.post_announcement, name='post_announcement'),
     path('edit-announcement/<int:pk>/', views.edit_announcement, name='edit_announcement'),
     path('delete-announcement/<int:pk>/', views.delete_announcement, name='delete_announcement'),
+    path('manage_users/', views.manage_users, name='manage_users'),
+    path('users/edit/<int:user_id>/', views.edit_user, name='edit_user'),
+    path('users/delete/<int:user_id>/', views.delete_user, name='delete_user'),
+    
 ]
-

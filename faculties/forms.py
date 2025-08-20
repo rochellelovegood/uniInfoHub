@@ -25,3 +25,27 @@ class CompanyForm(forms.ModelForm):
         }
 
 
+class FacultyUserEditForm(forms.Form):
+    username = forms.CharField(max_length=150)
+    email = forms.EmailField()
+    is_active = forms.BooleanField(required=False)
+    role = forms.CharField(max_length=20, required=False)
+    roll_no = forms.CharField(max_length=20, required=False)
+    major = forms.ChoiceField(choices=UserProfile.MAJOR_CHOICES, required=False)
+    semester = forms.ChoiceField(choices=UserProfile.SEMESTER_CHOICES, required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.profile = kwargs.pop('profile', None)
+        super().__init__(*args, **kwargs)
+
+    def save(self, user, profile):
+        # Update user
+        user.username = self.cleaned_data['username']
+        user.email = self.cleaned_data['email']
+        user.is_active = self.cleaned_data['is_active']
+        user.save()
+        profile.role = self.cleaned_data['role']
+        profile.roll_no = self.cleaned_data['roll_no']
+        profile.major = self.cleaned_data['major']
+        profile.semester = self.cleaned_data['semester']
+        profile.save()

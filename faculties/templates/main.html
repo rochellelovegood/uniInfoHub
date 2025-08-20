@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
@@ -8,23 +7,26 @@
     <title>{% block title %}Opportunity Hub{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            :root {
-        --primary-dark: #0a192f;
-        --primary-light: #172a45;
-        --accent-color: #64ffda;
-        --text-primary: #ccd6f6;
-        --text-secondary: #8892b0;
-    }
-    
-}
-
+            --primary-dark: #0a192f;
+            --primary-light: #172a45;
+            --accent-color: #64ffda;
+            --text-primary: #ccd6f6;
+            --text-secondary: #8892b0;
+        }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: #0a192f;
-            color: #ffffff;}
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
         .navbar {
             background-color: #0e0000 !important;
             border-bottom: 1px solid #333;
@@ -33,7 +35,7 @@
         .navbar-brand {
             font-weight: 700;
             background: linear-gradient(90deg, #8a2be2, #00bfff);
-           
+            -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -41,69 +43,119 @@
             cursor: pointer;
             color: var(--text-accent);
         }
+
+        /* New styles for footer positioning */
+        #page-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+            padding-bottom: 2rem;
+        }
+
+        .copyright {
+            background-color: #121212;
+            padding: 20px 0;
+            border-top: 1px solid #333;
+        }
+
+        /* Preserve your existing card styling */
+        .card {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            color: white;
+            padding: 1rem 1.5rem;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+
+        .action-btn {
+            min-width: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="" href="{% url 'home' %}">
-                <img src="{% static 'logo.png' %}" class="img-fluid" style="max-height: 40px;" alt="Logo">
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item me-3">
-                        <span class="theme-switcher nav-link" id="themeToggle">
-                            <i class="bi bi-sun-fill"></i>
-                        </span>
-                    </li>
-                    {# Conditional display based on user authentication status #}
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Welcome, {{ user.username }}!</a> {# Display username #}
-                    </li>
-                    
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a> {# Use Django's 'login' URL name #}
-                    </li>
-                    <li class="nav-item">
-                        
-                        <a class="nav-link" href="{% url 'register' %}">Register</a> 
-                    </li>
-                    {% endif %}
-                    
-                    {# Add your other app navigation links here #}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'faculties:faculty_dashboard_home' %}">Dashboard</a> {# Link to your scholarships app list page #}
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'faculties:scholarship_list' %}">Scholarships</a> {# Placeholder for future app #}
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Resources</a> {# Placeholder for future app #}
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Logout</a> {# Use Django's 'logout' URL name #}
-                    </li>
-                </ul>
+    <div id="page-container">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="" href="{% url 'home' %}">
+                    <img src="{% static 'logo.png' %}" class="img-fluid" style="max-height: 40px;" alt="Logo">
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item me-3">
+                            <span class="theme-switcher nav-link" id="themeToggle">
+                                <i class="bi bi-sun-fill"></i>
+                            </span>
+                        </li>
+                        {# Conditional display based on user authentication status #}
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Welcome, {{ user.username }}!</a> {# Display username #}
+                        </li>
+
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a> {# Use Django's 'login' URL name #}
+                        </li>
+                        <li class="nav-item">
+
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
+                        {% endif %}
+
+                        {# Add your other app navigation links here #}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'faculties:faculty_dashboard_home' %}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'faculties:scholarship_list' %}">Scholarships</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'faculties:manage_users' %}">Accounts</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+        <main>
+            {% block content %}{% endblock %}
+        </main>
 
-    <footer class="bg-dark py-4 mt-5 border-top border-dark">
-        <div class="container text-center">
-            <p class="mb-0 text-muted">&copy; {% now "Y" %} OpportunityHub. All rights reserved.</p>
-        </div>
-    </footer>
+        <footer>
+            <div class="copyright">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-12 text-center">
+                            <p class="mb-0 text-muted">&copy; {% now "Y" %}UcsyerHub. All rights reserved.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>

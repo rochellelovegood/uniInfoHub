@@ -128,10 +128,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
-LOGIN_REDIRECT_URL = 'scholarship:homepage' # Or 'scholarships:list' or any other URL name
-LOGOUT_REDIRECT_URL = 'home' # Or 'scholarships:list'
-STATIC_URL = '/static/' # This is the URL prefix for static files (e.g., yoursite.com/static/images/rocket.png)
-
+LOGIN_REDIRECT_URL = 'scholarship:homepage'
+LOGOUT_REDIRECT_URL = 'home'
+STATIC_URL = '/static/'
 LOGIN_URL = 'scholarships:login'
 # Define additional directories where static files are located (your project-level static folder)
 STATICFILES_DIRS = [

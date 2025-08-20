@@ -150,54 +150,6 @@
         margin: 0 auto;
     }
 
-    /* Footer */
-    footer {
-        background: var(--primary-light) !important;
-        padding: 2rem 0 !important;
-        border-top: 1px solid rgba(100, 255, 218, 0.1);
-    }
-
-    .footer-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-    }
-
-    .footer-logo {
-        font-size: 1.8rem;
-        font-weight: 700;
-        background: linear-gradient(to right, var(--text-primary), var(--accent-color));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
-
-    .social-links {
-        display: flex;
-        gap: 15px;
-    }
-
-    .social-links a {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: rgba(100, 255, 218, 0.1);
-        color: var(--accent-color);
-        transition: all 0.3s;
-    }
-
-    .social-links a:hover {
-        background: var(--gradient-primary);
-        color: var(--primary-dark);
-        transform: translateY(-3px);
-    }
-
     /* Responsive Adjustments */
     @media (max-width: 992px) {
         .hero-title {
@@ -328,24 +280,6 @@
         </div>
     </div>
 </section>
-
-<!-- Footer -->
-<footer>
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-logo">
-                <i class="fas fa-graduation-cap me-2"></i>
-                OpportunityHub
-            </div>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-linkedin-in"></i></a>
-            </div>
-        </div>
-    </div>
-</footer>
 {% endblock %}
 
 {% block extra_js %}
