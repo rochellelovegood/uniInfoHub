@@ -23,7 +23,7 @@ def is_faculty_or_admin(user):
 
 def home_view(request):
     context = {
-        'page_title': 'Unlock Your Potential',
+        'page_title': 'UCSYer Hub - Home',
         'intro_message': 'Discover scholarships, events, and resources to propel your academic and career journey at UCSY.',
         'is_faculty_or_admin': is_faculty_or_admin(request.user) if request.user.is_authenticated else False,
     }
