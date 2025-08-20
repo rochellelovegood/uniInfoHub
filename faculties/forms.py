@@ -1,10 +1,12 @@
 # faculties/forms.py
 from django import forms
-from scholarships.models import Company,ACADEMIC_LEVEL_CHOICES 
-from django import forms
+from scholarships.models import Company, ACADEMIC_LEVEL_CHOICES, UserProfile
+
+# Note: The following imports are not used in the provided code,
+# but might be needed for other forms in this file.
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
-from scholarships.models import UserProfile
+
 
 class CompanyForm(forms.ModelForm):
 
@@ -48,8 +50,12 @@ class FacultyUserEditForm(forms.Form):
         user.email = self.cleaned_data['email']
         user.is_active = self.cleaned_data['is_active']
         user.save()
+        
+        # Update user profile with cleaned data from the form
         profile.role = self.cleaned_data['role']
         profile.roll_no = self.cleaned_data['roll_no']
         profile.major = self.cleaned_data['major']
-        profile.semester = self.cleaned_data['semester']
+        
+        # Corrected: Save the 'academic_level' field to the profile
+        profile.academic_level = self.cleaned_data['academic_level']
         profile.save()

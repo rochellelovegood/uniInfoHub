@@ -43,17 +43,13 @@ def homepage(request):
 @login_required
 def scholarship_list_view(request):
     scholarships = Scholarship.objects.all()
-
-    # Get filter and sort parameters
     search_query = request.GET.get('search')
     min_gpa = request.GET.get('min_gpa')
     deadline_filter = request.GET.get('deadline')
     major = request.GET.get('major')
-    # Use the new 'level' filter name
+
     academic_level = request.GET.get('level')
     sort_by = request.GET.get('sort', 'deadline') # Default sort by deadline
-
-    # Apply filters
     if search_query:
         scholarships = scholarships.filter(
             Q(title__icontains=search_query) |

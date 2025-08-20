@@ -302,25 +302,25 @@ def delete_company(request, pk):
 # You'll need this import later to display them
 
 
-@login_required(login_url='login')
+@login_required
+@user_passes_test(is_faculty_or_admin)
 def post_announcement(request):
-    """
-    Handles posting a new announcement.
-    """
     if request.method == 'POST':
         form = AnnouncementForm(request.POST)
         if form.is_valid():
             announcement = form.save(commit=False)
             announcement.posted_by = request.user
             announcement.save()
-            return redirect('faculties:faculty_dashboard_home') # Redirect to the dashboard
+            form.save_m2m() # Required if your form has ManyToMany fields like 'tags'
+            messages.success(request, 'Announcement posted successfully.')
+            return redirect('faculties:faculty_dashboard_home')
         else:
-            form = AnnouncementForm()
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = AnnouncementForm()
 
     context = {'form': form, 'title': 'Post New Announcement'}
-    # Template path is now in the faculties app
     return render(request, 'dashboard/post_announcement.html', context)
-
 def is_faculty(user):
     return user.userprofile.role in ['FACULTY', 'ADMIN']
 
@@ -400,7 +400,7 @@ def edit_user(request, user_id):
             'role': user_profile.role,
             'roll_no': user_profile.roll_no,
             'major': user_profile.major,
-            'semester': user_profile.semester,
+            
         })
 
     return render(request, 'dashboard/edit_user.html', {
