@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
-
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
@@ -21,10 +20,9 @@ from django.shortcuts import render, get_object_or_404
 from itertools import chain
 from operator import attrgetter
 from django.core.exceptions import PermissionDenied
-# ALWAYS use this pattern:
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-
+from django.views.decorators.http import require_POST
 
 
 # This helper function is specific to faculty access, so it lives here
@@ -407,6 +405,7 @@ def edit_user(request, user_id):
     })
 
 @login_required
+@require_POST
 def delete_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     username = user.username
