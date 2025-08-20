@@ -64,12 +64,24 @@
         <h2 class="text-center mb-4">
             {% if announcement %}Edit Announcement{% else %}Post a New Announcement{% endif %}
         </h2>
-        <form method="post">
+        
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            
             {% for field in form %}
                 <div class="mb-3">
                     <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    
+                    {% if field.name == 'attachment' and announcement.attachment %}
+                        <p class="text-muted">Currently attached file: 
+                            <a href="{{ announcement.attachment.url }}" target="_blank">
+                                {{ announcement.attachment.name|cut:"announcements/attachments/" }}
+                            </a>
+                        </p>
+                    {% endif %}
+                    
                     {{ field }}
+                    
                     {% if field.help_text %}
                         <small class="form-text text-muted">{{ field.help_text }}</small>
                     {% endif %}
@@ -78,6 +90,7 @@
                     {% endfor %}
                 </div>
             {% endfor %}
+            
             <div class="d-grid mt-4">
                 <button type="submit" class="btn btn-futuristic">
                     {% if announcement %}Update Announcement{% else %}Publish Announcement{% endif %}

@@ -215,6 +215,10 @@
     .action-buttons form {
         display: inline;
     }
+    .action-buttons .delete-form {
+    z-index: 100; /* Ensure this is a high value to stack on top */
+    position: relative; /* Give the element a stacking context */
+}
     
     .btn-outline-danger:hover {
         background-color: #dc3545;
