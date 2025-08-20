@@ -4,7 +4,6 @@
 {% block title %}Post New Scholarship | uniHub{% endblock %}
 
 {% block extra_css %}
-<!-- Bootstrap Icons are used in your template but not loaded. We'll add them here. -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
     /* Your custom styles have been preserved and moved here */
@@ -98,21 +97,13 @@
         box-shadow: 0 0 0 0.25rem rgba(138, 43, 226, 0.25) !important;
     }
     
-    .form-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 1rem;
-        margin-top: 2rem;
+    .btn-gradient-primary {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
     }
     
-    .btn {
-        border-radius: 8px;
-        padding: 0.75rem 1.5rem;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-    }
-
     .btn-post {
         background: var(--primary-gradient);
         color: white;
@@ -147,7 +138,6 @@
     .form-group .is-invalid {
         border-color: #dc3545 !important;
     }
-    
 </style>
 {% endblock %}
 
@@ -162,7 +152,6 @@
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             
-            <!-- Display non-field errors at the top -->
             {% if form.non_field_errors %}
                 <div class="alert alert-danger" role="alert">
                     {% for error in form.non_field_errors %}
@@ -171,7 +160,6 @@
                 </div>
             {% endif %}
 
-            <!-- Django Messages Container (retained from the previous version for consistency) -->
             {% if messages %}
                 <div class="mb-6">
                     {% for message in messages %}
@@ -182,7 +170,6 @@
                 </div>
             {% endif %}
             
-            <!-- Basic Information Section -->
             <div class="form-section">
                 <h3><i class="bi bi-info-circle me-2"></i>Basic Information</h3>
                 {% for field in form %}
@@ -201,7 +188,6 @@
                 {% endfor %}
             </div>
 
-            <!-- Eligibility Criteria -->
             <div class="form-section">
                 <h3><i class="bi bi-check-circle me-2"></i>Eligibility Criteria</h3>
                 <div class="row">
@@ -244,9 +230,18 @@
                     {% endfor %}
                     <small class="form-text">{{ form.major.help_text|safe }}</small>
                 </div>
+                
+                
+                <div class="form-group">
+                    <label for="{{ form.academic_level.id_for_label }}">{{ form.level.label }}</label>
+                    {{ form.level }}
+                    {% for error in form.level.errors %}
+                        <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
+                    {% endfor %}
+                    <small class="form-text">{{ form.level.help_text|safe }}</small>
+                </div>
             </div>
 
-            <!-- Dates & Files -->
             <div class="form-section">
                 <h3><i class="bi bi-calendar-event me-2"></i>Important Dates & Files</h3>
                 <div class="row">
@@ -298,7 +293,6 @@
                 </div>
             </div>
 
-            <!-- Form Actions -->
             <div class="form-actions">
                 <button type="submit" class="btn btn-post">
                     <i class="bi bi-send-check me-2"></i> Post Scholarship

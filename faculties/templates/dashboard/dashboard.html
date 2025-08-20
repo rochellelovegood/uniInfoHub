@@ -27,23 +27,38 @@
 
 .company-card-admin {
     background: var(--primary-light);
-    padding: 1.5rem;
     border-radius: 8px;
+    padding: 1rem;
     transition: all 0.3s ease;
-    position: relative;
     border-left: 3px solid var(--accent-color);
-}
-
-.company-card-admin:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    max-width: 200px; /* ensures image stays inside */
+    overflow: hidden;  /* prevent overflow */
+    margin: 0.5rem;    /* spacing between cards */
 }
 
 .company-logo-grid {
-    height: 80px;
-    width: auto;
+    max-height: 100px;  /* constrain height */
+    max-width: 100%;    /* fit inside card */
     object-fit: contain;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+}
+
+.delete-company-form {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+.delete-company-form .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
 }
 
 .institution-name {
@@ -195,6 +210,21 @@
     .action-buttons .btn {
         z-index: 10;
     }
+
+    /* Fix for delete buttons */
+    .action-buttons form {
+        display: inline;
+    }
+    
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .btn-outline-accent:hover {
+        background-color: var(--accent-color);
+        color: var(--primary-dark);
+    }
 </style>
 {% endblock %}
 
@@ -206,7 +236,7 @@
                 <h1><i class="bi bi-cpu me-2"></i> Faculty Dashboard</h1>
                 <p class="mb-0 text-muted">Welcome back, Prof. {{ user.username }}!</p>
             </div>
-            <img src="{% static 'faculty_icon.png' %}" alt="Faculty" style="height: 80px; filter: hue-rotate(120deg);">
+            
         </div>
     </div>
 </div>
@@ -222,11 +252,9 @@
                                 <i class="bi bi-speedometer2 me-2"></i> Dashboard
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="post-opportunity-tab" data-bs-toggle="pill" href="#post-opportunity" role="tab" aria-controls="post-opportunity" aria-selected="false">
-                                <i class="bi bi-node-plus me-2"></i> Post New
-                            </a>
-                        </li>
+                        
+                        
+                        
                         <li class="nav-item">
                             <a class="nav-link" id="scholarships-tab" data-bs-toggle="pill" href="#scholarships" role="tab" aria-controls="scholarships" aria-selected="false">
                                 <i class="bi bi-award me-2"></i> Scholarships
@@ -237,7 +265,7 @@
                                 <i class="bi bi-megaphone me-2"></i> Announcements
                             </a>
                         </li>
-                       
+                    
                             <li class="nav-item">
                                 <a class="nav-link" id="internships-tab" data-bs-toggle="pill" href="#companies" role="tab" aria-controls="companies" aria-selected="false">
                                     <i class="bi bi-briefcase me-2"></i> Internships
@@ -253,7 +281,7 @@
                     <h5 class="card-title">Quick Stats</h5>
                     <div class="stat-card mb-3">
                         <h6 class="text-secondary">Total Posts</h6>
-                        <h3 class="text-accent">{{ my_scholarships.count }}+</h3> 
+                        <h3 class="text-accent">{{ total_count }}+</h3> 
                     </div>
                     <div class="stat-card">
                         <h6 class="text-secondary">Applications</h6>
@@ -270,19 +298,27 @@
                         <div class="card-body">
                             <h4 class="card-title">Recent Activity</h4>
                             <div class="list-group">
-                                {% if my_scholarships %}
-                                    {% for scholarship in my_scholarships|slice:":3" %}
-                                        <a href="#" class="list-group-item list-group-item-action glow-effect">
+                                {% if recent_activities %}
+                                    {% for activity in recent_activities %}
+                                        <div class="list-group-item list-group-item-action glow-effect">
                                             <div class="d-flex w-100 justify-content-between">
-                                                <h6 class="mb-1">Scholarship Posted/Updated</h6>
-                                                <small class="text-muted">{{ scholarship.updated_at|timesince }} ago</small>
+                                                <h6 class="mb-1">
+                                                    {% if activity.type == 'scholarship' %}
+                                                        <i class="bi bi-award me-2"></i>Scholarship {{ activity.action|title }}
+                                                    {% elif activity.type == 'announcement' %}
+                                                        <i class="bi bi-megaphone me-2"></i>Announcement Posted
+                                                    {% elif activity.type == 'company' %}
+                                                        <i class="bi bi-briefcase me-2"></i>Internship Opportunity Updated
+                                                    {% endif %}
+                                                </h6>
+                                                <small class="text-muted">{{ activity.date|timesince }} ago</small>
                                             </div>
-                                            <p class="mb-1">"{{ scholarship.title }}" - {% if scholarship.updated_at != scholarship.posted_at %}updated{% else %}posted{% endif %}</p>
-                                        </a>
+                                            <p class="mb-1">"{{ activity.title }}" - {{ activity.action }}</p>
+                                        </div>
                                     {% endfor %}
                                 {% else %}
                                     <div class="alert alert-info" role="alert">
-                                        No recent activity. Post your first scholarship!
+                                        No recent activity. Post your first opportunity!
                                     </div>
                                 {% endif %}
                             </div>
@@ -299,8 +335,9 @@
                                         Post Scholarship
                                     </a>
                                 </div>
+                            
                                 <div class="col-md-4">
-                                    <a href="#announcements" data-bs-toggle="pill" class="btn btn-futuristic w-100 py-3 glow-effect">
+                                    <a href="{% url 'faculties:post_announcement' %}" class="btn btn-futuristic w-100 py-3 glow-effect">
                                         <i class="bi bi-megaphone fs-4 d-block mb-2"></i>
                                         Post Announcement
                                     </a>
@@ -315,51 +352,7 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="tab-pane fade" id="post-opportunity" role="tabpanel" aria-labelledby="post-opportunity-tab">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Post New Opportunity</h4>
-                            <form method="post" action="{% url 'faculties:post_scholarship' %}" enctype="multipart/form-data" class="django-form-container">
-                                {% csrf_token %}
-                                
-                                {% if form.non_field_errors %}
-                                    <div class="alert alert-danger" role="alert">
-                                        {% for error in form.non_field_errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-
-                                <div class="mb-3">
-                                    <label class="form-label">Opportunity Type</label>
-                                    <select class="form-select">
-                                        <option selected>Scholarship</option>
-                                    </select>
-                                </div>
-                                
-                                {% for field in form %}
-                                    <div class="mb-3">
-                                        {{ field.label_tag }}
-                                        {{ field }}
-                                        {% if field.help_text %}
-                                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                                        {% endif %}
-                                        {% if field.errors %}
-                                            <ul class="errorlist">
-                                                {% for error in field.errors %}
-                                                    <li>{{ error }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                        {% endif %}
-                                    </div>
-                                {% endfor %}
-
-                                <button type="submit" class="btn btn-futuristic glow-effect">Publish Opportunity</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+            
                 
                 <div class="tab-pane fade" id="scholarships" role="tabpanel" aria-labelledby="scholarships-tab">
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -382,19 +375,17 @@
                                         </p>
                                     </div>
                                     <div class="action-buttons">
-                                        <!-- Edit Button -->
                                         <a href="{% url 'faculties:edit_scholarship' scholarship.id %}" 
-                                           class="btn btn-sm btn-outline-accent"
-                                           data-bs-toggle="tooltip" 
-                                           data-bs-placement="top" 
-                                           title="Edit Scholarship">
-                                            <i class="bi bi-pencil-square"></i>
+                                            class="btn btn-sm btn-outline-accent"
+                                            data-bs-toggle="tooltip" 
+                                            data-bs-placement="top" 
+                                            title="Edit Scholarship">
+                                             <i class="bi bi-pencil-square"></i>
                                         </a>
                                         
-                                        <!-- Delete Button -->
                                         <form method="post" 
                                               action="{% url 'faculties:delete_scholarship' scholarship.id %}" 
-                                              class="d-inline">
+                                              class="d-inline delete-form">
                                             {% csrf_token %}
                                             <button type="submit" 
                                                     class="btn btn-sm btn-outline-danger"
@@ -422,16 +413,58 @@
                     {% endif %}
                 </div>
                 
+
                 <div class="tab-pane fade" id="announcements" role="tabpanel" aria-labelledby="announcements-tab">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Manage Announcements</h4>
-                            <p>This section is for managing announcements. You'll need to create an `Announcement` model, form, and views for this.</p>
-                            <a href="{% url 'faculties:post_announcement' %}" class="btn btn-futuristic glow-effect">
-                                <i class="bi bi-plus-lg me-1"></i> Add Announcement
-                            </a>
-                        </div>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4>Manage Your Announcements</h4>
+                        <a href="{% url 'faculties:post_announcement' %}" class="btn btn-futuristic glow-effect">
+                            <i class="bi bi-plus-lg me-1"></i> Add New Announcement
+                        </a>
                     </div>
+                    {% if my_announcements %}
+                        {% for announcement in my_announcements %}
+                        <div class="card opportunity-card glow-effect">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5>{{ announcement.title }}</h5>
+                                        <p class="text-muted mb-2">
+                                            Posted: {{ announcement.created_at|date:"Y-m-d" }}
+                                        </p>
+                                    </div>
+                                    <div class="action-buttons">
+                                        <a href="{% url 'faculties:edit_announcement' announcement.id %}" 
+                                            class="btn btn-sm btn-outline-accent"
+                                            data-bs-toggle="tooltip" 
+                                            data-bs-placement="top" 
+                                            title="Edit Announcement">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        
+                                        <form method="post" 
+                                              action="{% url 'faculties:delete_announcement' announcement.id %}" 
+                                              class="d-inline delete-form">
+                                            {% csrf_token %}
+                                            <button type="submit" 
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    data-bs-toggle="tooltip" 
+                                                    data-bs-placement="top" 
+                                                    title="Delete Announcement"
+                                                    onclick="return confirm('Are you sure you want to delete this announcement?')">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <p>{{ announcement.content|truncatechars:150 }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-info" role="alert">
+                            You haven't posted any announcements yet. Click "Add New Announcement" to get started!
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="tab-pane fade" id="companies" role="tabpanel" aria-labelledby="companies-tab">
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -444,19 +477,15 @@
                     <div class="company-grid">
                         {% if my_companies %}
                             {% for company in my_companies %}
-                            <div class="company-card-admin position-relative">
-                                <a href="{{ company.website }}" target="_blank" class="text-decoration-none">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="company-logo-grid">
-                                        <div class="institution-name mt-3">
-                                            {{ company.name }}
-                                        </div>
-                                    </div>
+                            <div class="company-card-admin d-flex flex-column align-items-center position-relative p-3">
+                                <a href="{{ company.website }}" target="_blank" class="text-decoration-none w-100 text-center">
+                                    <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="company-logo-grid mb-2">
+                                    <div class="institution-name mt-2">{{ company.name }}</div>
                                 </a>
-                                <!-- Delete Button -->
+                    
                                 <form method="post" 
                                       action="{% url 'faculties:delete_company' company.id %}" 
-                                      class="position-absolute top-0 end-0 mt-2 me-2">
+                                      class="delete-company-form delete-form">
                                     {% csrf_token %}
                                     <button type="submit" 
                                             class="btn btn-sm btn-outline-danger"
@@ -472,6 +501,7 @@
                             </div>
                         {% endif %}
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -502,8 +532,8 @@
         // Activate tab when hash changes
         window.addEventListener('hashchange', activateTabFromHash);
         
-        // Prevent form submission from bubbling up
-        $('form').on('submit', function(e) {
+        // Only prevent propagation for forms that aren't delete forms
+        $('form:not(.delete-form)').on('submit', function(e) {
             e.stopPropagation();
         });
     });

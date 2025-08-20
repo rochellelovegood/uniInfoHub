@@ -1,7 +1,9 @@
 {% extends 'main.html' %}
 {% load static %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}
+    {% if announcement %}Edit Announcement{% else %}Post Announcement{% endif %}
+{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -59,7 +61,9 @@
 {% block content %}
 <div class="container mt-5">
     <div class="form-container">
-        <h2 class="text-center mb-4">{{ title }}</h2>
+        <h2 class="text-center mb-4">
+            {% if announcement %}Edit Announcement{% else %}Post a New Announcement{% endif %}
+        </h2>
         <form method="post">
             {% csrf_token %}
             {% for field in form %}
@@ -75,7 +79,14 @@
                 </div>
             {% endfor %}
             <div class="d-grid mt-4">
-                <button type="submit" class="btn btn-futuristic">Publish Announcement</button>
+                <button type="submit" class="btn btn-futuristic">
+                    {% if announcement %}Update Announcement{% else %}Publish Announcement{% endif %}
+                </button>
+            </div>
+            <div class="d-grid mt-2">
+                <a href="{% url 'faculties:faculty_dashboard_home' %}" class="btn btn-outline-secondary">
+                    Cancel
+                </a>
             </div>
         </form>
     </div>

@@ -1,6 +1,12 @@
 # faculties/forms.py
 from django import forms
-from scholarships.models import Company
+from scholarships.models import Company, ACADEMIC_LEVEL_CHOICES, UserProfile
+
+# Note: The following imports are not used in the provided code,
+# but might be needed for other forms in this file.
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.models import User
+
 
 class CompanyForm(forms.ModelForm):
 
@@ -21,11 +27,6 @@ class CompanyForm(forms.ModelForm):
         }
 
 
-from django import forms
-from django.contrib.auth import get_user_model
-from scholarships.models import UserProfile
-from django.contrib.auth.models import User
-
 class FacultyUserEditForm(forms.Form):
     username = forms.CharField(max_length=150)
     email = forms.EmailField()
@@ -33,8 +34,12 @@ class FacultyUserEditForm(forms.Form):
     role = forms.CharField(max_length=20, required=False)
     roll_no = forms.CharField(max_length=20, required=False)
     major = forms.ChoiceField(choices=UserProfile.MAJOR_CHOICES, required=False)
-    semester = forms.ChoiceField(choices=UserProfile.SEMESTER_CHOICES, required=False)
-
+    academic_level = forms.ChoiceField(
+        choices=ACADEMIC_LEVEL_CHOICES,
+        label="Academic Level",
+        required=False,
+        help_text="Undergraduate or Graduate. Required for Students."
+    )
     def __init__(self, *args, **kwargs):
         self.profile = kwargs.pop('profile', None)
         super().__init__(*args, **kwargs)
@@ -45,8 +50,12 @@ class FacultyUserEditForm(forms.Form):
         user.email = self.cleaned_data['email']
         user.is_active = self.cleaned_data['is_active']
         user.save()
+        
+        # Update user profile with cleaned data from the form
         profile.role = self.cleaned_data['role']
         profile.roll_no = self.cleaned_data['roll_no']
         profile.major = self.cleaned_data['major']
-        profile.semester = self.cleaned_data['semester']
+        
+        # Corrected: Save the 'academic_level' field to the profile
+        profile.academic_level = self.cleaned_data['academic_level']
         profile.save()

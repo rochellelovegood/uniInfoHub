@@ -6,6 +6,12 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 import datetime
 
+# New choices for academic level, reusable for both models
+ACADEMIC_LEVEL_CHOICES = [
+    ('UNDERGRADUATE', 'Undergraduate'),
+    ('GRADUATE', 'Graduate'),
+]
+
 class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
@@ -45,15 +51,14 @@ class UserProfile(models.Model):
         help_text="Your major. Required for Students."
     )
 
-    SEMESTER_CHOICES = [(i, f'Semester {i}') for i in range(1, 11)]
-    semester = models.IntegerField(
-        choices=SEMESTER_CHOICES,
+    # REPLACED the semester field with a new academic_level field
+    academic_level = models.CharField(
+        max_length=20,
+        choices=ACADEMIC_LEVEL_CHOICES,
         blank=True,
         null=True,
-        help_text="Your current semester. Required for Students."
+        help_text="Your current academic level (Undergraduate or Graduate). Required for Students."
     )
-
-
 
     def clean(self):
         if self.role == 'STUDENT':
@@ -61,15 +66,17 @@ class UserProfile(models.Model):
                 raise ValidationError({'roll_no': "Roll number is required for students."})
             if not self.major:
                 raise ValidationError({'major': "Major is required for students."})
-            if not self.semester:
-                raise ValidationError({'semester': "Semester is required for students."})
+            # UPDATED: Validation now checks academic_level instead of semester
+            if not self.academic_level:
+                raise ValidationError({'academic_level': "Academic level is required for students."})
         else:
             if self.roll_no is not None:
                 self.roll_no = None
             if self.major is not None:
                 self.major = None
-            if self.semester is not None:
-                self.semester = None
+            # UPDATED: Clears academic_level for non-students
+            if self.academic_level is not None:
+                self.academic_level = None
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -77,10 +84,6 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f'{self.user.username} Profile ({self.get_role_display()})'
-
-
-# The signal and receiver function have been completely removed.
-# You must now manually create the UserProfile object when a new User is created.
 
 
 class Company(models.Model):
@@ -143,6 +146,16 @@ class Scholarship(models.Model):
         max_length=100, null=True, blank=True,
         help_text="Optional: The country for which this scholarship is intended (e.g., 'USA', 'Myanmar', 'UK')."
     )
+
+    # ADDED: New field to specify if a scholarship is for undergraduate or graduate students
+    level = models.CharField(
+        max_length=20,
+        choices=ACADEMIC_LEVEL_CHOICES,
+        blank=True,
+        null=True,
+        help_text="The academic level for which this scholarship is intended."
+    )
+    
     MAJOR_CHOICES = [
         ('SE', 'B.C.Sc. (Software Engineering)'),
         ('BIS', 'B.C.Sc. (Business Information Systems)'),
@@ -190,7 +203,6 @@ class Scholarship(models.Model):
         blank=True
     )
 
-
     def __str__(self):
         return self.title
 
@@ -201,13 +213,11 @@ class Scholarship(models.Model):
 class Announcement(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
-    posted_at = models.DateTimeField(auto_now_add=True)
-    place = models.CharField(max_length=200, help_text="e.g., Main hall, Online")
+    created_at = models.DateTimeField(auto_now_add=True)
+    place = models.CharField(max_length=200, help_text="e.g., Auditorium A, Online")
     time = models.TimeField(default=datetime.time(9, 0), help_text="Time of the event")
-   
+    
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='announcements')
 
     def __str__(self):
         return self.title
-
-
