@@ -35,7 +35,7 @@
                             <th>Email</th>
                             <th>Roll No</th>
                             <th>Major</th>
-                            <th>Semester</th>
+                            <th>Academic Level</th>
                             <th>Joined</th>
                             <th class="text-center">Actions</th>
                         </tr>
@@ -48,7 +48,7 @@
                             <td>{{ user.email }}</td>
                             <td>{{ user.userprofile.roll_no }}</td>
                             <td>{{ user.userprofile.get_major_display }}</td>
-                            <td>Sem {{ user.userprofile.semester }}</td>
+                            <td>{{ user.userprofile.academic_level }}</td>
                             <td>{{ user.date_joined|date:"M d, Y" }}</td>
                             <td>
                                 <div class="d-flex justify-content-center">

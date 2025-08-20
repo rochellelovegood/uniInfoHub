@@ -370,7 +370,6 @@ def manage_users(request):
 
 @login_required
 def edit_user(request, user_id):
-    # Ensure only faculty/admin can access
     try:
         profile = request.user.userprofile
         if profile.role not in ['FACULTY', 'ADMIN']:
@@ -378,37 +377,34 @@ def edit_user(request, user_id):
     except UserProfile.DoesNotExist:
         raise PermissionDenied
 
-    user = get_object_or_404(User, id=user_id)
-    user_profile = user.userprofile
+    edited_user = get_object_or_404(User, id=user_id)  # Changed variable name
+    user_profile = edited_user.userprofile  # Updated reference
 
     # Prevent editing superusers
-    if user.is_superuser:
+    if edited_user.is_superuser:  # Updated reference
         raise PermissionDenied("Cannot edit superuser accounts")
 
     if request.method == 'POST':
         # Create form with POST data and profile instance
         form = FacultyUserEditForm(request.POST, profile=user_profile)
         if form.is_valid():
-            form.save(user, user_profile)
+            form.save(edited_user, user_profile)  # Updated reference
             return redirect('faculties:manage_users')
     else:
         # Initialize form with initial data
         form = FacultyUserEditForm(profile=user_profile, initial={
-            'username': user.username,
-            'email': user.email,
-            'is_active': user.is_active,
+            'username': edited_user.username,  # Updated reference
+            'email': edited_user.email,  # Updated reference
+            'is_active': edited_user.is_active,  # Updated reference
             'role': user_profile.role,
             'roll_no': user_profile.roll_no,
             'major': user_profile.major,
-            
         })
 
     return render(request, 'dashboard/edit_user.html', {
         'form': form,
-        'user': user
+        'edited_user': edited_user  # Changed key name to avoid conflict
     })
-
-
 
 @login_required
 def delete_user(request, user_id):
