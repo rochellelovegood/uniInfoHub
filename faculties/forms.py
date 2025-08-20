@@ -1,6 +1,6 @@
 # faculties/forms.py
 from django import forms
-from scholarships.models import Company
+from scholarships.models import Company,ACADEMIC_LEVEL_CHOICES 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
@@ -32,8 +32,12 @@ class FacultyUserEditForm(forms.Form):
     role = forms.CharField(max_length=20, required=False)
     roll_no = forms.CharField(max_length=20, required=False)
     major = forms.ChoiceField(choices=UserProfile.MAJOR_CHOICES, required=False)
-    semester = forms.ChoiceField(choices=UserProfile.SEMESTER_CHOICES, required=False)
-
+    academic_level = forms.ChoiceField(
+        choices=ACADEMIC_LEVEL_CHOICES,
+        label="Academic Level",
+        required=False,
+        help_text="Undergraduate or Graduate. Required for Students."
+    )
     def __init__(self, *args, **kwargs):
         self.profile = kwargs.pop('profile', None)
         super().__init__(*args, **kwargs)

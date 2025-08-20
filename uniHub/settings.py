@@ -40,8 +40,7 @@ INSTALLED_APPS = [
     'scholarships',
     'faculties',  
     'widget_tweaks',
-    'crispy_forms',
-    
+    'crispy_forms',  
 ]
 
 MIDDLEWARE = [
