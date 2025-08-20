@@ -152,10 +152,11 @@ class StudentProfileForm(forms.ModelForm):
 class AnnouncementForm(forms.ModelForm):
     class Meta:
         model = Announcement
-        fields = ['title', 'content', 'place', 'time']
+        fields = ['title', 'content', 'place', 'time','attachment']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
             'place': forms.TextInput(attrs={'class': 'form-control'}),
             'time': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
+            'attachment': forms.FileInput(attrs={'class': 'form-control'}),
         }

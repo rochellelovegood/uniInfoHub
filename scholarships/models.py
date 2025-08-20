@@ -216,7 +216,7 @@ class Announcement(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     place = models.CharField(max_length=200, help_text="e.g., Auditorium A, Online")
     time = models.TimeField(default=datetime.time(9, 0), help_text="Time of the event")
-    
+    attachment = models.FileField(upload_to='announcements/attachments/', blank=True, null=True)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='announcements')
 
     def __str__(self):
