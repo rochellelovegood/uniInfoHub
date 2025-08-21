@@ -11,7 +11,7 @@ venv/  # Your virtual environment folder
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
-**/.git
+**/.git 
 venv
 
 # Django specific
@@ -33,3 +33,5 @@ venv
 db.sqlite3
 scholarships/migrations/0001_initial.py
 scholarships/migrations/0002_announcement_attachment.py
+db.sqlite3
+db.sqlite3
