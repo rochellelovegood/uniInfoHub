@@ -42,6 +42,7 @@ class UserProfile(models.Model):
         ('ES', 'B.C.Tech. (Embedded Systems)'),
         ('CN', 'B.C.Tech. (Communication and Networking)'),
         ('CSec', 'B.C.Tech. (Cyber Security)'),
+        ('CST','CST (Have not decided yet)')
     ]
     major = models.CharField(
         max_length=50,
