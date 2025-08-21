@@ -10,11 +10,12 @@
                 </h3>
                 <form method="GET" action="{% url 'faculties:manage_users' %}" class="d-flex search-form">
                     <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 fw-bold text-dark">YKPT-</span>
                         <input type="text"
                                name="roll_no"
-                               class="form-control"
-                               placeholder="Search by Roll No (YKPT-...)"
-                               value="{{ request.GET.roll_no }}">
+                               class="form-control border-start-0"
+                               placeholder="Enter roll number"
+                               value="{{ request.GET.roll_no|cut:'YKPT-' }}">
                         <button class="btn btn-light" type="submit">
                             <i class="fas fa-search"></i>
                         </button>
@@ -137,6 +138,20 @@
 
     .search-form {
         width: 300px;
+    }
+
+    /* Custom styles for the YKPT- prefix */
+    .input-group-text.ykpt-prefix {
+        background-color: #f8f9fa;
+        color: #000;
+        font-weight: 600;
+        border-color: #ced4da;
+    }
+
+    /* Adjust input border when focused */
+    .input-group:focus-within .input-group-text.ykpt-prefix {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
     }
 
     @media (max-width: 768px) {

@@ -64,9 +64,16 @@
 
     /* Pinterest-style masonry grid */
     .announcements-grid {
-        column-count: 10;
-        column-gap: 1rem;
+        column-count: 4; /* Optimized from 10 */
+        column-gap: 1.5rem;
+        max-width: 1400px;
         margin: 0 auto;
+    }
+
+    @media (min-width: 1600px) {
+        .announcements-grid {
+            column-count: 5;
+        }
     }
 
     @media (max-width: 1200px) {
@@ -93,7 +100,7 @@
         padding: 1.8rem;
         transition: var(--transition);
         box-shadow: var(--card-shadow);
-        border-top: 4px solid transparent;
+        border: 1px solid transparent; /* Subtle border for definition */
         width: 100%;
         margin-bottom: 2rem;
         break-inside: avoid;
@@ -101,25 +108,10 @@
         overflow: hidden;
     }
 
-    .announcement-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-color), transparent);
-        opacity: 0;
-        transition: var(--transition);
-    }
-
     .announcement-card:hover {
         transform: translateY(-8px);
         box-shadow: 0 20px 40px -15px rgba(2,12,27,0.8);
-    }
-
-    .announcement-card:hover::before {
-        opacity: 1;
+        border-color: rgba(100, 255, 218, 0.2); /* Highlight border on hover */
     }
 
     .card-header {
@@ -174,13 +166,13 @@
         position: relative;
         overflow: hidden;
     }
-    
+
     .card-content.collapsed {
         max-height: 180px;
         mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
         -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
     }
-    
+
     .see-more-btn {
         color: var(--accent-color);
         cursor: pointer;
@@ -193,21 +185,22 @@
         border: none;
         padding: 0;
         transition: var(--transition);
+        text-decoration: none;
     }
-    
+
     .see-more-btn:hover {
         transform: translateX(5px);
     }
-    
+
     .see-more-btn i {
         margin-left: 0.5rem;
         transition: var(--transition);
     }
-    
+
     .see-more-btn:hover i {
         transform: translateX(3px);
     }
-    
+
     /* Tags styling */
     .card-tags {
         display: flex;
@@ -215,7 +208,7 @@
         gap: 0.6rem;
         margin-bottom: 1.5rem;
     }
-    
+
     .tag {
         background: rgba(100, 255, 218, 0.15);
         color: var(--accent-color);
@@ -226,12 +219,12 @@
         transition: var(--transition);
         cursor: pointer;
     }
-    
+
     .tag:hover {
         background: rgba(100, 255, 218, 0.25);
         transform: translateY(-2px);
     }
-    
+
     .card-footer {
         display: flex;
         justify-content: flex-end;
@@ -309,6 +302,29 @@
         transform: translateX(3px);
     }
 
+    .attachment {
+        margin-top: 1rem;
+    }
+
+    .attachment a {
+        color: var(--accent-color);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: var(--transition);
+    }
+
+    .attachment a:hover {
+        transform: translateX(5px);
+        color: rgba(100, 255, 218, 0.8);
+    }
+
+    .attachment i {
+        margin-right: 0.5rem;
+        color: var(--accent-color);
+        font-size: 1.1rem;
+    }
+
     /* Decorative elements */
     .grid-background {
         position: fixed;
@@ -319,7 +335,7 @@
         pointer-events: none;
         z-index: -1;
         opacity: 0.03;
-        background-image: 
+        background-image:
             radial-gradient(var(--accent-color) 1px, transparent 1px),
             radial-gradient(var(--accent-color) 1px, transparent 1px);
         background-size: 40px 40px;
@@ -352,8 +368,7 @@
                         <span>{{ announcement.time|date:"g:i A" }}</span>
                     </div>
                 </div>
-                
-                <!-- Tags section -->
+
                 {% if announcement.tags %}
                 <div class="card-tags">
                     {% for tag in announcement.tags %}
@@ -362,34 +377,29 @@
                 </div>
                 {% endif %}
             </div>
-            
-            <div class="card-content collapsed" id="content-{{ forloop.counter }}">
+
+            <div class="card-content collapsed" data-id="{{ forloop.counter }}">
                 {{ announcement.content }}
             </div>
-            
-            {% if announcement.content|length > 200 %}
-            <button class="see-more-btn" data-target="content-{{ forloop.counter }}">
-                Read more <i class="bi bi-arrow-right"></i>
-            </button>
-            {% endif %}
+
             {% if announcement.attachment %}
-<div class="attachment mt-4 mb-3">
-    {% if announcement.attachment.name|lower|slice:"-4:" == ".pdf" %}
-        <a href="{{ announcement.attachment.url }}" target="_blank" class="btn btn-outline-secondary d-flex align-items-center">
-            <i class="bi bi-file-earmark-fill me-2"></i> View Document (PDF)
-        </a>
-    {% elif announcement.attachment.name|lower|slice:"-4:" in ".png.jpg.jpeg.gif" %}
-        <a href="{{ announcement.attachment.url }}" target="_blank">
-            <img src="{{ announcement.attachment.url }}" class="img-fluid rounded" alt="Attachment for {{ announcement.title }}">
-        </a>
-    {% else %}
-        <a href="{{ announcement.attachment.url }}" target="_blank" class="btn btn-outline-secondary d-flex align-items-center">
-            <i class="bi bi-file-earmark-arrow-down-fill me-2"></i> Download File
-        </a>
-    {% endif %}
-</div>
-{% endif %}
-            
+            <div class="attachment mt-4 mb-3">
+                {% if announcement.attachment.name|lower|slice:"-4:" == ".pdf" %}
+                    <a href="{{ announcement.attachment.url }}" target="_blank">
+                        <i class="bi bi-file-earmark-fill"></i> View Document (PDF)
+                    </a>
+                {% elif announcement.attachment.name|lower|slice:"-4:" in ".png.jpg.jpeg.gif" %}
+                    <a href="{{ announcement.attachment.url }}" target="_blank">
+                        <img src="{{ announcement.attachment.url }}" class="img-fluid rounded" alt="Attachment for {{ announcement.title }}">
+                    </a>
+                {% else %}
+                    <a href="{{ announcement.attachment.url }}" target="_blank">
+                        <i class="bi bi-file-earmark-arrow-down-fill"></i> Download File
+                    </a>
+                {% endif %}
+            </div>
+            {% endif %}
+
             <div class="card-footer">
                 <div class="posted-at">
                     <i class="bi bi-calendar-event"></i>
@@ -408,70 +418,4 @@
     </div>
     {% endif %}
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Content toggle functionality
-        document.querySelectorAll('.see-more-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const targetId = this.getAttribute('data-target');
-                const content = document.getElementById(targetId);
-                
-                if (content.classList.contains('collapsed')) {
-                    content.classList.remove('collapsed');
-                    this.innerHTML = 'Show less <i class="bi bi-arrow-up"></i>';
-                } else {
-                    content.classList.add('collapsed');
-                    this.innerHTML = 'Read more <i class="bi bi-arrow-right"></i>';
-                }
-            });
-        });
-
-        // Check if content needs "see more" button
-        document.querySelectorAll('.card-content').forEach(content => {
-            // If content height is more than 180px, add see more button if not already there
-            if (content.scrollHeight > 180) {
-                const card = content.closest('.announcement-card');
-                const hasButton = card.querySelector('.see-more-btn');
-                
-                if (!hasButton) {
-                    const button = document.createElement('button');
-                    button.className = 'see-more-btn';
-                    button.innerHTML = 'Read more <i class="bi bi-arrow-right"></i>';
-                    button.setAttribute('data-target', content.id);
-                    
-                    content.parentNode.insertBefore(button, content.nextSibling);
-                    
-                    // Add event listener to new button
-                    button.addEventListener('click', function() {
-                        const targetId = this.getAttribute('data-target');
-                        const targetContent = document.getElementById(targetId);
-                        
-                        if (targetContent.classList.contains('collapsed')) {
-                            targetContent.classList.remove('collapsed');
-                            this.innerHTML = 'Show less <i class="bi bi-arrow-up"></i>';
-                        } else {
-                            targetContent.classList.add('collapsed');
-                            this.innerHTML = 'Read more <i class="bi bi-arrow-right"></i>';
-                        }
-                    });
-                }
-            }
-        });
-
-        // Add subtle animation to cards on page load
-        document.querySelectorAll('.announcement-card').forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            
-            setTimeout(() => {
-                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, 100 + (index * 100));
-        });
-    });
-</script>
 {% endblock %}
