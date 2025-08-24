@@ -5,100 +5,158 @@
 
 {% block extra_css %}
 <style>
-    /* Scholarship Detail Styles - Futuristic Theme */
+    /* ===================================
+       Color Variables (Matching Base Theme)
+    ====================================== */
+    :root {
+        --primary-dark: #0A2463;
+        --primary-light: #E7FAFE;
+        --accent-primary: #5C9EAD;
+        --accent-secondary: #F4A261;
+        --card-bg: #ffffff;
+        --text-dark: #1a1a2e;
+        --text-light: #777;
+        --border-color: #ddd;
+        --hover-bg: #f9fafb;
+    }
+
+    /* ===================================
+       Scholarship Detail Page Styles
+    ====================================== */
     .detail-container {
         max-width: 900px;
         margin: 2rem auto;
-        background-color: var(--primary-light);
+        background-color: var(--card-bg);
         border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-        border: 1px solid var(--glass-border);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--border-color);
     }
-    
+
     .banner-image {
         width: 100%;
-        max-height: 300px;
+        max-height: 250px;
         object-fit: cover;
-        border-bottom: 1px solid var(--glass-border);
+        border-bottom: 1px solid var(--border-color);
     }
-    
+
     .detail-header {
-        background: var(--gradient-primary);
+        background-color: var(--primary-light);
         padding: 2rem;
         color: var(--primary-dark);
+        border-bottom: 1px solid var(--border-color);
     }
-    
+
     .detail-title {
-        font-size: 1.8rem;
+        font-size: 2rem;
         font-weight: 700;
         margin-bottom: 1rem;
+        color: var(--primary-dark);
     }
-    
+
     .detail-badges {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
+        gap: 0.75rem;
     }
-    
+
     .detail-badge {
-        background-color: rgba(10, 25, 47, 0.3);
-        padding: 0.4rem 0.8rem;
+        background-color: var(--accent-primary);
+        color: white;
+        padding: 0.4rem 0.9rem;
         border-radius: 20px;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         display: inline-flex;
         align-items: center;
-        color: var(--text-primary);
-        border: 1px solid var(--glass-border);
+        font-weight: 500;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     }
-    
+
+    .detail-badge .fas,
+    .detail-badge .bi {
+        font-size: 0.9rem;
+        margin-right: 0.5rem;
+    }
+
     .detail-body {
         padding: 2rem;
     }
-    
+
     .section-title {
-        color: var(--accent-color);
+        font-size: 1.5rem;
         font-weight: 600;
+        color: var(--primary-dark);
         margin: 1.5rem 0 1rem;
-        padding-bottom: 0.3rem;
-        border-bottom: 1px solid var(--glass-border);
+        position: relative;
     }
-    
+
+    /* This is the new rule for the full line */
+    .section-title::after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 1px;
+        background-color: var(--primary-dark);
+        margin-top: 0.5rem;
+        border-radius: 0;
+        opacity: 0.2; /* A subtle line looks better */
+    }
+
     .info-box {
-        background-color: rgba(10, 25, 47, 0.2);
+        background-color: var(--primary-light);
         border-radius: 8px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        border-left: 3px solid var(--accent-color);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid var(--accent-secondary);
     }
-    
+
     .info-title {
-        color: var(--accent-color);
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
+        color: var(--primary-dark);
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.8rem;
         display: flex;
         align-items: center;
     }
-    
+
+    .info-title .fas,
+    .info-title .bi {
+        font-size: 1.2rem;
+        margin-right: 0.8rem;
+        color: var(--accent-secondary);
+    }
+
+    .info-box a {
+        color: var(--accent-primary);
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .info-box a:hover {
+        color: var(--primary-dark);
+    }
+
     .back-btn {
         margin-bottom: 1.5rem;
-        background: rgba(100, 255, 218, 0.1);
-        border: 1px solid var(--glass-border);
-        color: var(--accent-color);
+        background-color: var(--hover-bg);
+        border: 1px solid var(--border-color);
+        color: var(--text-dark);
+        transition: all 0.3s ease;
     }
-    
+
     .back-btn:hover {
-        background: rgba(100, 255, 218, 0.2);
+        background-color: var(--border-color);
+        transform: translateY(-2px);
     }
-    
+
     .action-btns {
         margin-top: 2rem;
         display: flex;
         gap: 1rem;
         flex-wrap: wrap;
     }
-    
+
     .status-badge {
         display: inline-block;
         padding: 0.35rem 0.75rem;
@@ -106,51 +164,69 @@
         font-weight: 500;
         font-size: 0.85rem;
     }
-    
+
     .active-status {
-        background-color: rgba(50, 205, 50, 0.15);
-        color: #7aff7a;
-        border: 1px solid rgba(50, 205, 50, 0.3);
+        background-color: rgba(50, 205, 50, 0.1);
+        color: green;
+        border: 1px solid rgba(50, 205, 50, 0.2);
     }
-    
+
     .inactive-status {
-        background-color: rgba(255, 59, 48, 0.15);
-        color: #ff8a82;
-        border: 1px solid rgba(255, 59, 48, 0.3);
+        background-color: rgba(255, 59, 48, 0.1);
+        color: red;
+        border: 1px solid rgba(255, 59, 48, 0.2);
     }
-    
+
     /* Button styles */
     .btn-primary {
-        background: var(--gradient-primary);
+        background-color: var(--accent-primary);
+        border: none;
+        color: white;
+        font-weight: 500;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(92, 158, 173, 0.2);
+    }
+
+    .btn-warning {
+        background-color: var(--accent-secondary);
         border: none;
         color: var(--primary-dark);
         font-weight: 500;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    
-    .btn-warning {
-        background: linear-gradient(135deg, #ffb347, #ffcc33);
-        border: none;
-        color: #0a192f;
-        font-weight: 500;
+
+    .btn-warning:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(244, 162, 97, 0.2);
     }
-    
+
     .btn-danger {
-        background: linear-gradient(135deg, #ff5f6d, #ffc371);
+        background-color: #dc3545;
         border: none;
-        color: #0a192f;
+        color: white;
         font-weight: 500;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+    }
+
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .detail-container {
             margin: 1rem;
         }
-        
+
         .detail-header {
             padding: 1.5rem;
         }
-        
+
         .detail-title {
             font-size: 1.5rem;
         }
@@ -163,34 +239,34 @@
     <a href="{% url 'scholarships:list' %}" class="btn back-btn ">
         <i class="fas fa-arrow-left"></i> Back to Scholarships
     </a>
-    
+
     <div class="detail-container">
         {% if scholarship.banner_image %}
         <img src="{{ scholarship.banner_image.url }}" class="banner-image" alt="{{ scholarship.title }} banner">
         {% endif %}
-        
+
         <div class="detail-header">
             <h1 class="detail-title">{{ scholarship.title }}</h1>
-            
+
             <div class="detail-badges">
                 <span class="status-badge {% if scholarship.is_active %}active-status{% else %}inactive-status{% endif %}">
                     <i class="fas fa-circle"></i> {% if scholarship.is_active %}Active{% else %}Inactive{% endif %}
                 </span>
-                
+
                 {% if scholarship.min_gpa %}
                 <span class="detail-badge">
                     <i class="fas fa-award"></i> Min GPA: {{ scholarship.min_gpa }}
                 </span>
                 {% endif %}
-                
+
                 <span class="detail-badge">
                     <i class="fas fa-graduation-cap"></i> {{ scholarship.get_major_display }}
                 </span>
-                
+
                 <span class="detail-badge">
                     <i class="fas fa-calendar-times"></i> Deadline: {{ scholarship.deadline|date:"M d, Y" }}
                 </span>
-                
+
                 {% if scholarship.country %}
                 <span class="detail-badge">
                     <i class="fas fa-map-marker-alt"></i> {{ scholarship.country }}
@@ -198,38 +274,38 @@
                 {% endif %}
             </div>
         </div>
-        
+
         <div class="detail-body">
             <h3 class="section-title">Description</h3>
             <p>{{ scholarship.description|linebreaks }}</p>
-            
+
             <h3 class="section-title">Eligibility Requirements</h3>
             <p>{{ scholarship.eligibility|linebreaks }}</p>
-            
+
             <div class="info-box">
                 <h4 class="info-title"><i class="fas fa-link me-2"></i> Application Details</h4>
                 {% if scholarship.application_link %}
                 <p><strong>Online Application:</strong> <a href="{{ scholarship.application_link }}" target="_blank" class="text-accent">{{ scholarship.application_link }}</a></p>
                 {% endif %}
-                
+
                 {% if scholarship.brochure_pdf %}
                 <p><strong>Download Brochure:</strong> Contains full application details and requirements</p>
                 {% endif %}
             </div>
-            
+
             <div class="action-btns">
                 {% if scholarship.brochure_pdf %}
                 <a href="{{ scholarship.brochure_pdf.url }}" class="btn btn-primary" download>
                     <i class="fas fa-file-pdf"></i> Download Brochure
                 </a>
                 {% endif %}
-                
+
                 {% if scholarship.application_link %}
                 <a href="{{ scholarship.application_link }}" class="btn btn-primary" target="_blank">
                     <i class="fas fa-external-link-alt"></i> Apply Online
                 </a>
                 {% endif %}
-                
+
                 {% if user.is_authenticated and user.is_staff %}
                 <a href="{% url 'scholarships:edit_scholarship' scholarship.id %}" class="btn btn-warning">
                     <i class="fas fa-edit"></i> Edit
@@ -239,7 +315,7 @@
                 </a>
                 {% endif %}
             </div>
-            
+
             <div class="mt-4 text-muted">
                 <small>
                     Posted {{ scholarship.created_at|timesince }} ago

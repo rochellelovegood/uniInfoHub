@@ -13,7 +13,7 @@
         --text-primary: #ccd6f6;
         --text-secondary: #8892b0;
     }
-    
+
     body {
         background-color: var(--primary-dark);
         color: var(--text-primary);
@@ -66,32 +66,32 @@
     text-align: center;
     font-weight: 500;
 }
-    
+
     .dashboard-header {
         background: var(--primary-light);
         padding: 2rem 0;
         margin-bottom: 2rem;
         border-bottom: 1px solid var(--accent-color);
     }
-    
+
     .nav-pills .nav-link {
         color: var(--text-secondary);
         border-radius: 4px;
         margin-bottom: 8px;
         transition: all 0.3s ease;
     }
-    
+
     .nav-pills .nav-link.active {
         background: transparent;
         color: var(--accent-color);
         border-left: 3px solid var(--accent-color);
         border-radius: 0;
     }
-    
+
     .nav-pills .nav-link:hover:not(.active) {
         background: rgba(100, 255, 218, 0.1);
     }
-    
+
     .opportunity-card {
         background: var(--primary-light);
         border: none;
@@ -99,24 +99,24 @@
         transition: all 0.3s ease;
         margin-bottom: 1rem;
     }
-    
+
     .opportunity-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     }
-    
+
     .btn-futuristic {
         background: transparent;
         color: var(--accent-color);
         border: 1px solid var(--accent-color);
         transition: all 0.3s ease;
     }
-    
+
     .btn-futuristic:hover {
         background: rgba(100, 255, 218, 0.1);
         color: var(--accent-color);
     }
-    
+
     .stat-card {
         border-radius: 8px;
         padding: 1.5rem;
@@ -124,24 +124,24 @@
         border-bottom: 3px solid var(--accent-color);
         margin-bottom: 1rem;
     }
-    
+
     .card {
         background: var(--primary-light);
         border: none;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    
+
     .list-group-item {
         background: var(--primary-light);
         color: var(--text-primary);
         border: 1px solid rgba(100, 255, 218, 0.1);
         margin-bottom: 8px;
     }
-    
+
     .list-group-item:hover {
         background: rgba(100, 255, 218, 0.05);
     }
-    
+
     /* Form styles */
     .django-form-container .form-control {
         background: var(--primary-dark);
@@ -149,29 +149,29 @@
         color: var(--text-primary);
         margin-bottom: 1rem;
     }
-    
+
     .django-form-container .form-control:focus {
         background: var(--primary-dark);
         color: var(--text-primary);
         border-color: var(--accent-color);
         box-shadow: 0 0 0 0.25rem rgba(100, 255, 218, 0.25);
     }
-    
+
     .django-form-container label {
         color: var(--text-secondary);
     }
-    
+
     .django-form-container ul.errorlist {
         color: #ff6b6b;
         list-style-type: none;
         padding-left: 0;
     }
-    
+
     /* Futuristic elements */
     .glow-effect {
         position: relative;
     }
-    
+
     .glow-effect::after {
         content: '';
         position: absolute;
@@ -183,30 +183,30 @@
         opacity: 0;
         transition: opacity 0.3s ease;
     }
-    
+
     .glow-effect:hover::after {
         opacity: 0.3;
     }
-    
+
     /* Badge style */
     .badge {
         background: rgba(100, 255, 218, 0.1);
         color: var(--accent-color);
     }
-    
+
     /* Alert style */
     .alert-info {
         background: rgba(0, 147, 147, 0.2);
         border-color: var(--accent-color);
         color: var(--text-primary);
     }
-    
+
     /* Action buttons */
     .action-buttons {
         display: flex;
         gap: 0.5rem;
     }
-    
+
     .action-buttons .btn {
         z-index: 10;
     }
@@ -219,12 +219,12 @@
     z-index: 100; /* Ensure this is a high value to stack on top */
     position: relative; /* Give the element a stacking context */
 }
-    
+
     .btn-outline-danger:hover {
         background-color: #dc3545;
         border-color: #dc3545;
     }
-    
+
     .btn-outline-accent:hover {
         background-color: var(--accent-color);
         color: var(--primary-dark);
@@ -240,7 +240,7 @@
                 <h1><i class="bi bi-cpu me-2"></i> Faculty Dashboard</h1>
                 <p class="mb-0 text-muted">Welcome back, Prof. {{ user.username }}!</p>
             </div>
-            
+
         </div>
     </div>
 </div>
@@ -256,9 +256,9 @@
                                 <i class="bi bi-speedometer2 me-2"></i> Dashboard
                             </a>
                         </li>
-                        
-                        
-                        
+
+
+
                         <li class="nav-item">
                             <a class="nav-link" id="scholarships-tab" data-bs-toggle="pill" href="#scholarships" role="tab" aria-controls="scholarships" aria-selected="false">
                                 <i class="bi bi-award me-2"></i> Scholarships
@@ -269,32 +269,32 @@
                                 <i class="bi bi-megaphone me-2"></i> Announcements
                             </a>
                         </li>
-                    
+
                             <li class="nav-item">
                                 <a class="nav-link" id="internships-tab" data-bs-toggle="pill" href="#companies" role="tab" aria-controls="companies" aria-selected="false">
                                     <i class="bi bi-briefcase me-2"></i> Internships
                                 </a>
                             </li>
-                        
+
                     </ul>
                 </div>
             </div>
-            
+
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Quick Stats</h5>
                     <div class="stat-card mb-3">
                         <h6 class="text-secondary">Total Posts</h6>
-                        <h3 class="text-accent">{{ total_count }}+</h3> 
+                        <h3 class="text-accent">{{ total_count }}+</h3>
                     </div>
                     <div class="stat-card">
                         <h6 class="text-secondary">Applications</h6>
-                        <h3 class="text-accent">128</h3> 
+                        <h3 class="text-accent">128</h3>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-9">
             <div class="tab-content" id="dashboardTabContent">
                 <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
@@ -328,7 +328,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Quick Actions</h4>
@@ -339,7 +339,7 @@
                                         Post Scholarship
                                     </a>
                                 </div>
-                            
+
                                 <div class="col-md-4">
                                     <a href="{% url 'faculties:post_announcement' %}" class="btn btn-futuristic w-100 py-3 glow-effect">
                                         <i class="bi bi-megaphone fs-4 d-block mb-2"></i>
@@ -356,8 +356,8 @@
                         </div>
                     </div>
                 </div>
-            
-                
+
+
                 <div class="tab-pane fade" id="scholarships" role="tabpanel" aria-labelledby="scholarships-tab">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4>Manage Your Scholarships</h4>
@@ -365,7 +365,7 @@
                             <i class="bi bi-plus-lg me-1"></i> Add New Scholarship
                         </a>
                     </div>
-                    
+
                     {% if my_scholarships %}
                         {% for scholarship in my_scholarships %}
                         <div class="card opportunity-card glow-effect">
@@ -374,27 +374,27 @@
                                     <div>
                                         <h5>{{ scholarship.title }}</h5>
                                         <p class="text-muted mb-2">
-                                            Deadline: {{ scholarship.deadline|date:"Y-m-d" }} | 
+                                            Deadline: {{ scholarship.deadline|date:"Y-m-d" }} |
                                             Posted: {{ scholarship.posted_at|date:"Y-m-d" }}
                                         </p>
                                     </div>
                                     <div class="action-buttons">
-                                        <a href="{% url 'faculties:edit_scholarship' scholarship.id %}" 
+                                        <a href="{% url 'faculties:edit_scholarship' scholarship.id %}"
                                             class="btn btn-sm btn-outline-accent"
-                                            data-bs-toggle="tooltip" 
-                                            data-bs-placement="top" 
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
                                             title="Edit Scholarship">
                                              <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        
-                                        <form method="post" 
-                                              action="{% url 'faculties:delete_scholarship' scholarship.id %}" 
+
+                                        <form method="post"
+                                              action="{% url 'faculties:delete_scholarship' scholarship.id %}"
                                               class="d-inline delete-form">
                                             {% csrf_token %}
-                                            <button type="submit" 
+                                            <button type="submit"
                                                     class="btn btn-sm btn-outline-danger"
-                                                    data-bs-toggle="tooltip" 
-                                                    data-bs-placement="top" 
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
                                                     title="Delete Scholarship"
                                                     onclick="return confirm('Are you sure you want to delete this scholarship?')">
                                                 <i class="bi bi-trash"></i>
@@ -403,7 +403,7 @@
                                     </div>
                                 </div>
                                 <p>{{ scholarship.description|truncatechars:150 }}</p>
-                            
+
                                 {% if scholarship.country %}
                                     <span class="badge">{{ scholarship.country }}</span>
                                 {% endif %}
@@ -416,7 +416,7 @@
                         </div>
                     {% endif %}
                 </div>
-                
+
 
                 <div class="tab-pane fade" id="announcements" role="tabpanel" aria-labelledby="announcements-tab">
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -437,22 +437,22 @@
                                         </p>
                                     </div>
                                     <div class="action-buttons">
-                                        <a href="{% url 'faculties:edit_announcement' announcement.id %}" 
+                                        <a href="{% url 'faculties:edit_announcement' announcement.id %}"
                                             class="btn btn-sm btn-outline-accent"
-                                            data-bs-toggle="tooltip" 
-                                            data-bs-placement="top" 
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
                                             title="Edit Announcement">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        
-                                        <form method="post" 
-                                              action="{% url 'faculties:delete_announcement' announcement.id %}" 
+
+                                        <form method="post"
+                                              action="{% url 'faculties:delete_announcement' announcement.id %}"
                                               class="d-inline delete-form">
                                             {% csrf_token %}
-                                            <button type="submit" 
+                                            <button type="submit"
                                                     class="btn btn-sm btn-outline-danger"
-                                                    data-bs-toggle="tooltip" 
-                                                    data-bs-placement="top" 
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
                                                     title="Delete Announcement"
                                                     onclick="return confirm('Are you sure you want to delete this announcement?')">
                                                 <i class="bi bi-trash"></i>
@@ -477,7 +477,7 @@
                             <i class="bi bi-plus-lg me-1"></i> Add New Company
                         </a>
                     </div>
-                    
+
                     <div class="company-grid">
                         {% if my_companies %}
                             {% for company in my_companies %}
@@ -486,12 +486,12 @@
                                     <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="company-logo-grid mb-2">
                                     <div class="institution-name mt-2">{{ company.name }}</div>
                                 </a>
-                    
-                                <form method="post" 
-                                      action="{% url 'faculties:delete_company' company.id %}" 
+
+                                <form method="post"
+                                      action="{% url 'faculties:delete_company' company.id %}"
                                       class="delete-company-form delete-form">
                                     {% csrf_token %}
-                                    <button type="submit" 
+                                    <button type="submit"
                                             class="btn btn-sm btn-outline-danger"
                                             onclick="return confirm('Delete this company?')">
                                         <i class="bi bi-trash"></i>
@@ -505,7 +505,7 @@
                             </div>
                         {% endif %}
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -518,7 +518,7 @@
     $(function () {
         // Initialize tooltips
         $('[data-bs-toggle="tooltip"]').tooltip();
-        
+
         // Tab persistence - Activate tab based on URL hash
         function activateTabFromHash() {
             if (location.hash) {
@@ -532,10 +532,10 @@
 
         // Activate tab on page load
         activateTabFromHash();
-        
+
         // Activate tab when hash changes
         window.addEventListener('hashchange', activateTabFromHash);
-        
+
         // Only prevent propagation for forms that aren't delete forms
         $('form:not(.delete-form)').on('submit', function(e) {
             e.stopPropagation();

@@ -4,118 +4,7 @@
 {% block title %}Login{% endblock %}
 
 {% block extra_css %}
-<style>
-    .login-card {
-        background-color: var(--card-bg);
-        border: none;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        transition: transform 0.3s ease;
-        max-width: 500px;
-        margin: 0 auto;
-    }
-
-    .login-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .card-header {
-        background: var(--primary-gradient) !important;
-        border-bottom: none;
-        padding: 1.5rem;
-        text-align: center;
-    }
-
-    .form-label {
-        color: #e0e0e0;
-        font-weight: 500;
-        display: block;
-        margin-bottom: 0.5rem;
-    }
-
-    .form-control {
-        background-color: #2a2a3a;
-        border: 1px solid #444;
-        color: #f0f0f0;
-        border-radius: 8px;
-        padding: 0.75rem 1rem;
-        width: 100%;
-        margin-bottom: 1rem;
-    }
-
-    .role-options {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        margin: 1.5rem 0;
-    }
-
-    .role-option {
-        background-color: #2a2a3a;
-        border: 1px solid #444;
-        border-radius: 8px;
-        padding: 1rem;
-        transition: all 0.2s ease;
-        cursor: pointer;
-    }
-
-    .role-option:hover {
-        border-color: var(--text-accent);
-    }
-
-    .role-option.selected {
-        border-color: var(--text-accent);
-        background-color: rgba(138, 43, 226, 0.1);
-    }
-
-    .role-option input[type="radio"] {
-        display: none;
-    }
-
-    .role-icon {
-        font-size: 1.5rem;
-        margin-right: 1rem;
-    }
-
-    .student-option .role-icon { color: #6e8efb; }
-    .faculty-option .role-icon { color: #4facfe; }
-    .admin-option .role-icon { color: #a777e3; }
-
-    .conditional-field {
-        display: none;
-    }
-
-    .conditional-field.show {
-        display: block;
-    }
-
-    .btn-gradient-primary {
-        background: var(--primary-gradient);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.75rem;
-        font-weight: 500;
-        width: 100%;
-        margin-top: 1rem;
-    }
-
-    .divider {
-        display: flex;
-        align-items: center;
-        margin: 1.5rem 0;
-        color: #777;
-        font-size: 0.9em;
-    }
-
-    .divider::before, .divider::after {
-        content: "";
-        flex: 1;
-        border-bottom: 1px solid #444;
-        margin: 0 1rem;
-    }
-</style>
+ <link rel="stylesheet" href="{% static 'css/loginregister.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -123,7 +12,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8">
             <div class="login-card card shadow-lg">
-                <div class="card-header text-white">
+                <div class="card-header text-center">
                     <h3 class="mb-0"><i class="bi bi-box-arrow-in-right me-2"></i>Login</h3>
                 </div>
                 <div class="card-body p-4">
@@ -185,7 +74,7 @@
                         <div class="divider">or</div>
 
                         <div class="text-center">
-                            <p class="mb-0">Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+                            <p class="mb-0">Don't have an account? <a href="{% url 'register' %}" class="register-link">Register</a></p>
                         </div>
                     </form>
                 </div>

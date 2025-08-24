@@ -1,285 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}OpportunityHub - Home{% endblock %}
+{% block title %}UCSYerHub - Home{% endblock %}
 
 {% block extra_css %}
-<style>
-    :root {
-        --primary: #6a11cb;
-        --secondary: #2575fc;
-        --dark: #1a1a2e;
-        --darker: #0d0d1a;
-        --card-bg: #2a2a3a;
-        --text: #e0e0e0;
-        --accent: #a777e3;
-        --light-accent: #c9a8ff;
-    }
+<link rel="stylesheet" href="{% static 'css/scholarhomepage.css' %}">
 
-    /* Remove the custom container styles */
-    .homepage-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 15px;
-    }
-
-    /* Slideshow Styles */
-    .slideshow-container {
-        position: relative;
-        width: 100%;
-        height: 85vh;
-        overflow: hidden;
-    }
-
-    .slideshow {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
-
-    .slide {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        animation: slideAnimation 24s infinite;
-    }
-
-    .slide:nth-child(1) {
-        animation-delay: 0s;
-        background-image: linear-gradient(rgba(26, 26, 46, 0.85), rgba(26, 26, 46, 0.85)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80');
-    }
-
-    .slide:nth-child(2) {
-        animation-delay: 8s;
-        background-image: linear-gradient(rgba(26, 26, 46, 0.85), rgba(26, 26, 46, 0.85)), url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80');
-    }
-
-    .slide:nth-child(3) {
-        animation-delay: 16s;
-        background-image: linear-gradient(rgba(26, 26, 46, 0.85), rgba(26, 26, 46, 0.85)), url('https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80');
-    }
-
-    .slide-content {
-        text-align: center;
-        max-width: 800px;
-        padding: 0 20px;
-    }
-
-    .slide-content h1 {
-        font-size: 3.5rem;
-        font-weight: 700;
-        margin-bottom: 20px;
-        background: linear-gradient(to right, var(--text), var(--accent));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        line-height: 1.2;
-    }
-
-    .slide-content p {
-        font-size: 1.2rem;
-        margin-bottom: 30px;
-        color: #bbb;
-    }
-
-    /* Categories Section */
-    .categories {
-        padding: 80px 0;
-    }
-
-    .section-title {
-        text-align: center;
-        margin-bottom: 60px;
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: linear-gradient(to right, var(--text), var(--accent));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
-
-    .category-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 30px;
-    }
-
-    .category-card {
-        background: var(--card-bg);
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        transition: all 0.4s ease;
-        border: 1px solid rgba(138, 43, 226, 0.2);
-        position: relative;
-        display: block;
-        text-decoration: none;
-        color: var(--text);
-    }
-
-    .category-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 40px rgba(106, 17, 203, 0.4);
-    }
-
-    .card-image {
-        height: 250px;
-        overflow: hidden;
-    }
-
-    .card-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-
-    .category-card:hover .card-image img {
-        transform: scale(1.05);
-    }
-
-    .card-content {
-        padding: 25px;
-    }
-
-    .card-content h3 {
-        font-size: 1.8rem;
-        margin-bottom: 15px;
-        color: var(--accent);
-    }
-
-    .card-content p {
-        color: #bbb;
-        margin-bottom: 25px;
-    }
-
-    .card-link {
-        display: inline-block;
-        color: var(--accent);
-        text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s;
-    }
-
-    .card-link i {
-        margin-left: 8px;
-        transition: transform 0.3s;
-    }
-
-    .category-card:hover .card-link i {
-        transform: translateX(5px);
-    }
-
-    /* Stats Section */
-    .stats {
-        padding: 60px 0;
-        background: rgba(26, 26, 46, 0.5);
-        margin: 40px 0;
-    }
-
-    .stats-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 30px;
-    }
-
-    .stat-card {
-        text-align: center;
-        padding: 30px;
-    }
-
-    .stat-number {
-        font-size: 3.5rem;
-        font-weight: 700;
-        background: linear-gradient(to right, var(--accent), var(--light-accent));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        margin-bottom: 10px;
-    }
-
-    .stat-label {
-        font-size: 1.2rem;
-        color: #bbb;
-    }
-
-    /* Animations */
-    @keyframes slideAnimation {
-        0% {
-            opacity: 0;
-            transform: scale(1.05);
-        }
-        8% {
-            opacity: 1;
-            transform: scale(1);
-        }
-        33% {
-            opacity: 1;
-            transform: scale(1);
-        }
-        41% {
-            opacity: 0;
-            transform: scale(1.05);
-        }
-        100% {
-            opacity: 0;
-            transform: scale(1.05);
-        }
-    }
-
-    /* Responsive Design */
-    @media (max-width: 992px) {
-        .slide-content h1 {
-            font-size: 2.8rem;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .slideshow-container {
-            height: 70vh;
-        }
-
-        .slide-content h1 {
-            font-size: 2.3rem;
-        }
-
-        .slide-content p {
-            font-size: 1rem;
-        }
-
-        .section-title {
-            font-size: 2rem;
-        }
-
-        .category-cards {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .slide-content h1 {
-            font-size: 2rem;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-        }
-    }
-</style>
 {% endblock %}
-
 {% block content %}
 
-<!-- Slideshow -->
 <div class="slideshow-container">
     <div class="slideshow">
-        <!-- Slide 1 -->
         <div class="slide">
             <div class="slide-content">
                 <h1>Discover Your Academic Potential</h1>
@@ -287,7 +18,6 @@
             </div>
         </div>
 
-        <!-- Slide 2 -->
         <div class="slide">
             <div class="slide-content">
                 <h1>Connect with Industry Leaders</h1>
@@ -295,7 +25,6 @@
             </div>
         </div>
 
-        <!-- Slide 3 -->
         <div class="slide">
             <div class="slide-content">
                 <h1>Transform Your Career Path</h1>
@@ -305,13 +34,11 @@
     </div>
 </div>
 
-<!-- Categories Section -->
 <section class="categories">
-    <div class="container"> <!-- Use base.html container -->
+    <div class="container">
         <h2 class="section-title">Explore Opportunities</h2>
 
         <div class="category-cards">
-            <!-- Scholarship Card -->
             <a href="{% url 'scholarships:list' %}" class="category-card">
                 <div class="card-image">
                     <img src="https://images.unsplash.com/photo-1584697964358-3e14ca57658b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80" alt="Scholarships">
@@ -325,7 +52,6 @@
                 </div>
             </a>
 
-            <!-- Internship Card -->
             <a href="{% url 'internships' %}" class="category-card">
                 <div class="card-image">
                     <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80" alt="Internships">
@@ -339,7 +65,6 @@
                 </div>
             </a>
 
-            <!-- Activities Card -->
             <a href="{% url 'scholarships:announcements_list' %}" class="category-card">
                 <div class="card-image">
                     <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80" alt="Activities">
@@ -356,9 +81,8 @@
     </div>
 </section>
 
-<!-- Stats Section -->
 <section class="stats">
-    <div class="container"> <!-- Use base.html container -->
+    <div class="container">
         <div class="stats-container">
             <div class="stat-card">
                 <div class="stat-number">1,250+</div>
