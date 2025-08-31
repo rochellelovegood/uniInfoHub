@@ -6,137 +6,320 @@
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
-    /* Your custom styles have been preserved and moved here */
     :root {
-        --card-bg: #1e1e2d;
-        --text-accent: #8a2be2;
-        --primary-gradient: linear-gradient(90deg, #8a2be2, #00bfff);
+        --new-primary: #0a2463;
+        --new-accent: #5c9ead;
+        --new-background: #f8fafc;
+        --card-bg: rgba(255, 255, 255, 0.95);
+        --text-primary: #1a1a2e;
+        --text-secondary: #8892b0;
     }
+
     body {
-        --text-color: #f0f0f0;
-        --bg-color: #12121e;
-        color: var(--text-color);
-        background-color: var(--bg-color);
+        font-family: 'Inter', sans-serif;
+        background: var(--new-background);
+        color: var(--text-primary);
+        line-height: 1.6;
     }
+
+    /* Section Titles */
+    .section-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 2.5rem;
+        color: var(--new-primary);
+        position: relative;
+        text-align: center;
+    }
+
+    .section-title::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 4px;
+        margin: 0.5rem auto 0;
+        background: linear-gradient(90deg, var(--new-primary), var(--new-accent));
+        border-radius: 2px;
+    }
+
     .scholarship-form-container {
         max-width: 900px;
         margin: 2rem auto;
         padding: 0 1rem;
     }
-    
+
     .form-header {
         text-align: center;
         margin-bottom: 2rem;
     }
-    
+
     .form-header h1 {
-        background: var(--primary-gradient);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
+        color: var(--new-primary);
         font-weight: 800;
+        margin-bottom: 0.5rem;
     }
-    
+
     .form-header .subtitle {
-        color: #bbbbbb;
+        color: var(--text-secondary);
     }
-    
+
     .scholarship-form-card {
-        background-color: var(--card-bg);
-        border-radius: 16px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        background: var(--card-bg);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        backdrop-filter: blur(8px);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         padding: 2rem;
-        border: 1px solid #333;
+        border: none;
     }
-    
+
+    .scholarship-form-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+    }
+
     .form-section {
         margin-bottom: 2rem;
-        background-color: #2a2a3a;
-        border-radius: 12px;
+        background-color: rgba(255, 255, 255, 0.7);
+        border-radius: 15px;
         padding: 1.5rem;
-        border: 1px solid #444;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
-    
+
     .form-section h3 {
-        color: #e0e0e0;
+        color: var(--new-primary);
         margin-bottom: 1.5rem;
         font-weight: 600;
     }
-    
+
     .form-group {
         margin-bottom: 1.5rem;
     }
-    
+
     .form-group label {
-        color: #e0e0e0;
+        color: var(--new-primary);
         display: block;
         margin-bottom: 0.5rem;
-        font-weight: 500;
+        font-weight: 600;
     }
-    
+
     .form-text {
-        color: #8a8a8a;
+        color: var(--text-secondary);
         font-size: 0.85rem;
         margin-top: 0.25rem;
     }
-    
-    .form-control, .form-select, .form-file-input {
-        background-color: #2a2a3a !important;
-        color: #f0f0f0 !important;
-        border: 1px solid #444 !important;
-        border-radius: 8px;
+
+    .form-control, .form-select {
+        background-color: #ffffff !important;
+        color: var(--text-primary) !important;
+        border: 1px solid #dee2e6 !important;
+        border-radius: 10px;
         padding: 0.75rem 1rem;
         width: 100%;
         display: block;
+        transition: all 0.3s ease;
     }
-    
-    .form-control:focus, .form-select:focus, .form-file-input:focus {
-        background-color: #2a2a3a !important;
-        color: #fff !important;
-        border-color: var(--text-accent) !important;
-        box-shadow: 0 0 0 0.25rem rgba(138, 43, 226, 0.25) !important;
+
+    .form-control:focus, .form-select:focus {
+        background-color: #ffffff !important;
+        color: var(--text-primary) !important;
+        border-color: var(--new-accent) !important;
+        box-shadow: 0 0 0 0.25rem rgba(10, 36, 99, 0.25) !important;
     }
-    
-    .btn-gradient-primary {
-        background: var(--primary-gradient);
+
+    /* Custom file input wrapper */
+    .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .file-input-wrapper input[type=file] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .file-input-button {
+        background: linear-gradient(90deg, var(--new-primary), var(--new-accent));
         color: white;
         border: none;
-        box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+        border-radius: 50px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: inline-block;
+        width: 100%;
+        text-align: center;
     }
-    
-    .btn-post {
-        background: var(--primary-gradient);
-        color: white;
-        border: none;
-        box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
-    }
-    
-    .btn-post:hover {
+
+    .file-input-button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
-    
+
+    .file-input-text {
+        background-color: #ffffff !important;
+        color: var(--text-primary) !important;
+        border: 1px solid #dee2e6 !important;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        width: 100%;
+        display: block;
+        transition: all 0.3s ease;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .form-check-input:checked {
+        background-color: var(--new-primary);
+        border-color: var(--new-primary);
+    }
+
+    .form-check-input:focus {
+        border-color: var(--new-accent);
+        box-shadow: 0 0 0 0.25rem rgba(10, 36, 99, 0.25);
+    }
+
+    .btn-post {
+        background: linear-gradient(90deg, var(--new-primary), var(--new-accent));
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 0.8rem 2rem;
+        font-weight: 600;
+        transition: 0.3s;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .btn-post:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+
     .btn-cancel {
-        background: #2a2a3a;
-        border: 1px solid #444;
-        color: #e0e0e0;
+        background: #e9ecef;
+        border: 1px solid #dee2e6;
+        color: var(--text-primary);
+        border-radius: 50px;
+        padding: 0.8rem 2rem;
+        font-weight: 600;
+        transition: 0.3s;
+        width: 100%;
+        text-decoration: none;
+        display: block;
+        text-align: center;
     }
-    
+
     .btn-cancel:hover {
-        background: #333344;
-        border-color: #555;
+        background: #d0d4d9;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Alert styles */
+    .alert-danger {
+        background: linear-gradient(135deg, rgba(230, 57, 70, 0.1), rgba(230, 57, 70, 0.05));
+        border: none;
+        color: #e63946;
+        border-radius: 10px;
     }
 
     /* Styles for Django form errors */
-    .errorlist {
-        color: #dc3545; /* Red for errors */
+    .errorlist, .text-danger {
+        color: #e63946;
         list-style-type: none;
         padding-left: 0;
         margin-top: 0.5rem;
         font-size: 0.875rem;
     }
+
     .form-group .is-invalid {
-        border-color: #dc3545 !important;
+        border-color: #e63946 !important;
+    }
+
+    /* Form actions */
+    .form-actions {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-direction: column;
+    }
+
+    /* Dark theme support */
+    body.dark-theme {
+        background-color: #0a192f;
+        color: #ccd6f6;
+    }
+
+    body.dark-theme .scholarship-form-card {
+        background: #172a45;
+        color: #ccd6f6;
+    }
+
+    body.dark-theme .form-section {
+        background-color: rgba(23, 42, 69, 0.7);
+    }
+
+    body.dark-theme .form-control,
+    body.dark-theme .form-select,
+    body.dark-theme .file-input-text {
+        background-color: #0a192f !important;
+        color: #ccd6f6 !important;
+        border: 1px solid #444 !important;
+    }
+
+    body.dark-theme .form-control:focus,
+    body.dark-theme .form-select:focus {
+        background-color: #0a192f !important;
+        color: #ccd6f6 !important;
+        border-color: #64ffda !important;
+        box-shadow: 0 0 0 0.25rem rgba(100, 255, 218, 0.25) !important;
+    }
+
+    body.dark-theme .form-group label,
+    body.dark-theme .form-section h3 {
+        color: #ccd6f6;
+    }
+
+    body.dark-theme .form-text,
+    body.dark-theme .form-header .subtitle {
+        color: #8892b0;
+    }
+
+    body.dark-theme .btn-cancel {
+        background: #172a45;
+        border: 1px solid #444;
+        color: #ccd6f6;
+    }
+
+    body.dark-theme .btn-cancel:hover {
+        background: #2a3d5e;
+    }
+
+    body.dark-theme .alert-danger {
+        background: rgba(230, 57, 70, 0.2);
+        color: #ff6b6b;
+    }
+
+    body.dark-theme .file-input-button {
+        background: linear-gradient(90deg, #0a2463, #64ffda);
+        color: #0a192f;
+    }
+
+    /* Hide theme switcher in this page */
+    #themeToggle {
+        display: none !important;
     }
 </style>
 {% endblock %}
@@ -151,7 +334,7 @@
     <div class="scholarship-form-card">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            
+
             {% if form.non_field_errors %}
                 <div class="alert alert-danger" role="alert">
                     {% for error in form.non_field_errors %}
@@ -169,7 +352,7 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            
+
             <div class="form-section">
                 <h3><i class="bi bi-info-circle me-2"></i>Basic Information</h3>
                 {% for field in form %}
@@ -212,7 +395,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="{{ form.eligibility.id_for_label }}">{{ form.eligibility.label }}*</label>
                     {{ form.eligibility }}
@@ -230,8 +413,8 @@
                     {% endfor %}
                     <small class="form-text">{{ form.major.help_text|safe }}</small>
                 </div>
-                
-                
+
+
                 <div class="form-group">
                     <label for="{{ form.academic_level.id_for_label }}">{{ form.level.label }}</label>
                     {{ form.level }}
@@ -243,7 +426,7 @@
             </div>
 
             <div class="form-section">
-                <h3><i class="bi bi-calendar-event me-2"></i>Important Dates & Files</h3>
+                <h3><i class="bi bi-calendar-event me-2"></i>Important Date & Files</h3>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -255,25 +438,20 @@
                             <small class="form-text">{{ form.deadline.help_text|safe }}</small>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="{{ form.is_active.id_for_label }}">{{ form.is_active.label }}</label>
-                            <div class="form-check form-switch">
-                                {{ form.is_active }}
-                                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
-                                    Active Scholarship
-                                </label>
-                            </div>
-                            <small class="form-text">{{ form.is_active.help_text|safe }}</small>
-                        </div>
-                    </div>
+
                 </div>
-                
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="{{ form.brochure_pdf.id_for_label }}">{{ form.brochure_pdf.label }}</label>
-                            {{ form.brochure_pdf }}
+                            <div class="file-input-wrapper">
+                                {{ form.brochure_pdf }}
+                                <div class="file-input-button">
+                                    <i class="bi bi-cloud-arrow-up me-2"></i>Choose PDF File
+                                </div>
+                                <div class="file-input-text" id="brochure-file-name">No file chosen</div>
+                            </div>
                             {% for error in form.brochure_pdf.errors %}
                                 <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
                             {% endfor %}
@@ -283,7 +461,13 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="{{ form.banner_image.id_for_label }}">{{ form.banner_image.label }}</label>
-                            {{ form.banner_image }}
+                            <div class="file-input-wrapper">
+                                {{ form.banner_image }}
+                                <div class="file-input-button">
+                                    <i class="bi bi-image me-2"></i>Choose Image File
+                                </div>
+                                <div class="file-input-text" id="banner-file-name">No file chosen</div>
+                            </div>
                             {% for error in form.banner_image.errors %}
                                 <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
                             {% endfor %}
@@ -304,4 +488,34 @@
         </form>
     </div>
 </div>
+
+<script>
+    // Update file name display when file is selected
+    document.addEventListener('DOMContentLoaded', function() {
+        const brochureInput = document.querySelector('#id_brochure_pdf');
+        const bannerInput = document.querySelector('#id_banner_image');
+        const brochureFileName = document.querySelector('#brochure-file-name');
+        const bannerFileName = document.querySelector('#banner-file-name');
+
+        if (brochureInput) {
+            brochureInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    brochureFileName.textContent = this.files[0].name;
+                } else {
+                    brochureFileName.textContent = 'No file chosen';
+                }
+            });
+        }
+
+        if (bannerInput) {
+            bannerInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    bannerFileName.textContent = this.files[0].name;
+                } else {
+                    bannerFileName.textContent = 'No file chosen';
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

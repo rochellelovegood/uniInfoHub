@@ -2,86 +2,47 @@
 {% load static %}
 
 {% block title %}{{ title }}{% endblock %}
-
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/announcement.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="grid-background"></div>
 <div class="announcements-container">
     <div class="page-header">
         <h2>{{ title }}</h2>
-        <p class="text-secondary">Browse through the latest updates and important notices in our Pinterest-style board</p>
+        <p>Browse through the latest updates and important notices</p>
     </div>
 
     {% if announcements %}
-    <div class="announcements-grid">
         {% for announcement in announcements %}
         <div class="announcement-card">
-            <div class="card-header">
-                <h3 class="card-title">{{ announcement.title }}</h3>
-                <div class="card-meta">
-                    <div class="meta-item">
-                        <i class="bi bi-geo-alt-fill"></i>
-                        <span>{{ announcement.place }}</span>
-                    </div>
-                    <div class="meta-item">
-                        <i class="bi bi-clock-fill"></i>
-                        <span>{{ announcement.time|date:"g:i A" }}</span>
-                    </div>
-                </div>
-
-                {% if announcement.tags %}
-                <div class="card-tags">
-                    {% for tag in announcement.tags %}
-                    <span class="tag">#{{ tag }}</span>
-                    {% endfor %}
-                </div>
+            <h3 class="card-title">{{ announcement.title }}</h3>
+            <div class="card-meta">
+                {% if announcement.place %}
+                <span><i class="bi bi-geo-alt-fill"></i> {{ announcement.place }}</span>
+                {% endif %}
+                {% if announcement.time %}
+                <span><i class="bi bi-clock-fill"></i> {{ announcement.time|date:"g:i A" }}</span>
                 {% endif %}
             </div>
 
-            <div class="card-content collapsed" data-id="{{ forloop.counter }}">
-                {{ announcement.content }}
+            <div class="card-content" id="content-{{ announcement.id }}">
+                {{ announcement.content|linebreaks }}
             </div>
 
             {% if announcement.attachment %}
-            <div class="attachment mt-4 mb-3">
-                {% if announcement.attachment.name|lower|slice:"-4:" == ".pdf" %}
-                    <a href="{{ announcement.attachment.url }}" target="_blank" class="document-link">
-                        <i class="bi bi-file-earmark-fill"></i> View Document (PDF)
-                    </a>
-                {% elif announcement.attachment.name|lower|slice:"-4:" in ".png.jpg.jpeg.gif" %}
-                    <a href="{{ announcement.attachment.url }}" target="_blank">
-                        <img src="{{ announcement.attachment.url }}" class="img-fluid rounded" alt="Attachment for {{ announcement.title }}">
-                    </a>
-                {% else %}
-                    <a href="{{ announcement.attachment.url }}" target="_blank" class="document-link">
-                        <i class="bi bi-file-earmark-arrow-down-fill"></i> Download File
-                    </a>
-                {% endif %}
+            <div class="attachment mt-2">
+                <a href="{{ announcement.attachment.url }}" target="_blank">View Attachment</a>
             </div>
             {% endif %}
 
             <div class="card-footer">
-                <div class="posted-at">
-                    <i class="bi bi-calendar-event"></i>
-                    {{ announcement.posted_at|date:"M d, Y" }}
-                </div>
+                Posted on {{ announcement.created_at|date:"M d, Y" }}
             </div>
         </div>
         {% endfor %}
-    </div>
     {% else %}
-    <div class="empty-state">
-        <i class="bi bi-megaphone"></i>
-        <h3>No Announcements Yet</h3>
-        <p>There are currently no announcements posted. Check back later for updates or contact the administration if you believe this is an error.</p>
-        <a href="#" class="btn btn-primary">Refresh Page <i class="bi bi-arrow-repeat"></i></a>
-    </div>
+    <p>No announcements available.</p>
     {% endif %}
 </div>
-
-<!-- Spacer to prevent content from touching footer -->
-<div class="content-spacer"></div>
 {% endblock %}

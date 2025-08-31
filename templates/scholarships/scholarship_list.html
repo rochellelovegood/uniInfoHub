@@ -19,7 +19,6 @@
     {% endif %}
 
     <div class="row">
-        <!-- Search Filters -->
         <div class="col-lg-3 mb-4">
             <div class="search-card">
                 <h5 class="mb-4"><i class="bi bi-funnel-fill me-2"></i>Filters</h5>
@@ -27,17 +26,15 @@
                 <form method="get">
                     <div class="mb-3">
                         <label class="form-label">Search</label>
-                        <input type="text" name="search" class="form-control" placeholder="Keywords..." value="{{ search_query|default:'' }}">
+                        <input type="text" name="search" class="form-control" placeholder="Keywords, Country..." value="{{ search_query|default:'' }}">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Deadline</label>
-                        <select name="deadline" class="form-select">
-                            <option value="">Any Time</option>
-                            <option value="week" {% if selected_deadline == "week" %}selected{% endif %}>Within 1 Week</option>
-                            <option value="month" {% if selected_deadline == "month" %}selected{% endif %}>Within 1 Month</option>
-                        </select>
+                        <label class="form-label">Minimum GPA</label>
+                        <input type="number" step="0.01" name="min_gpa" class="form-control" placeholder="e.g. 3.0" value="{{ min_gpa_query|default:'' }}">
                     </div>
+
+
 
                     <div class="mb-3">
                         <label for="levelFilter" class="form-label">Academic Level</label>
@@ -53,13 +50,15 @@
                         <label for="major" class="form-label">Major</label>
                         <select name="major" id="major" class="form-select">
                             <option value="">Select a major</option>
+                            <option value="All"{% if major == "All" %}selected{% endif %}>All Majors</option>
                             <option value="SE" {% if major == "SE" %}selected{% endif %}>B.C.Sc. (Software Engineering)</option>
                             <option value="BIS" {% if major == "BIS" %}selected{% endif %}>B.C.Sc. (Business Information Systems)</option>
                             <option value="KE" {% if major == "KE" %}selected{% endif %}>B.C.Sc. (Knowledge Engineering)</option>
+                            <option value="CSec" {% if major == "CSec" %}selected{% endif %}>B.C.Sc. (Cyber Security)</option>
                             <option value="HPC" {% if major == "HPC" %}selected{% endif %}>B.C.Sc. (High Performance Computing)</option>
                             <option value="ES" {% if major == "ES" %}selected{% endif %}>B.C.Tech. (Embedded Systems)</option>
                             <option value="CN" {% if major == "CN" %}selected{% endif %}>B.C.Tech. (Communication and Networking)</option>
-                            <option value="CSec" {% if major == "CSec" %}selected{% endif %}>B.C.Tech. (Cyber Security)</option>
+
                         </select>
                     </div>
 
@@ -89,7 +88,14 @@
                 <div class="scholarship-card">
                     <div class="scholarship-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">{{ scholarship.title }}</h5>
-                        <span class="deadline-badge">Deadline: {{ scholarship.deadline|date:"M d, Y" }}</span>
+                        <div>
+                            {% if scholarship.deadline > today %}
+                                <span class="badge bg-success m-2">Active</span>
+                            {% else %}
+                                <span class="badge bg-danger m-2">Expired</span>
+                            {% endif %}
+                            <span class="deadline-badge">Deadline: {{ scholarship.deadline|date:"M d, Y" }}</span>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="d-flex flex-wrap mb-3">
@@ -113,9 +119,9 @@
                                 <i class="bi bi-clock-history me-1"></i> Posted {{ scholarship.created_at|timesince }} ago
                             </small>
 
-                            <button class="btn btn-sm wishlist-btn {% if scholarship in request.user.wishlist.all %}btn-outline-secondary{% else %}btn-outline-primary{% endif %}" data-scholarship-id="{{ scholarship.id }}">
-                                <i class="bi {% if scholarship in request.user.wishlist.all %}bi-bookmark-heart-fill{% else %}bi-bookmark-heart{% endif %}"></i>
-                                {% if scholarship in request.user.wishlist.all %}Added{% else %}Add to wishlist{% endif %}
+                            <button class="btn btn-sm wishlist-btn {% if scholarship in user.wishlist.all %}btn-outline-secondary{% else %}btn-outline-primary{% endif %}" data-scholarship-id="{{ scholarship.id }}">
+                                <i class="bi {% if scholarship in user.wishlist.all %}bi-bookmark-heart-fill{% else %}bi-bookmark-heart{% endif %}"></i>
+                                {% if scholarship in user.wishlist.all %}Added{% else %}Add to wishlist{% endif %}
                             </button>
 
                             <div>
@@ -132,6 +138,47 @@
                     </div>
                 </div>
                 {% endfor %}
+
+                {% if scholarships.has_other_pages %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mt-5">
+                        {% if scholarships.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ scholarships.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_deadline %}&deadline={{ selected_deadline }}{% endif %}{% if selected_level %}&level={{ selected_level }}{% endif %}{% if major %}&major={{ major }}{% endif %}{% if min_gpa_query %}&min_gpa={{ min_gpa_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link" aria-hidden="true">&laquo;</span>
+                            </li>
+                        {% endif %}
+
+                        {% for i in scholarships.paginator.page_range %}
+                            {% if scholarships.number == i %}
+                                <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                            {% elif i > scholarships.number|add:'-3' and i < scholarships.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ i }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_deadline %}&deadline={{ selected_deadline }}{% endif %}{% if selected_level %}&level={{ selected_level }}{% endif %}{% if major %}&major={{ major }}{% endif %}{% if min_gpa_query %}&min_gpa={{ min_gpa_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if scholarships.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ scholarships.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_deadline %}&deadline={{ selected_deadline }}{% endif %}{% if selected_level %}&level={{ selected_level }}{% endif %}{% if major %}&major={{ major }}{% endif %}{% if min_gpa_query %}&min_gpa={{ min_gpa_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link" aria-hidden="true">&raquo;</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+
             {% else %}
                 <div class="alert alert-info">
                     <i class="bi bi-info-circle me-2"></i>No scholarships found matching your criteria.
@@ -147,10 +194,12 @@
     // Auto-rotate carousel every 5 seconds
     document.addEventListener('DOMContentLoaded', function() {
         var myCarousel = document.getElementById('successCarousel');
-        var carousel = new bootstrap.Carousel(myCarousel, {
-            interval: 5000,
-            wrap: true
-        });
+        if (myCarousel) {
+            var carousel = new bootstrap.Carousel(myCarousel, {
+                interval: 5000,
+                wrap: true
+            });
+        }
     });
 
     function updateSort(value) {
@@ -179,12 +228,10 @@
                 if (data.status === 'success') {
                     // Update button appearance
                     if (data.action === 'added') {
-                        // The action was 'added', so the button should now look like it's in the wishlist
                         button.classList.replace('btn-outline-primary', 'btn-outline-secondary');
                         icon.className = 'bi bi-bookmark-heart-fill';
                         button.innerHTML = '<i class="bi bi-bookmark-heart-fill"></i> Added';
                     } else {
-                        // The action was 'removed', so the button should revert to the "add" state
                         button.classList.replace('btn-outline-secondary', 'btn-outline-primary');
                         icon.className = 'bi bi-bookmark-heart';
                         button.innerHTML = '<i class="bi bi-bookmark-heart"></i> Add to wishlist';

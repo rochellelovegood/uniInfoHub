@@ -29,6 +29,8 @@ urlpatterns = [
     path('internships/', InternshipsView.as_view(), name='internships'),
 
     path('student_dashboard/', student_dashboard, name='student_dashboard'),
+    
+    
 
 
 ]

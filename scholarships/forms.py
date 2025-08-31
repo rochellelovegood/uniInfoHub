@@ -95,34 +95,36 @@ class UserRegisterForm(UserCreationForm):
 class ScholarshipForm(forms.ModelForm):
     class Meta:
         model = Scholarship
-        # Note: '__all__' automatically includes the new 'level' field
         fields = '__all__'
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Scholarship Title'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Detailed description...'}),
-            'eligibility': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Eligibility criteria...'}),
-            'application_link': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://example.com/apply'}),
+            'description': forms.Textarea(
+                attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Detailed description...'}),
+            'eligibility': forms.Textarea(
+                attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Eligibility criteria...'}),
+            'application_link': forms.URLInput(
+                attrs={'class': 'form-control', 'placeholder': 'https://example.com/apply'}),
             'deadline': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'min_gpa': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'e.g., 3.0'}),
             'country': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., USA, Myanmar'}),
             'major': forms.Select(attrs={'class': 'form-select'}),
-           
+
             'level': forms.Select(attrs={'class': 'form-select'}),
             'brochure_pdf': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'banner_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            # REMOVED: major_department widget, as it does not exist in the model
+            
+
         }
         labels = {
             'min_gpa': 'Minimum GPA (Optional)',
             'country': 'Target Country (Optional)',
             'major': 'Target Major',
-            # ADDED: New label for the 'level' field
+
             'level': 'Academic Level',
             'brochure_pdf': 'Brochure PDF (Optional)',
             'banner_image': 'Banner Image (Optional)',
             'is_active': 'Active Scholarship',
-            # REMOVED: major_department label, as it does not exist in the model
+
         }
         exclude = ['posted_by', 'created_at', 'updated_at', 'is_active', 'wishlisted_by']
 
@@ -152,7 +154,7 @@ class StudentProfileForm(forms.ModelForm):
 class AnnouncementForm(forms.ModelForm):
     class Meta:
         model = Announcement
-        fields = ['title', 'content', 'place', 'time','attachment']
+        fields = ['title', 'content', 'place', 'time', 'attachment']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),

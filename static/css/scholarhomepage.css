@@ -18,12 +18,12 @@
     ===================================== */
 
     .slideshow-container {
-        position: relative;
-        width: 100%;
-        height: 85vh;
-        overflow: hidden;
-        margin-top: 70px;
-    }
+    position: relative;
+    width: 100%;
+    height: 85vh;
+    overflow: hidden;
+    margin-top: 0px;
+}
 
     .slideshow {
         position: relative;

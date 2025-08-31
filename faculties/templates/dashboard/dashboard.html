@@ -12,240 +12,424 @@
         --accent-color: #64ffda;
         --text-primary: #ccd6f6;
         --text-secondary: #8892b0;
+        --new-primary: #0a2463;
+        --new-accent: #5c9ead;
+        --new-background: #f8fafc;
     }
+
 
     body {
-        background-color: var(--primary-dark);
-        color: var(--text-primary);
+        background-color: var(--new-background);
+        color: #1a1a2e;
     }
-    .company-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.company-card-admin {
-    background: var(--primary-light);
-    border-radius: 8px;
-    padding: 1rem;
-    transition: all 0.3s ease;
-    border-left: 3px solid var(--accent-color);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    text-align: center;
-    max-width: 200px; /* ensures image stays inside */
-    overflow: hidden;  /* prevent overflow */
-    margin: 0.5rem;    /* spacing between cards */
-}
-
-.company-logo-grid {
-    max-height: 100px;  /* constrain height */
-    max-width: 100%;    /* fit inside card */
-    object-fit: contain;
-    margin-bottom: 0.5rem;
-    border-radius: 4px;
-}
-
-.delete-company-form {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-}
-
-.delete-company-form .btn {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.85rem;
-}
-
-.institution-name {
-    color: var(--text-primary);
-    text-align: center;
-    font-weight: 500;
-}
 
     .dashboard-header {
-        background: var(--primary-light);
-        padding: 2rem 0;
-        margin-bottom: 2rem;
-        border-bottom: 1px solid var(--accent-color);
+        background: linear-gradient(135deg, var(--new-primary), var(--new-accent));
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 20px;
+        color: white;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .dashboard-header h1 {
+        color: white;
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .dashboard-header .text-muted {
+        color: rgba(255, 255, 255, 0.8) !important;
+        margin-bottom: 0;
     }
 
     .nav-pills .nav-link {
-        color: var(--text-secondary);
-        border-radius: 4px;
+        background-color: rgba(255, 255, 255, 0.95);
+        color: var(--new-primary);
+        border-radius: 50px;
         margin-bottom: 8px;
         transition: all 0.3s ease;
+        font-weight: 600;
+        border: none;
+        padding: 0.75rem 1rem;
     }
 
     .nav-pills .nav-link.active {
-        background: transparent;
-        color: var(--accent-color);
-        border-left: 3px solid var(--accent-color);
-        border-radius: 0;
+        background: linear-gradient(90deg, var(--new-primary), var(--new-accent));
+        color: white;
+        border-radius: 50px;
     }
 
     .nav-pills .nav-link:hover:not(.active) {
-        background: rgba(100, 255, 218, 0.1);
+        background: rgba(10, 36, 99, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .company-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .company-card-admin {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        text-align: center;
+        max-width: 200px;
+        overflow: hidden;
+        margin: 0.5rem;
+        border: none;
+    }
+
+    .company-card-admin:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+    }
+
+    .company-logo-grid {
+        max-height: 100px;
+        max-width: 100%;
+        object-fit: contain;
+        margin-bottom: 0.5rem;
+        border-radius: 4px;
+    }
+
+    .delete-company-form {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+    }
+
+    .delete-company-form .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.85rem;
+        border-radius: 50px;
+    }
+
+    .institution-name {
+        color: var(--new-primary);
+        text-align: center;
+        font-weight: 600;
     }
 
     .opportunity-card {
-        background: var(--primary-light);
-        border: none;
-        border-left: 3px solid var(--accent-color);
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
         transition: all 0.3s ease;
         margin-bottom: 1rem;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        border: none;
+        overflow: hidden;
     }
 
     .opportunity-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        transform: translateY(-10px);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.15);
     }
 
     .btn-futuristic {
-        background: transparent;
-        color: var(--accent-color);
-        border: 1px solid var(--accent-color);
+        background: linear-gradient(90deg, var(--new-primary), var(--new-accent));
+        color: white;
+        border: none;
+        border-radius: 50px;
         transition: all 0.3s ease;
+        font-weight: 600;
+        padding: 0.8rem 1.5rem;
     }
 
     .btn-futuristic:hover {
-        background: rgba(100, 255, 218, 0.1);
-        color: var(--accent-color);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        color: white;
+    }
+
+    .btn-futuristic i {
+        transition: transform 0.3s ease;
+    }
+
+    .btn-futuristic:hover i {
+        transform: scale(1.2);
     }
 
     .stat-card {
-        border-radius: 8px;
-        padding: 1.5rem;
-        background: var(--primary-light);
-        border-bottom: 3px solid var(--accent-color);
+        border-radius: 20px;
+        padding: 1.25rem;
+        background: rgba(255, 255, 255, 0.95);
         margin-bottom: 1rem;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        border: none;
+    }
+
+    .stat-card h3 {
+        color: var(--new-primary);
+        font-weight: 700;
+    }
+
+    .stat-card h6 {
+        color: var(--text-secondary);
+        font-weight: 600;
     }
 
     .card {
-        background: var(--primary-light);
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
         border: none;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+    }
+
+    .card-title {
+        color: var(--new-primary);
+        font-weight: 700;
     }
 
     .list-group-item {
-        background: var(--primary-light);
-        color: var(--text-primary);
-        border: 1px solid rgba(100, 255, 218, 0.1);
+        background: rgba(255, 255, 255, 0.95);
+        color: black;
+        border: 1px solid #e2e8f0;
         margin-bottom: 8px;
+        border-radius: 15px;
+        transition : all 0.3s ease;
+    }
+     .list-group-item:hover {
+        background: linear-gradient(90deg, var(--new-primary), var(--new-accent));
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-color: transparent;
+        color: white;
     }
 
-    .list-group-item:hover {
-        background: rgba(100, 255, 218, 0.05);
+    .list-group-item:hover h6,
+    .list-group-item:hover p,
+    .list-group-item:hover .activity-time {
+        color: white !important;
     }
 
     /* Form styles */
     .django-form-container .form-control {
-        background: var(--primary-dark);
-        border: 1px solid var(--text-secondary);
-        color: var(--text-primary);
+        background: #ffffff;
+        border: 1px solid #dee2e6;
+        color: #1a1a2e;
         margin-bottom: 1rem;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
     }
 
     .django-form-container .form-control:focus {
-        background: var(--primary-dark);
-        color: var(--text-primary);
-        border-color: var(--accent-color);
-        box-shadow: 0 0 0 0.25rem rgba(100, 255, 218, 0.25);
+        background: #ffffff;
+        color: #1a1a2e;
+        border-color: var(--new-accent);
+        box-shadow: 0 0 0 0.25rem rgba(10, 36, 99, 0.25);
     }
 
     .django-form-container label {
-        color: var(--text-secondary);
+        color: var(--new-primary);
+        font-weight: 600;
     }
 
     .django-form-container ul.errorlist {
-        color: #ff6b6b;
+        color: #e63946;
         list-style-type: none;
         padding-left: 0;
     }
 
-    /* Futuristic elements */
-    .glow-effect {
-        position: relative;
-    }
-
-    .glow-effect::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        box-shadow: 0 0 10px var(--accent-color);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .glow-effect:hover::after {
-        opacity: 0.3;
-    }
-
     /* Badge style */
     .badge {
-        background: rgba(100, 255, 218, 0.1);
-        color: var(--accent-color);
+        background: linear-gradient(90deg, var(--new-primary), var(--new-accent));
+        color: white;
+        border-radius: 50px;
+        padding: 0.5em 1em;
+        font-weight: 600;
     }
 
     /* Alert style */
     .alert-info {
-        background: rgba(0, 147, 147, 0.2);
-        border-color: var(--accent-color);
-        color: var(--text-primary);
+        background: linear-gradient(135deg, rgba(10, 36, 99, 0.1), rgba(92, 158, 173, 0.1));
+        border: none;
+        color: var(--new-primary);
+        border-radius: 15px;
     }
 
     /* Action buttons */
     .action-buttons {
         display: flex;
         gap: 0.5rem;
+        align-items : center ;
     }
 
-    .action-buttons .btn {
-        z-index: 10;
+       .action-buttons .btn {
+        border-radius: 50px;
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        border: none;
     }
 
-    /* Fix for delete buttons */
     .action-buttons form {
         display: inline;
     }
+
     .action-buttons .delete-form {
-    z-index: 100; /* Ensure this is a high value to stack on top */
-    position: relative; /* Give the element a stacking context */
-}
+        z-index: 100;
+        position: relative;
+    }
+
+    .btn-outline-danger {
+        border-color: #e63946;
+        color: #e63946;
+    }
 
     .btn-outline-danger:hover {
-        background-color: #dc3545;
-        border-color: #dc3545;
+        background-color: #e63946;
+        border-color: #e63946;
+        color: white;
+    }
+
+    .btn-outline-accent {
+        border-color: var(--new-accent);
+        color: var(--new-accent);
     }
 
     .btn-outline-accent:hover {
-        background-color: var(--accent-color);
-        color: var(--primary-dark);
+        background: linear-gradient(90deg, var(--new-primary), var(--new-accent));
+        border-color: var(--new-accent);
+        color: white;
+    }
+
+
+    /* Quick actions grid */
+    .quick-actions-grid .col-md-4 {
+        display: flex;
+    }
+
+    .quick-actions-grid .btn-futuristic {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .dashboard-header {
+            padding: 1rem;
+        }
+
+        .company-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .nav-pills .nav-link {
+            text-align: center;
+            font-size: 0.9rem;
+            padding: 0.6rem 0.8rem;
+        }
+
+        .card {
+            margin-bottom: 1rem;
+        }
+
+
+    /* Dark theme support */
+   /* body.dark-theme {
+        background-color: var(--primary-dark);
+        color: var(--text-primary);
+    }
+
+    body.dark-theme .dashboard-header {
+        background: var(--primary-light);
+    }
+
+    body.dark-theme .nav-pills .nav-link {
+        background-color: var(--primary-light);
+        color: var(--text-primary);
+    }
+
+    body.dark-theme .nav-pills .nav-link.active {
+        background: linear-gradient(135deg, var(--primary-dark), var(--accent-color));
+    }
+
+    body.dark-theme .company-card-admin,
+    body.dark-theme .opportunity-card,
+    body.dark-theme .stat-card,
+    body.dark-theme .card,
+    body.dark-theme .list-group-item,
+    body.dark-theme .django-form-container .form-control {
+        background: var(--primary-light);
+        color: var(--text-primary);
+    }
+
+    body.dark-theme .institution-name,
+    body.dark-theme .card-title,
+    body.dark-theme .django-form-container label {
+        color: var(--text-primary);
+    }
+
+    body.dark-theme .alert-info {
+        background: rgba(0, 147, 147, 0.2);
+        color: var(--text-primary);
+    }
+
+    body.dark-theme .list-group-item {
+        border: 1px solid rgba(100, 255, 218, 0.1);
+    }
+
+    body.dark-theme .list-group-item:hover {
+        background: rgba(100, 255, 218, 0.05);
+    }
+*/
+    /* Hide theme switcher in this page */
+    #themeToggle {
+        display: none !important;
+    }
+
+    /* Add max-width to contain content */
+    .content-container {
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 15px;
+        padding-right: 15px;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="dashboard-header">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h1><i class="bi bi-cpu me-2"></i> Faculty Dashboard</h1>
-                <p class="mb-0 text-muted">Welcome back, Prof. {{ user.username }}!</p>
-            </div>
-
+    <div class="content-container">
+        <div class="d-flex flex-column align-items-center justify-content-center">
+            <h1><i class="bi bi-cpu"></i> Faculty Dashboard</h1>
+            <p class="mb-0 text-muted">Welcome back, Prof. {{ user.username }}!</p>
         </div>
     </div>
 </div>
 
-<div class="container">
+<div class="content-container">
     <div class="row">
         <div class="col-md-3">
             <div class="card mb-4">
@@ -256,8 +440,6 @@
                                 <i class="bi bi-speedometer2 me-2"></i> Dashboard
                             </a>
                         </li>
-
-
 
                         <li class="nav-item">
                             <a class="nav-link" id="scholarships-tab" data-bs-toggle="pill" href="#scholarships" role="tab" aria-controls="scholarships" aria-selected="false">
@@ -270,12 +452,11 @@
                             </a>
                         </li>
 
-                            <li class="nav-item">
-                                <a class="nav-link" id="internships-tab" data-bs-toggle="pill" href="#companies" role="tab" aria-controls="companies" aria-selected="false">
-                                    <i class="bi bi-briefcase me-2"></i> Internships
-                                </a>
-                            </li>
-
+                        <li class="nav-item">
+                            <a class="nav-link" id="internships-tab" data-bs-toggle="pill" href="#companies" role="tab" aria-controls="companies" aria-selected="false">
+                                <i class="bi bi-briefcase me-2"></i> Internships
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -287,10 +468,7 @@
                         <h6 class="text-secondary">Total Posts</h6>
                         <h3 class="text-accent">{{ total_count }}+</h3>
                     </div>
-                    <div class="stat-card">
-                        <h6 class="text-secondary">Applications</h6>
-                        <h3 class="text-accent">128</h3>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -304,7 +482,7 @@
                             <div class="list-group">
                                 {% if recent_activities %}
                                     {% for activity in recent_activities %}
-                                        <div class="list-group-item list-group-item-action glow-effect">
+                                        <div class="list-group-item list-group-item-action">
                                             <div class="d-flex w-100 justify-content-between">
                                                 <h6 class="mb-1">
                                                     {% if activity.type == 'scholarship' %}
@@ -315,7 +493,7 @@
                                                         <i class="bi bi-briefcase me-2"></i>Internship Opportunity Updated
                                                     {% endif %}
                                                 </h6>
-                                                <small class="text-muted">{{ activity.date|timesince }} ago</small>
+
                                             </div>
                                             <p class="mb-1">"{{ activity.title }}" - {{ activity.action }}</p>
                                         </div>
@@ -332,24 +510,24 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Quick Actions</h4>
-                            <div class="row g-3">
+                            <div class="row g-3 quick-actions-grid">
                                 <div class="col-md-4">
-                                    <a href="{% url 'faculties:post_scholarship' %}" class="btn btn-futuristic w-100 py-3 glow-effect">
+                                    <a href="{% url 'faculties:post_scholarship' %}" class="btn btn-futuristic w-100 py-3">
                                         <i class="bi bi-award fs-4 d-block mb-2"></i>
-                                        Post Scholarship
+                                        <span>Post Scholarship</span>
                                     </a>
                                 </div>
 
                                 <div class="col-md-4">
-                                    <a href="{% url 'faculties:post_announcement' %}" class="btn btn-futuristic w-100 py-3 glow-effect">
+                                    <a href="{% url 'faculties:post_announcement' %}" class="btn btn-futuristic w-100 py-3">
                                         <i class="bi bi-megaphone fs-4 d-block mb-2"></i>
-                                        Post Announcement
+                                        <span>Post Announcement</span>
                                     </a>
                                 </div>
                                 <div class="col-md-4">
-                                    <a href="{% url 'faculties:post_company' %}" class="btn btn-futuristic w-100 py-3 glow-effect">
+                                    <a href="{% url 'faculties:post_company' %}" class="btn btn-futuristic w-100 py-3">
                                         <i class="bi bi-briefcase fs-4 d-block mb-2"></i>
-                                        Post Internship
+                                        <span>Post Internship</span>
                                     </a>
                                 </div>
                             </div>
@@ -361,21 +539,21 @@
                 <div class="tab-pane fade" id="scholarships" role="tabpanel" aria-labelledby="scholarships-tab">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4>Manage Your Scholarships</h4>
-                        <a href="{% url 'faculties:post_scholarship' %}" class="btn btn-futuristic glow-effect">
+                        <a href="{% url 'faculties:post_scholarship' %}" class="btn btn-futuristic">
                             <i class="bi bi-plus-lg me-1"></i> Add New Scholarship
                         </a>
                     </div>
 
                     {% if my_scholarships %}
                         {% for scholarship in my_scholarships %}
-                        <div class="card opportunity-card glow-effect">
+                        <div class="card opportunity-card">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">
                                     <div>
                                         <h5>{{ scholarship.title }}</h5>
                                         <p class="text-muted mb-2">
                                             Deadline: {{ scholarship.deadline|date:"Y-m-d" }} |
-                                            Posted: {{ scholarship.posted_at|date:"Y-m-d" }}
+                                            Posted: {{ scholarship.created_at|date:"Y-m-d" }}
                                         </p>
                                     </div>
                                     <div class="action-buttons">
@@ -421,13 +599,13 @@
                 <div class="tab-pane fade" id="announcements" role="tabpanel" aria-labelledby="announcements-tab">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4>Manage Your Announcements</h4>
-                        <a href="{% url 'faculties:post_announcement' %}" class="btn btn-futuristic glow-effect">
+                        <a href="{% url 'faculties:post_announcement' %}" class="btn btn-futuristic">
                             <i class="bi bi-plus-lg me-1"></i> Add New Announcement
                         </a>
                     </div>
                     {% if my_announcements %}
                         {% for announcement in my_announcements %}
-                        <div class="card opportunity-card glow-effect">
+                        <div class="card opportunity-card">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">
                                     <div>
@@ -473,7 +651,7 @@
                 <div class="tab-pane fade" id="companies" role="tabpanel" aria-labelledby="companies-tab">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4>Manage Your Internship</h4>
-                        <a href="{% url 'faculties:post_company' %}" class="btn btn-futuristic glow-effect">
+                        <a href="{% url 'faculties:post_company' %}" class="btn btn-futuristic">
                             <i class="bi bi-plus-lg me-1"></i> Add New Company
                         </a>
                     </div>

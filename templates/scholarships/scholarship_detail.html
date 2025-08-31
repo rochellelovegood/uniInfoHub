@@ -249,8 +249,8 @@
             <h1 class="detail-title">{{ scholarship.title }}</h1>
 
             <div class="detail-badges">
-                <span class="status-badge {% if scholarship.is_active %}active-status{% else %}inactive-status{% endif %}">
-                    <i class="fas fa-circle"></i> {% if scholarship.is_active %}Active{% else %}Inactive{% endif %}
+                <span class="status-badge {% if scholarship.deadline > today %}active-status{% else %}inactive-status{% endif %}">
+                    <i class="fas fa-circle"></i> {% if scholarship.deadline > today %}Active{% else %}Expired{% endif %}
                 </span>
 
                 {% if scholarship.min_gpa %}

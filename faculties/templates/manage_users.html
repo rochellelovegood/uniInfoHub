@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container-fluid mt-4">
     <div class="card shadow">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
                 <h3 class="mb-0">
                     <i class="fas fa-users me-2"></i> Student Accounts Management
@@ -27,7 +27,7 @@
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
-                    <thead class="thead-light">
+                    <thead>
                         <tr>
                             <th>Username</th>
                             <th>Email</th>
@@ -85,14 +85,14 @@
 </div>
 
 <!-- Delete Confirmation Modal -->
-<div class="modal fade blue-modal" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="deleteModalLabel">
                     <i class="fas fa-exclamation-circle me-2"></i>Confirm Account Deletion
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="d-flex align-items-start mb-4">
@@ -120,50 +120,288 @@
 </div>
 
 <style>
+    /* Section Titles */
+    .section-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 2.5rem;
+        color: #0a2463;
+        position: relative;
+    }
+
+    .section-title::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 4px;
+        margin: 0.5rem auto 0;
+        background: linear-gradient(90deg, #0a2463, #5c9ead);
+        border-radius: 2px;
+    }
+
+    /* Card Styles */
+    .card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 1.5rem;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #0a2463, #5c9ead);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 20px 20px 0 0 !important;
+        border-bottom: none;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Table Styles */
+    .table {
+        margin-bottom: 0;
+        background-color: #ffffff;
+        color: #000000;
+    }
+
+    .table thead th {
+        font-weight: 600;
+        color: #0a2463;
+        border-bottom: 2px solid #dee2e6;
+        background-color: #ffffff;
+    }
+
+    .table tbody td {
+        color: #000000;
+        background-color: #ffffff;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Empty state */
+    .text-muted {
+        color: #6c757d !important;
+    }
+
+    /* Action Buttons */
     .action-btn {
         min-width: 90px;
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
 
-    .table-hover tbody tr:hover {
-        background-color: rgba(13, 110, 253, 0.05);
+    .btn-primary {
+        background: linear-gradient(90deg, #0a2463, #5c9ead);
+        color: white;
+        border: none;
     }
 
-    .badge {
-        padding: 0.5em 0.8em;
-        border-radius: 4px;
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        color: white;
     }
 
+    .btn-danger {
+        background: linear-gradient(90deg, #e63946, #f4a261);
+        color: white;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: #8892b0;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background: #5c9ead;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Search Form */
     .search-form {
         width: 300px;
     }
 
-    /* Custom styles for the YKPT- prefix */
-    .input-group-text.ykpt-prefix {
-        background-color: #f8f9fa;
-        color: #000;
+    .input-group {
+        border-radius: 50px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .input-group-text {
+        background-color: #ffffff;
+        color: #000000;
         font-weight: 600;
-        border-color: #ced4da;
+        border: none;
     }
 
-    /* Adjust input border when focused */
-    .input-group:focus-within .input-group-text.ykpt-prefix {
-        border-color: #86b7fe;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    .form-control {
+    border: none;
+    padding: 0.75rem 1rem;
+    color: #000000;
+    background-color: #ffffff;
+}
+
+.form-control::placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+.form-control:focus {
+    color: #000000; /* Changed from #ffffff */
+    background-color: #ffffff; /* Ensure background stays white on focus */
+    box-shadow: 0 0 0 0.2rem rgba(10, 36, 99, 0.25); /* Add focus indicator */
+}
+
+
+    .btn-light {
+        background: #e9ecef;
+        border: none;
+        color: #000000;
+        font-weight: 600;
     }
 
+    /* Modal Styles */
+    .modal-content {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+        background-color: #ffffff;
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #0a2463, #5c9ead);
+        color: white;
+        border-radius: 20px 20px 0 0;
+        border-bottom: none;
+        padding: 1.5rem;
+    }
+
+    .btn-close {
+        background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .modal-body p {
+        color: #000000;
+    }
+
+    /* Badges */
+    .badge {
+        padding: 0.5em 0.8em;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+
+    .badge-primary {
+        background: linear-gradient(90deg, #0a2463, #5c9ead);
+        color: white;
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
         .card-header .d-flex {
             flex-direction: column;
             align-items: flex-start !important;
         }
+
         .search-form {
             width: 100%;
             margin-top: 15px;
         }
+
+        .card-header {
+            padding: 1rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
     }
+
+
+
+<!--    /* Dark theme support */-->
+<!--    body.dark-theme .card {-->
+<!--        background: rgba(26, 26, 46, 0.95);-->
+<!--    }-->
+
+<!--    body.dark-theme .table {-->
+<!--        background-color: #1a1a2e;-->
+<!--        color: #ffffff;-->
+<!--    }-->
+
+<!--    body.dark-theme .table thead th {-->
+<!--        background-color: #1a1a2e;-->
+<!--        color: #ccd6f6;-->
+<!--    }-->
+
+<!--    body.dark-theme .table tbody td {-->
+<!--        background-color: #1a1a2e;-->
+<!--        color: #ffffff;-->
+<!--    }-->
+
+<!--    body.dark-theme .table-hover tbody tr:hover {-->
+<!--        background-color: rgba(255, 255, 255, 0.1);-->
+<!--    }-->
+
+
+
+
+<!--    body.dark-theme .input-group-text {-->
+<!--        background-color: rgba(255, 255, 255, 0.1);-->
+<!--        color: #ffffff;-->
+<!--        border-color: #444;-->
+<!--    }-->
+
+<!--    body.dark-theme .btn-light {-->
+<!--        background: rgba(255, 255, 255, 0.1);-->
+<!--        color: #ffffff;-->
+<!--    }-->
+
+<!--    body.dark-theme .modal-content {-->
+<!--        background-color: #1a1a2e;-->
+<!--    }-->
+
+<!--    body.dark-theme .modal-body p {-->
+<!--        color: #ffffff;-->
+<!--    }-->
+
+<!--    body.dark-theme .text-muted {-->
+<!--        color: #a0aec0 !important;-->
+<!--    }-->
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

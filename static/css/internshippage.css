@@ -12,41 +12,78 @@
 body {
     background-color: var(--bg-light);
     color: var(--text-primary);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Hero Section */
-.hero-section {
+/* Hero Section - Converted to Slider */
+.hero-slider {
     position: relative;
     height: 70vh;
     overflow: hidden;
-    background:
-        linear-gradient(rgba(231, 250, 254, 0.85), rgba(231, 250, 254, 0.85)),
-        url('../images/hero1.jpg') no-repeat center center/cover;
-    display: flex;
-    align-items: center;
+}
+
+.carousel-item {
+    height: 70vh;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
+
+.carousel-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(10, 36, 99, 0.8), rgba(92, 158, 173, 0.6));
 }
 
 .hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
     width: 100%;
+    z-index: 2;
 }
 
 .hero-title {
     font-size: 3rem;
     font-weight: 800;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: white;
     margin-bottom: 1rem;
-    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .hero-subtitle {
     font-size: 1.3rem;
-    color: var(--text-secondary);
+    color: white;
     max-width: 700px;
     margin: 0 auto 2rem;
-    text-align: center;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Carousel controls styling */
+.carousel-control-prev, .carousel-control-next {
+    width: 5%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    background-size: 50%;
+}
+
+.carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 5px;
 }
 
 /* Section Header */
@@ -68,8 +105,8 @@ body {
 
 .section-header p {
     font-size: 1.1rem;
-    color: var(--text-secondary);
-    max-width: 700px;
+    color: #666;
+    max-width: 600px;
     margin: 0 auto;
 }
 
@@ -116,107 +153,170 @@ body {
     font-weight: 600;
     color: var(--primary-dark);
 }
+/* Testimonial Cards - Fixed Layout */
+        .testimonials-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
 
-/* Testimonials */
-.testimonial-card {
-    background: #fff;
-    border-radius: 12px;
-    border-left: 4px solid var(--primary-light);
-    padding: 1.5rem;
-    height: 100%;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-}
+        .testimonial-column {
+            flex: 0 0 calc(33.333% - 20px);
+            display: flex;
+            flex-direction: column;
+        }
 
-.testimonial-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(92,158,173,0.15);
-}
+        @media (max-width: 992px) {
+            .testimonial-column {
+                flex: 0 0 calc(50% - 20px);
+            }
+        }
 
-.student-img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--primary-light);
-}
+        @media (max-width: 768px) {
+            .testimonial-column {
+                flex: 0 0 100%;
+            }
+        }
 
-.tech-badge {
-    background: var(--bg-light);
-    color: var(--primary-dark);
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    margin: 2px 3px;
-    display: inline-block;
-    border: 1px solid var(--primary-light);
-}
+        .testimonial-card {
+            background: #fff;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-light);
+            padding: 1.5rem;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            width: 100%;
+        }
 
-.role-highlight {
-    background: var(--bg-light);
-    padding: 12px;
-    border-radius: 8px;
-    margin-top: 12px;
-    border-left: 3px solid var(--accent-color);
-    font-size: 0.9rem;
-}
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(92,158,173,0.15);
+        }
 
-/* Footer - Override to use black text */
-footer {
-    color: #000000 !important;
-}
+        /* Quote container */
+        .quote-container {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
 
-footer .footer-logo {
-    color: #000000 !important;
-}
+        .quote-content {
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.3s ease;
+            margin-bottom: 0;
+            min-height: 96px;
+        }
 
-footer .social-links a {
-    color: #000000 !important;
-}
+        .quote-content.expanded {
+            -webkit-line-clamp: unset;
+            display: block;
+            min-height: auto;
+        }
 
-footer .social-links a:hover {
-    color: #ffffff !important;
-}
+        /* See More button for quotes */
+        .see-more-btn {
+            background: transparent;
+            border: none;
+            color: var(--primary-light);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 5px 0;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 8px;
+        }
 
-footer copyright {
-    color: #000000 !important;
-    border-top: 1px solid rgba(0, 0, 0, 0.2) !important;
-}
+        .see-more-btn:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        /* Student image styling */
+        .student-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-light);
+            flex-shrink: 0;
+        }
+
+        /* Role highlight section */
+        .role-highlight {
+            background: var(--bg-light);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 3px solid var(--accent-color);
+            font-size: 0.9rem;
+        }
+
+        .tech-badge {
+            background: var(--bg-light);
+            color: var(--primary-dark);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 2px 3px;
+            display: inline-block;
+            border: 1px solid var(--primary-light);
+        }
+
+        /* Animation for showing testimonials */
+        .testimonial-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .testimonial-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
 /* Responsive Adjustments */
 @media (max-width: 992px) {
-    .hero-title { 
-        font-size: 2.5rem; 
+    .hero-title {
+        font-size: 2.5rem;
     }
-    .hero-subtitle { 
-        font-size: 1.1rem; 
+    .hero-subtitle {
+        font-size: 1.1rem;
     }
 }
 
 @media (max-width: 768px) {
-    .hero-title { 
-        font-size: 2.2rem; 
+    .hero-title {
+        font-size: 2.2rem;
     }
-    .hero-subtitle { 
-        font-size: 1rem; 
+    .hero-subtitle {
+        font-size: 1rem;
     }
-    .section-header h2 { 
-        font-size: 1.8rem; 
+    .section-header h2 {
+        font-size: 1.8rem;
+    }
+    .carousel-control-prev, .carousel-control-next {
+        display: none; /* Hide controls on mobile for cleaner UI */
     }
 }
 
 @media (max-width: 576px) {
-    .company-grid { 
-        grid-template-columns: 1fr; 
+    .company-grid {
+        grid-template-columns: 1fr;
     }
-    .footer-content { 
-        flex-direction: column; 
-        gap: 1.2rem; 
+    .footer-content {
+        flex-direction: column;
+        gap: 1.2rem;
     }
-    .hero-title { 
-        font-size: 2rem; 
+    .hero-title {
+        font-size: 2rem;
     }
-    .hero-section { 
-        height: 60vh; 
+    .hero-slider, .carousel-item {
+        height: 60vh;
     }
 }

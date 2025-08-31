@@ -5,7 +5,7 @@ from .models import Scholarship, UserProfile, Company, Testimonial, Announcement
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Case, When, IntegerField
 from datetime import date, timedelta
 from .forms import UserRegisterForm, CustomPasswordChangeForm, StudentProfileForm
 from django.views.generic import TemplateView
@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
+from django.utils.dateparse import parse_date
 import json # Corrected: Moved import to the top of the file
 
 def is_faculty_or_admin(user):
@@ -40,66 +41,129 @@ def homepage(request):
     return render(request, 'scholarships/homepage.html', context)
 
 
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from datetime import date, timedelta
+from .models import Scholarship
+
+
 @login_required
 def scholarship_list_view(request):
-    scholarships = Scholarship.objects.all()
-    search_query = request.GET.get('search')
-    min_gpa = request.GET.get('min_gpa')
-    deadline_filter = request.GET.get('deadline')
-    major = request.GET.get('major')
+    # Fetch all scholarships
+    scholarships_list = Scholarship.objects.all()
 
-    academic_level = request.GET.get('level')
-    sort_by = request.GET.get('sort', 'deadline') # Default sort by deadline
-    if search_query:
-        scholarships = scholarships.filter(
-            Q(title__icontains=search_query) |
-            Q(description__icontains=search_query) |
-            Q(country__icontains=search_query)
-        )
-    
-    if min_gpa:
-        scholarships = scholarships.filter(min_gpa__gte=float(min_gpa))
+    # Get filter and sort parameters from the request
+    search_query = request.GET.get('search', '')
+    selected_deadline = request.GET.get('deadline', '')
+    selected_level = request.GET.get('level', '')
+    major = request.GET.get('major', '')
+    min_gpa_query = request.GET.get('min_gpa', '')
+    sort_by = request.GET.get('sort', 'deadline')
+    start_date_str = request.GET.get('start_date', '')
+    end_date_str = request.GET.get('end_date', '')
 
-    if deadline_filter:
-        today = date.today()
-        if deadline_filter == 'week':
-            end_date = today + timedelta(days=7)
-            scholarships = scholarships.filter(deadline__range=[today, end_date])
-        elif deadline_filter == 'month':
-            end_date = today + timedelta(days=30)
-            scholarships = scholarships.filter(deadline__range=[today, end_date])
-            
-    if major:
-        scholarships = scholarships.filter(major=major)
-        
-    # Filter by the new 'level' field
-    if academic_level:
-        scholarships = scholarships.filter(level=academic_level)
+    # Apply filters
+    month_mapping = {
+        'january': 1, 'jan': 1, 'february': 2, 'feb': 2, 'march': 3, 'mar': 3,
+        'april': 4, 'apr': 4, 'may': 5, 'june': 6, 'jun': 6, 'july': 7, 'jul': 7,
+        'august': 8, 'aug': 8, 'september': 9, 'sep': 9, 'october': 10, 'oct': 10,
+        'november': 11, 'nov': 11, 'december': 12, 'dec': 12
+    }
+
+    is_date_search = False
+
+    # Split the query to handle "Sep 2025"
+    query_parts = search_query.split()
+
+    if len(query_parts) == 2:
+        month_part = query_parts[0].lower()
+        year_part = query_parts[1]
+
+        if month_part in month_mapping and year_part.isdigit():
+            month_int = month_mapping[month_part]
+            year_int = int(year_part)
+            scholarships_list = scholarships_list.filter(
+                deadline__month=month_int,
+                deadline__year=year_int
+            )
+            is_date_search = True
+
+    if not is_date_search:
+        # Check for month name or number as a single word
+        if search_query.lower() in month_mapping:
+            month_int = month_mapping[search_query.lower()]
+            scholarships_list = scholarships_list.filter(deadline__month=month_int)
+            is_date_search = True
+        else:
+            try:
+                search_int = int(search_query)
+                if 1 <= search_int <= 12:  # Check for month number
+                    scholarships_list = scholarships_list.filter(deadline__month=search_int)
+                    is_date_search = True
+                elif 1900 <= search_int <= 2100:  # Check for year number
+                    scholarships_list = scholarships_list.filter(deadline__year=search_int)
+                    is_date_search = True
+            except (ValueError, TypeError):
+                pass
+
+    if not is_date_search and search_query:
+        scholarships_list = scholarships_list.filter(
+            Q(title__icontains=search_query) | Q(description__icontains=search_query) | Q(
+                country__icontains=search_query))
+
+
+    if selected_level:
+            scholarships_list = scholarships_list.filter(level=selected_level)
+
+    if min_gpa_query:
+        try:
+            min_gpa_value = float(min_gpa_query)
+            scholarships_list = scholarships_list.filter(min_gpa__gte=min_gpa_value)
+        except (ValueError, TypeError):
+            # Handle case where GPA is not a valid number
+            pass
+
+    if major and major != "All":
+        scholarships_list = scholarships_list.filter(major=major)
 
     # Apply sorting
     if sort_by == 'newest':
-        scholarships = scholarships.order_by('-created_at')
-    else: # Default is 'deadline'
-        scholarships = scholarships.order_by('deadline')
-        
-    # Get all majors for the dropdown filter
-    all_majors = Scholarship.objects.values_list('major', 'major').distinct()
-    
+        scholarships_list = scholarships_list.order_by('-created_at')
+    else:  # This handles 'deadline' sort_by
+        # Sorts by 'active' status first (0 for active, 1 for expired), then by deadline
+        scholarships_list = scholarships_list.order_by(
+            Case(
+                When(deadline__gte=date.today(), then=0),
+                default=1,
+                output_field=IntegerField(),
+            ),
+            'deadline'
+        )
+
+    # --- Pagination Logic ---
+    paginator = Paginator(scholarships_list, 2) # Show 10 scholarships per page
+    page_number = request.GET.get('page')
+    try:
+        scholarships = paginator.page(page_number)
+    except PageNotAnInteger:
+        scholarships = paginator.page(1)
+    except EmptyPage:
+        scholarships = paginator.page(paginator.num_pages)
+
     context = {
         'scholarships': scholarships,
         'search_query': search_query,
-        'selected_min_gpa': min_gpa,
-        'selected_deadline': deadline_filter,
-        'sort_by': sort_by,
+        'selected_deadline': selected_deadline,
+        'min_gpa_query': min_gpa_query,
+        'selected_level': selected_level,
         'major': major,
-        # Pass the new choices constant to the template
+        'sort_by': sort_by,
         'academic_level_choices': ACADEMIC_LEVEL_CHOICES,
-        # Pass the selected academic level to the template for state preservation
-        'selected_level': academic_level,
+        'start_date': start_date_str,
+        'end_date': end_date_str,
+        'today': date.today(),
     }
-
     return render(request, 'scholarships/scholarship_list.html', context)
-
 
 def register_view(request):
     if request.method == 'POST':
@@ -108,7 +172,7 @@ def register_view(request):
             user = form.save()
             login(request, user)
             messages.success(request, f'Account created for {user.username}! You are now logged in.')
-            
+
             if hasattr(user, 'userprofile') and user.userprofile.role in ['FACULTY', 'ADMIN']:
                 return redirect('faculties:faculty_dashboard_home')
             else:
@@ -161,6 +225,7 @@ def logout_view(request):
     return redirect('home')
 
 
+
 class InternshipsView(TemplateView):
     template_name = 'internships.html'
 
@@ -170,19 +235,38 @@ class InternshipsView(TemplateView):
         context['testimonials'] = Testimonial.objects.all()
         return context
 
-
+@login_required
 def scholarship_detail(request, pk):
     scholarship = get_object_or_404(Scholarship, pk=pk)
-    context = {'scholarship': scholarship}
+    context = {
+        'scholarship': scholarship,
+        'today': date.today()
+    }
     return render(request, 'scholarships/scholarship_detail.html', context)
 
 
 # ---------- Student Dashboard & Wishlist ----------
+
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger  # Add this import
+
+
 @login_required
 def student_dashboard(request):
     user = request.user
     profile = user.userprofile
-    wishlist_scholarships = user.wishlist.all()
+    wishlist_scholarships_list = user.wishlist.all().order_by('-id')  # Fetch all scholarships and order them
+
+    paginator = Paginator(wishlist_scholarships_list, 2)  # Show 5 scholarships per page
+    page = request.GET.get('page', 1)
+
+    try:
+        wishlist_scholarships = paginator.page(page)
+    except PageNotAnInteger:
+        wishlist_scholarships = paginator.page(1)
+    except EmptyPage:
+        wishlist_scholarships = paginator.page(paginator.num_pages)
+
     password_form = CustomPasswordChangeForm(user=user)
     profile_form = StudentProfileForm(instance=profile)
 
@@ -205,12 +289,12 @@ def student_dashboard(request):
 
     context = {
         'user': user,
-        'wishlist_scholarships': wishlist_scholarships,
+        'wishlist_scholarships': wishlist_scholarships,  # Pass the paginated object
         'password_form': password_form,
         'profile_form': profile_form,
+        'today': date.today(),
     }
     return render(request, 'student_dashboard.html', context)
-
 
 @login_required
 def toggle_wishlist(request, scholarship_id):

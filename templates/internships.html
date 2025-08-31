@@ -1,4 +1,3 @@
-<!-- #uniHub/scholarships/internships.html -->
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Internship Opportunities{% endblock %}
@@ -8,30 +7,45 @@
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="hero-content">
-        <div class="container text-center">
-            <h1 class="hero-title">Internship Hub</h1>
-            <p class="hero-subtitle">Connecting Computer Science Students with Industry Leaders</p>
+<!-- Hero Slider Section -->
+<section class="hero-slider">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+
         </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active" style="background-image: url('{% static 'images/intern1.jpg' %}')">
+                <div class="hero-content">
+                    <h1 class="hero-title">Internship Hub</h1>
+                    <p class="hero-subtitle">Connecting Computer Science Students with Industry Leaders</p>
+                </div>
+            </div>
+            <div class="carousel-item" style="background-image: url('{% static 'images/intern2.jpg' %}')">
+                <div class="hero-content">
+                    <h1 class="hero-title">Gain Real Experience</h1>
+                    <p class="hero-subtitle">Apply your classroom knowledge in professional settings</p>
+                </div>
+            </div>
+
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 </section>
 
-<!-- Featured Companies Section -->
 <section class="py-5" id="partners">
     <div class="container">
         <div class="section-header">
-            <h2>Our <span>Company Partnerships</span></h2>
+            <h2>Our Company Partnerships </h2>
             <p>Leading companies where our students have secured internships</p>
-        </div>
-
-        <div class="mb-5 text-center">
-            <p class="section-description">
-                We partner with top tech companies to provide real-world internship opportunities.
-                Our students gain hands-on experience working with industry-leading technologies
-                and professionals.
-            </p>
         </div>
 
         <div class="company-grid">
@@ -52,50 +66,123 @@
         </div>
     </div>
 </section>
-
-<!-- Senior Testimonials -->
 <section class="py-5" id="testimonials">
     <div class="container">
         <div class="section-header">
             <h2>Senior <span>Experiences</span></h2>
-            <p>Hear from our graduates about their internship journeys</p>
+            <p>Hear from our seniors about their internship journeys</p>
         </div>
 
-        <div class="row">
-            {% for testimonial in testimonials %}
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="testimonial-card">
-                    <div class="d-flex align-items-center mb-4">
-                        {% if testimonial.student_photo %}
-                        <img src="{{ testimonial.student_photo.url }}" alt="{{ testimonial.student_name }}" class="student-img me-3">
-                        {% else %}
-                        <div class="student-img bg-secondary d-flex align-items-center justify-content-center me-3">
-                            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
-                        </div>
-                        {% endif %}
-                        <div>
-                            <h5 class="mb-0">{{ testimonial.student_name }}</h5>
-                            <p class="text-muted mb-0">{{ testimonial.graduation_info }}</p>
-                            <div class="mt-1">
-                                <span class="tech-badge">{{ testimonial.company }}</span>
-                                <span class="tech-badge">{{ testimonial.role }}</span>
+        <div class="testimonials-container">
+            <!-- We'll create three columns and distribute testimonials among them -->
+            <div class="testimonial-column" id="column-1">
+                {% for testimonial in testimonials %}
+                    {% if forloop.counter0|divisibleby:3 %}
+                    <div class="testimonial-card">
+                        <div class="d-flex align-items-center mb-4">
+                            {% if testimonial.student_photo %}
+                            <img src="{{ testimonial.student_photo.url }}" alt="{{ testimonial.student_name }}" class="student-img me-3">
+                            {% else %}
+                            <div class="student-img bg-secondary d-flex align-items-center justify-content-center me-3">
+                                <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <h5 class="mb-0">{{ testimonial.student_name }}</h5>
+                                <div class="mt-1">
+                                    <span class="tech-badge">{{ testimonial.company }}</span>
+                                    <span class="tech-badge">{{ testimonial.role }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <p class="card-text">{{ testimonial.quote }}</p>
+                        <div class="quote-container">
+                            <p class="card-text quote-content">{{ testimonial.quote }}</p>
+                        </div>
 
-                    <div class="role-highlight mt-3">
-                        <p class="mb-1"><strong>Role:</strong> {{ testimonial.role }}</p>
-                        <p class="mb-1"><strong>Technologies:</strong> {{ testimonial.technologies }}</p>
+                        <button class="see-more-btn">See More</button>
+
+                        <div class="role-highlight mt-3">
+                            <p class="mb-1"><strong>Role:</strong> {{ testimonial.role }}</p>
+                        </div>
                     </div>
+                    {% endif %}
+                {% empty %}
+                <div class="testimonial-card">
+                    <p class="text-muted">No testimonials available at the moment.</p>
                 </div>
+                {% endfor %}
             </div>
-            {% empty %}
-            <div class="col-12 text-center">
-                <p class="text-muted">No testimonials available at the moment.</p>
+
+            <div class="testimonial-column" id="column-2">
+                {% for testimonial in testimonials %}
+                    {% if forloop.counter0|divisibleby:3 == False and forloop.counter0|add:1|divisibleby:3 == False %}
+                    <div class="testimonial-card">
+                        <div class="d-flex align-items-center mb-4">
+                            {% if testimonial.student_photo %}
+                            <img src="{{ testimonial.student_photo.url }}" alt="{{ testimonial.student_name }}" class="student-img me-3">
+                            {% else %}
+                            <div class="student-img bg-secondary d-flex align-items-center justify-content-center me-3">
+                                <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <h5 class="mb-0">{{ testimonial.student_name }}</h5>
+                                <div class="mt-1">
+                                    <span class="tech-badge">{{ testimonial.company }}</span>
+                                    <span class="tech-badge">{{ testimonial.role }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quote-container">
+                            <p class="card-text quote-content">{{ testimonial.quote }}</p>
+                        </div>
+
+                        <button class="see-more-btn">See More</button>
+
+                        <div class="role-highlight mt-3">
+                            <p class="mb-1"><strong>Role:</strong> {{ testimonial.role }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
             </div>
-            {% endfor %}
+
+            <div class="testimonial-column" id="column-3">
+                {% for testimonial in testimonials %}
+                    {% if forloop.counter0|add:1|divisibleby:3 %}
+                    <div class="testimonial-card">
+                        <div class="d-flex align-items-center mb-4">
+                            {% if testimonial.student_photo %}
+                            <img src="{{ testimonial.student_photo.url }}" alt="{{ testimonial.student_name }}" class="student-img me-3">
+                            {% else %}
+                            <div class="student-img bg-secondary d-flex align-items-center justify-content-center me-3">
+                                <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <h5 class="mb-0">{{ testimonial.student_name }}</h5>
+                                <div class="mt-1">
+                                    <span class="tech-badge">{{ testimonial.company }}</span>
+                                    <span class="tech-badge">{{ testimonial.role }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quote-container">
+                            <p class="card-text quote-content">{{ testimonial.quote }}</p>
+                        </div>
+
+                        <button class="see-more-btn">See More</button>
+
+                        <div class="role-highlight mt-3">
+                            <p class="mb-1"><strong>Role:</strong> {{ testimonial.role }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 </section>
@@ -103,10 +190,9 @@
 
 {% block extra_js %}
 <script>
-    // Simple animation for cards on scroll
     document.addEventListener('DOMContentLoaded', function() {
+        // Simple animation for cards on scroll
         const cards = document.querySelectorAll('.company-card, .testimonial-card');
-
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -122,6 +208,40 @@
             card.style.transition = 'all 0.5s ease';
             observer.observe(card);
         });
+
+        // Auto-advance the carousel every 5 seconds
+        const myCarousel = document.getElementById('heroCarousel');
+        const carousel = new bootstrap.Carousel(myCarousel, {
+            interval: 5000,
+            wrap: true
+        });
+
+        // Add "See More" buttons to long testimonials
+        function addSeeMoreButtons() {
+            const testimonialCards = document.querySelectorAll('.testimonial-card');
+
+            testimonialCards.forEach(card => {
+                const content = card.querySelector('.quote-content');
+                const originalText = content.textContent;
+                const seeMoreBtn = card.querySelector('.see-more-btn');
+
+                // Check if text is longer than 200 characters
+                if (originalText.length > 200) {
+                    seeMoreBtn.style.display = 'block';
+
+                    seeMoreBtn.addEventListener('click', function() {
+                        content.classList.toggle('expanded');
+                        seeMoreBtn.textContent = content.classList.contains('expanded') ? 'See Less' : 'See More';
+                    });
+                } else {
+                    // Hide see more button if not needed
+                    seeMoreBtn.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize the see more functionality
+        addSeeMoreButtons();
     });
 </script>
 {% endblock %}

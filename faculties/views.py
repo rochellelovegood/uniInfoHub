@@ -67,8 +67,7 @@ def faculty_dashboard_home(request):
         'my_scholarships': my_scholarships,
         'my_companies': Company.objects.all(), 
         'my_announcements': my_announcements,# Keep this for the separate tab
-        'recent_activities': recent_activities, 
-      
+        'recent_activities': recent_activities,     
         'total_count':   my_scholarships.count() + my_announcements.count()+ Company.objects.count(),
     }
 

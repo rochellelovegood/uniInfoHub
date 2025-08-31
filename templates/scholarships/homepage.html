@@ -40,21 +40,21 @@
 
         <div class="category-cards">
             <a href="{% url 'scholarships:list' %}" class="category-card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1584697964358-3e14ca57658b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80" alt="Scholarships">
-                </div>
-                <div class="card-content">
-                    <h3>Scholarships</h3>
-                    <p>Discover financial aid opportunities to support your education. Find scholarships tailored to your field of study, achievements, and background.</p>
-                    <div class="card-link">
-                        Explore Scholarships <i class="fas fa-arrow-right"></i>
-                    </div>
-                </div>
-            </a>
+    <div class="card-image">
+        <img src="{% static 'images/announcement.jpg' %}" alt="Scholarships">
+    </div>
+    <div class="card-content">
+        <h3>Scholarships</h3>
+        <p>Discover financial aid opportunities to support your education. Find scholarships tailored to your field of study, achievements, and background.</p>
+        <div class="card-link">
+            Explore Scholarships <i class="fas fa-arrow-right"></i>
+        </div>
+    </div>
+</a>
 
             <a href="{% url 'internships' %}" class="category-card">
                 <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80" alt="Internships">
+                    <img src="{% static 'images/scholarship.HEIC' %}" alt="Internships">
                 </div>
                 <div class="card-content">
                     <h3>Internships</h3>
@@ -67,11 +67,11 @@
 
             <a href="{% url 'scholarships:announcements_list' %}" class="category-card">
                 <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80" alt="Activities">
+                    <img src="{% static 'images/intern4.jpg' %}" alt="Activities">
                 </div>
                 <div class="card-content">
-                    <h3>Activities</h3>
-                    <p>Participate in extracurricular activities, workshops, and events to enhance your skills and build your network.</p>
+                    <h3>Announcements</h3>
+                    <p>Stay up-to-date with the latest news, events, and important notices from the university.</p>
                     <div class="card-link">
                         Browse Activities <i class="fas fa-arrow-right"></i>
                     </div>
@@ -85,15 +85,15 @@
     <div class="container">
         <div class="stats-container">
             <div class="stat-card">
-                <div class="stat-number">1,250+</div>
+                <div class="stat-number">150+</div>
                 <div class="stat-label">Scholarships</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">850+</div>
+                <div class="stat-number">150+</div>
                 <div class="stat-label">Internships</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">500+</div>
+                <div class="stat-number">100+</div>
                 <div class="stat-label">Activities</div>
             </div>
             <div class="stat-card">
