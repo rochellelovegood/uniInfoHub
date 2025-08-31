@@ -1,7 +1,7 @@
 .announcements-container {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem 1.5rem;
+    padding: 2rem 1rem;
 }
 
 .page-header {
@@ -21,12 +21,17 @@
     color: #666;
 }
 
+.announcements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+}
+
 .announcement-card {
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    padding: 1.2rem;
     transition: box-shadow 0.3s ease;
 }
 
@@ -34,19 +39,41 @@
     box-shadow: 0 6px 18px rgba(0,0,0,0.12);
 }
 
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
 .card-title {
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: #0A2463;
-    margin-bottom: 0.5rem;
+    margin: 0;
+}
+
+.badge-new {
+    background-color: #FF5A5F;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
 }
 
 .card-meta {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
     font-size: 0.9rem;
-    color: #666;
+    color: #555;
+    justify-content: flex-start;
     margin-bottom: 1rem;
+}
+
+.card-meta i {
+    margin-right: 0.25rem;
+    color: #0A2463;
 }
 
 .card-content {
@@ -56,19 +83,18 @@
     margin-bottom: 1rem;
 }
 
-.see-more-btn {
-    background: none;
-    border: none;
-    color: #0A2463;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: underline;
-    padding: 0;
-    font-size: 0.95rem;
+.attachment a {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    background: #0A2463;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.85rem;
 }
 
-.see-more-btn:hover {
-    color: #5C9EAD;
+.attachment a:hover {
+    background: #5C9EAD;
 }
 
 .card-footer {
@@ -76,23 +102,12 @@
     color: #666;
     border-top: 1px solid #eee;
     padding-top: 0.75rem;
-}
-
-.see-more-btn i {
-    font-size: 0.9rem;
+    text-align: right;
 }
 
 /* Responsive breakpoints */
 @media (max-width: 900px) {
-    .grid-sizer,
-    .announcement-card {
-        width: 100%; /* 2 columns tablet */
-    }
-}
-
-@media (max-width: 600px) {
-    .grid-sizer,
-    .announcement-card {
-        width: 100%; /* 1 column mobile */
+    .announcements-grid {
+        grid-template-columns: 1fr; /* single column on tablet and below */
     }
 }

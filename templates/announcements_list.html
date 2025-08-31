@@ -2,47 +2,56 @@
 {% load static %}
 
 {% block title %}{{ title }}{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/announcement.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="announcements-container">
-    <div class="page-header">
-        <h2>{{ title }}</h2>
-        <p class="text-secondary">Browse through the latest updates and important notices</p>
-    </div>
+    <div class="page-header">
+        <h2>{{ title }}</h2>
+        <p class="text-secondary">Browse through the latest updates and important notices</p>
+    </div>
 
-    {% if announcements %}
-        {% for announcement in announcements %}
-        <div class="announcement-card">
-            <h3 class="card-title">{{ announcement.title }}</h3>
-            <div class="card-meta">
-                {% if announcement.place %}
-                <span><i class="bi bi-geo-alt-fill"></i> {{ announcement.place }}</span>
-                {% endif %}
-                {% if announcement.time %}
-                <span><i class="bi bi-clock-fill"></i> {{ announcement.time|date:"g:i A" }}</span>
-                {% endif %}
-            </div>
+    {% if announcements %}
+    <div class="announcements-grid">
+        {% for announcement in announcements %}
+        <div class="announcement-card">
+            <div class="card-header">
+                <h3 class="card-title">{{ announcement.title }}</h3>
+                {% if announcement.is_new %}
+                <span class="badge-new">NEW</span>
+                {% endif %}
+            </div>
 
-            <div class="card-content" id="content-{{ announcement.id }}">
-                {{ announcement.content|linebreaks }}
-            </div>
+            <div class="card-meta">
+                {% if announcement.place %}
+                <span><i class="bi bi-geo-alt-fill"></i> {{ announcement.place }}</span>
+                {% endif %}
+                {% if announcement.time %}
+                <span><i class="bi bi-clock-fill"></i> {{ announcement.time|date:"g:i A" }}</span>
+                {% endif %}
+            </div>
 
-            {% if announcement.attachment %}
-            <div class="attachment mt-2">
-                <a href="{{ announcement.attachment.url }}" target="_blank">View Attachment</a>
-            </div>
-            {% endif %}
+            <div class="card-content" id="content-{{ announcement.id }}">
+                {{ announcement.content|linebreaks }}
+            </div>
 
-            <div class="card-footer">
-                Posted on {{ announcement.created_at|date:"M d, Y" }}
-            </div>
-        </div>
-        {% endfor %}
-    {% else %}
-    <p>No announcements available.</p>
-    {% endif %}
+            {% if announcement.attachment %}
+            <div class="attachment mt-2">
+                <a href="{{ announcement.attachment.url }}" target="_blank">View Attachment</a>
+            </div>
+            {% endif %}
+
+            <div class="card-footer">
+                Posted on {{ announcement.created_at|date:"M d, Y" }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No announcements available.</p>
+    {% endif %}
 </div>
 {% endblock %}
