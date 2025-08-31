@@ -7,6 +7,7 @@ app_name = 'scholarships'
 urlpatterns = [
     # Public-facing views for scholarships
     path('', views.scholarship_list_view, name='list'),
+    
 
     # User authentication-related views
     path('register/', views.register_view, name='register'),
@@ -22,5 +23,5 @@ urlpatterns = [
 
     # From main branch
     path('announcements/', views.announcements_list, name='announcements_list'),
-   
+    path('resources/', views.resources, name='resources'),
 ]

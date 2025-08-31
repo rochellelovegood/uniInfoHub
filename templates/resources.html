@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Resource Hub | UcsyerHub{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/resourcepage.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="resources-hero">
+    <div class="hero-content">
+        <div class="hero-grid">
+            <div class="hero-text-content">
+                <h1 class="hero-title">Resource Hub</h1>
+                <p class="hero-subtitle">Essential tools for your academic and professional journey</p>
+
+                <div class="hero-highlight">
+                    <h3 class="highlight-title">Why These Resources Matter</h3>
+                    <p class="highlight-text">Our curated collection of resources helps students prepare effectively for scholarships, internships, and career opportunities. Each link has been selected for its quality and relevance to your goals.</p>
+                </div>
+            </div>
+
+            <div class="hero-image-container">
+                <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+                     alt="Resource Hub" class="hero-image">
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="text-center mb-5">
+        <h2 class="section-title">Essential Student Resources</h2>
+        <p class="lead text-muted">Tools and guides to help you succeed in scholarship applications and career preparation</p>
+    </div>
+
+    <div class="resource-cards">
+        <!-- Scholarship Preparation Card -->
+        <div class="resource-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="bi bi-award"></i>
+                </div>
+                <h3 class="mb-0">Scholarship Preparation</h3>
+            </div>
+            <div class="card-body">
+                <div class="resource-item">
+                    <div class="resource-icon bg-primary">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+                    <div class="resource-text">
+                        <h4 class="resource-title">IELTS Practice</h4>
+                        <p class="resource-description">Official sample test questions and preparation materials</p>
+                    </div>
+                    <a href="https://www.ielts.org/about-the-test/sample-test-questions" target="_blank" class="external-link">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                </div>
+
+                <div class="resource-item">
+                    <div class="resource-icon bg-info">
+                        <i class="bi bi-translate"></i>
+                    </div>
+                    <div class="resource-text">
+                        <h4 class="resource-title">Duolingo Practice</h4>
+                        <p class="resource-description">Free language learning resources and test prep</p>
+                    </div>
+                    <a href="https://englishtest.duolingo.com/practice" target="_blank" class="external-link">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                </div>
+
+                <div class="resource-item">
+                    <div class="resource-icon bg-warning">
+                        <i class="bi bi-card-checklist"></i>
+                    </div>
+                    <div class="resource-text">
+                        <h4 class="resource-title">TOEFL Practice</h4>
+                        <p class="resource-description">Official test preparation guides and resources</p>
+                    </div>
+                    <a href="https://www.ets.org/toefl/test-takers/ibt/prepare.html" target="_blank" class="external-link">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                </div>
+
+                <div class="resource-item">
+                    <div class="resource-icon bg-success">
+                        <i class="bi bi-envelope-paper"></i>
+                    </div>
+                    <div class="resource-text">
+                        <h4 class="resource-title">Motivation Letter Writing</h4>
+                        <p class="resource-description">Examples and guides for crafting compelling letters</p>
+                    </div>
+                    <a href="https://www.mastersportal.com/articles/415/how-to-write-a-motivation-letter-for-a-scholarship.html" class="external-link">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Internship Preparation Card -->
+        <div class="resource-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="bi bi-briefcase"></i>
+                </div>
+                <h3 class="mb-0">Internship Preparation</h3>
+            </div>
+            <div class="card-body">
+                <div class="resource-item">
+                    <div class="resource-icon bg-danger">
+                        <i class="bi bi-file-earmark-person"></i>
+                    </div>
+                    <div class="resource-text">
+                        <h4 class="resource-title">CV Writing Practice</h4>
+                        <p class="resource-description">Professional templates and examples for all industries</p>
+                    </div>
+                    <a href="https://resume.io/cover-letter-examples/internship" target="_blank" class="external-link">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                </div>
+
+                <div class="resource-item">
+                    <div class="resource-icon bg-indigo">
+                        <i class="bi bi-collection"></i>
+                    </div>
+                    <div class="resource-text">
+                        <h4 class="resource-title">Portfolio Building</h4>
+                        <p class="resource-description">Design templates and inspiration for your portfolio</p>
+                    </div>
+                    <a href="https://www.w3schools.com/howto/howto_website_create_portfolio.asp?utm_source=chatgpt.com" target="_blank" class="external-link">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                </div>
+
+                <div class="resource-item">
+                    <div class="resource-icon bg-teal">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="resource-text">
+                        <h4 class="resource-title">Interview Preparation</h4>
+                        <p class="resource-description">Common questions and strategies for success</p>
+                    </div>
+                    <a href="https://www.mockquestions.com" class="external-link">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                </div>
+
+                <div class="resource-item">
+                    <div class="resource-icon bg-orange">
+                        <i class="bi bi-linkedin"></i>
+                    </div>
+                    <div class="resource-text">
+                        <h4 class="resource-title">LinkedIn Profile Guide</h4>
+                        <p class="resource-description">Optimize your profile for internship opportunities</p>
+                    </div>
+                    <a href="https://www.coursera.org/articles/linkedin-profile" class="external-link">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

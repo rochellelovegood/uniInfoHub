@@ -29,10 +29,12 @@ urlpatterns = [
     path('internships/', InternshipsView.as_view(), name='internships'),
 
     path('student_dashboard/', student_dashboard, name='student_dashboard'),
+    
+    
+
 
 ]
 
 # Only serve media files in development mode
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

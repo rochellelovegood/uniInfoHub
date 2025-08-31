@@ -1,0 +1,427 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="card shadow">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">
+                    <i class="fas fa-users me-2"></i> Student Accounts Management
+                </h3>
+                <form method="GET" action="{% url 'faculties:manage_users' %}" class="d-flex search-form">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 fw-bold text-dark">YKPT-</span>
+                        <input type="text"
+                               name="roll_no"
+                               class="form-control border-start-0"
+                               placeholder="Enter roll number"
+                               value="{{ request.GET.roll_no|cut:'YKPT-' }}">
+                        <button class="btn btn-light" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Roll No</th>
+                            <th>Major</th>
+                            <th>Academic Level</th>
+                            <th>Joined</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        {% if user.userprofile.role == 'STUDENT' %}
+                        <tr id="row-{{ user.id }}">
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.userprofile.roll_no }}</td>
+                            <td>{{ user.userprofile.get_major_display }}</td>
+                            <td>{{ user.userprofile.academic_level }}</td>
+                            <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <a href="{% url 'faculties:edit_user' user.id %}"
+                                       class="btn btn-sm btn-primary me-2 action-btn">
+                                        <i class="fas fa-edit me-1"></i> Edit
+                                    </a>
+
+                                    <button type="button" class="btn btn-sm btn-danger delete-trigger action-btn"
+                                            data-user-id="{{ user.id }}"
+                                            data-username="{{ user.username }}"
+                                            data-delete-url="{% url 'faculties:delete_user' user.id %}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal">
+                                        <i class="fas fa-trash-alt me-1"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-4">
+                                <div class="d-flex flex-column align-items-center">
+                                    <i class="fas fa-user-graduate text-muted fa-3x mb-2"></i>
+                                    <h5 class="text-muted">No student accounts found</h5>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="fas fa-exclamation-circle me-2"></i>Confirm Account Deletion
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-start mb-4">
+                    <i class="fas fa-user-slash text-danger me-3 mt-1"></i>
+                    <div>
+                        <p class="mb-1">Are you sure you want to permanently delete the account for <strong id="modalUsername">john.doe@example.com</strong>?</p>
+                        <p class="mb-0 text-muted">This action cannot be undone and will permanently remove all associated data.</p>
+                    </div>
+                </div>
+                <form method="POST" id="deleteForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-1"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash-alt me-1"></i> Delete Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Section Titles */
+    .section-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 2.5rem;
+        color: #0a2463;
+        position: relative;
+    }
+
+    .section-title::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 4px;
+        margin: 0.5rem auto 0;
+        background: linear-gradient(90deg, #0a2463, #5c9ead);
+        border-radius: 2px;
+    }
+
+    /* Card Styles */
+    .card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 1.5rem;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #0a2463, #5c9ead);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 20px 20px 0 0 !important;
+        border-bottom: none;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Table Styles */
+    .table {
+        margin-bottom: 0;
+        background-color: #ffffff;
+        color: #000000;
+    }
+
+    .table thead th {
+        font-weight: 600;
+        color: #0a2463;
+        border-bottom: 2px solid #dee2e6;
+        background-color: #ffffff;
+    }
+
+    .table tbody td {
+        color: #000000;
+        background-color: #ffffff;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Empty state */
+    .text-muted {
+        color: #6c757d !important;
+    }
+
+    /* Action Buttons */
+    .action-btn {
+        min-width: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background: linear-gradient(90deg, #0a2463, #5c9ead);
+        color: white;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        color: white;
+    }
+
+    .btn-danger {
+        background: linear-gradient(90deg, #e63946, #f4a261);
+        color: white;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: #8892b0;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background: #5c9ead;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Search Form */
+    .search-form {
+        width: 300px;
+    }
+
+    .input-group {
+        border-radius: 50px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .input-group-text {
+        background-color: #ffffff;
+        color: #000000;
+        font-weight: 600;
+        border: none;
+    }
+
+    .form-control {
+    border: none;
+    padding: 0.75rem 1rem;
+    color: #000000;
+    background-color: #ffffff;
+}
+
+.form-control::placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+.form-control:focus {
+    color: #000000; /* Changed from #ffffff */
+    background-color: #ffffff; /* Ensure background stays white on focus */
+    box-shadow: 0 0 0 0.2rem rgba(10, 36, 99, 0.25); /* Add focus indicator */
+}
+
+
+    .btn-light {
+        background: #e9ecef;
+        border: none;
+        color: #000000;
+        font-weight: 600;
+    }
+
+    /* Modal Styles */
+    .modal-content {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+        background-color: #ffffff;
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #0a2463, #5c9ead);
+        color: white;
+        border-radius: 20px 20px 0 0;
+        border-bottom: none;
+        padding: 1.5rem;
+    }
+
+    .btn-close {
+        background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .modal-body p {
+        color: #000000;
+    }
+
+    /* Badges */
+    .badge {
+        padding: 0.5em 0.8em;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+
+    .badge-primary {
+        background: linear-gradient(90deg, #0a2463, #5c9ead);
+        color: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .card-header .d-flex {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+
+        .search-form {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .card-header {
+            padding: 1rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+    }
+
+
+
+<!--    /* Dark theme support */-->
+<!--    body.dark-theme .card {-->
+<!--        background: rgba(26, 26, 46, 0.95);-->
+<!--    }-->
+
+<!--    body.dark-theme .table {-->
+<!--        background-color: #1a1a2e;-->
+<!--        color: #ffffff;-->
+<!--    }-->
+
+<!--    body.dark-theme .table thead th {-->
+<!--        background-color: #1a1a2e;-->
+<!--        color: #ccd6f6;-->
+<!--    }-->
+
+<!--    body.dark-theme .table tbody td {-->
+<!--        background-color: #1a1a2e;-->
+<!--        color: #ffffff;-->
+<!--    }-->
+
+<!--    body.dark-theme .table-hover tbody tr:hover {-->
+<!--        background-color: rgba(255, 255, 255, 0.1);-->
+<!--    }-->
+
+
+
+
+<!--    body.dark-theme .input-group-text {-->
+<!--        background-color: rgba(255, 255, 255, 0.1);-->
+<!--        color: #ffffff;-->
+<!--        border-color: #444;-->
+<!--    }-->
+
+<!--    body.dark-theme .btn-light {-->
+<!--        background: rgba(255, 255, 255, 0.1);-->
+<!--        color: #ffffff;-->
+<!--    }-->
+
+<!--    body.dark-theme .modal-content {-->
+<!--        background-color: #1a1a2e;-->
+<!--    }-->
+
+<!--    body.dark-theme .modal-body p {-->
+<!--        color: #ffffff;-->
+<!--    }-->
+
+<!--    body.dark-theme .text-muted {-->
+<!--        color: #a0aec0 !important;-->
+<!--    }-->
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteModal = document.getElementById('deleteModal');
+    const modalUsername = document.getElementById('modalUsername');
+    const deleteForm = document.getElementById('deleteForm');
+
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const username = button.getAttribute('data-username');
+        const deleteUrl = button.getAttribute('data-delete-url');
+
+        // Update modal content
+        modalUsername.textContent = username;
+
+        // Update form action
+        deleteForm.action = deleteUrl;
+    });
+});
+</script>
+{% endblock %}

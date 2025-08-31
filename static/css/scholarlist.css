@@ -1,0 +1,185 @@
+/* Filters Sidebar */
+.search-card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.search-card h5 {
+    font-weight: 700;
+    color: #0A2463;
+}
+
+.search-card .form-control,
+.search-card .form-select,
+.search-card input[type="text"],
+.search-card input[type="search"],
+.search-card select {
+    background-color: #fff !important;
+    color: #0A2463 !important;
+    border: 1px solid #ddd !important;
+}
+
+.search-card .form-control:focus,
+.search-card .form-select:focus,
+.search-card input[type="text"]:focus,
+.search-card input[type="search"]:focus,
+.search-card select:focus {
+    background-color: #fff !important;
+    color: #0A2463 !important;
+    border-color: #5C9EAD !important;
+    box-shadow: 0 0 0 0.25rem rgba(92, 158, 173, 0.25) !important;
+    outline: none;
+}
+
+/* Scholarship Listings */
+.scholarship-card {
+    background-color: #fff;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    border-left: 4px solid #5C9EAD;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease;
+    will-change: transform;
+}
+
+.scholarship-card:hover {
+    transform: translateY(-5px);
+}
+
+.scholarship-header h5 {
+    color: #0A2463;
+    font-weight: 700;
+}
+.badge,
+.deadline-badge {
+    background-color: #F4A261;
+    color: #fff;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.badge-custom {
+    background-color: #E7FAFE;
+    color: #0A2463;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #5C9EAD;
+}
+
+.btn-gradient-primary {
+    background: linear-gradient(90deg, #0a2463, #5c9ead);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    transition: all 0.3s;
+    border-radius: 50px;
+}
+
+.btn-gradient-primary:hover {
+    background: linear-gradient(90deg, #5c9ead, #0a2463);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-gradient-primary:focus,
+.btn-view-details:focus,
+.wishlist-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.25rem rgba(10, 36, 99, 0.3);
+}
+
+.btn-view-details {
+    background-color: #0A2463;
+    color: #fff;
+    border: none;
+    transition: 0.2s;
+    border-radius: 6px;
+}
+
+.btn-view-details:hover {
+    background-color: #5C9EAD;
+}
+
+.wishlist-btn {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #5C9EAD;
+    background-color: transparent;
+}
+
+.wishlist-btn.btn-outline-primary {
+    color: #5C9EAD;
+}
+
+.wishlist-btn.btn-outline-primary:hover {
+    color: #fff;
+    background-color: #5C9EAD;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(92, 158, 173, 0.3);
+}
+
+.wishlist-btn.btn-outline-secondary {
+    color: #fff;
+    background-color: #5C9EAD;
+}
+
+.wishlist-btn.btn-outline-secondary:hover {
+    color: #5C9EAD;
+    background-color: transparent;
+}
+
+.wishlist-btn i {
+    font-size: 1rem;
+    margin-right: 8px;
+}
+
+/* Responsiveness */
+@media (max-width: 767.98px) {
+    .scholarship-card .scholarship-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .scholarship-card .scholarship-header h5 {
+        margin-bottom: 0;
+    }
+
+    .scholarship-card .scholarship-header > div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+}
+
+.scholarship-card .card-body .d-flex.justify-content-between {
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.scholarship-card .card-body .d-flex.justify-content-between > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.badge-custom, .deadline-badge {
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+}
+
+.wishlist-btn, .btn-view-details, .btn-outline-secondary {
+    white-space: nowrap;
+}

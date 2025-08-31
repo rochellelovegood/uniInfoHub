@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
-from scholarships.models import UserProfile
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
@@ -14,12 +13,18 @@ from scholarships.models import Scholarship, UserProfile, Announcement,Company
 from datetime import date
 from django.db.models import Q 
 from django.shortcuts import render, redirect
-from .forms import CompanyForm
+from .forms import CompanyForm, FacultyUserEditForm
 from django.shortcuts import render, redirect
 from .forms import CompanyForm
 from django.shortcuts import render, get_object_or_404
 from itertools import chain
 from operator import attrgetter
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
+from django.views.decorators.http import require_POST
+
+
 # This helper function is specific to faculty access, so it lives here
 def is_faculty_or_admin(user):
     """
@@ -57,13 +62,12 @@ def faculty_dashboard_home(request):
 
     # Get the 3 most recent activities for the dashboard
     recent_activities = all_activities[:3]
-  
+ 
     context = {
         'my_scholarships': my_scholarships,
         'my_companies': Company.objects.all(), 
         'my_announcements': my_announcements,# Keep this for the separate tab
-        'recent_activities': recent_activities, 
-      
+        'recent_activities': recent_activities,     
         'total_count':   my_scholarships.count() + my_announcements.count()+ Company.objects.count(),
     }
 
@@ -80,7 +84,7 @@ def post_scholarship(request):
         return redirect('scholarships:list')
 
     if request.method == 'POST':
-       
+        
         form = ScholarshipForm(request.POST, request.FILES)
         if form.is_valid():
             try:
@@ -199,68 +203,6 @@ def delete_scholarship(request, scholarship_id):
         return redirect('faculties:faculty_dashboard_home')
     
 
-@login_required
-def scholarship_list_view(request):
-
-    today = date.today()
-    scholarships = Scholarship.objects.filter(is_active=True, deadline__gte=today).order_by('deadline')
-
-    # Get filter/search parameters from the URL's GET request (e.g., from the form)
-    query = request.GET.get('q') # General search term (e.g., "science scholarship")
-    min_gpa = request.GET.get('gpa') # User wants scholarships requiring this GPA or lower
-    country = request.GET.get('country') # User wants scholarships for this country
-    major = request.GET.get('major') # User wants scholarships for this major/department
-    deadline_before_str = request.GET.get('deadline_before') # User wants scholarships with a deadline before this date
-
-    # --- Apply Search Filter ---
-    if query:
-        scholarships = scholarships.filter(
-            Q(title__icontains=query) |
-            Q(description__icontains=query) |
-            Q(eligibility__icontains=query) |
-            Q(country__icontains=query) |
-            Q(major_department__icontains=query)
-        ).distinct() # Use distinct to avoid duplicate results if a scholarship matches multiple Q conditions
-
-    # --- Apply GPA Filter ---
-    # Filters for scholarships where their 'min_gpa' is less than or equal to the entered GPA,
-    # OR where the scholarship doesn't specify a min_gpa (meaning it's open to all GPAs).
-    if min_gpa:
-        try:
-            min_gpa_float = float(min_gpa)
-            scholarships = scholarships.filter(Q(min_gpa__lte=min_gpa_float) | Q(min_gpa__isnull=True))
-        except ValueError:
-            pass # Ignore invalid GPA input (e.g., if user types text)
-
-    # --- Apply Country Filter ---
-    if country:
-        scholarships = scholarships.filter(country__icontains=country) # Case-insensitive contains
-
-    # --- Apply Major/Department Filter ---
-    if major:
-        scholarships = scholarships.filter(major_department__icontains=major)
-
-    # --- Apply 'Deadline Before' Filter ---
-    if deadline_before_str:
-        try:
-            # Convert string date from input (YYYY-MM-DD) to a date object
-            target_date = date.fromisoformat(deadline_before_str)
-            scholarships = scholarships.filter(deadline__lte=target_date) # Deadline is less than or equal to target date
-        except ValueError:
-            pass # Ignore invalid date format
-
-    # Prepare context to pass data to the template
-    context = {
-        'scholarships': scholarships,
-        'query': query or '', # Pass back current search query to display in the form
-        'min_gpa': min_gpa or '',
-        'country': country or '',
-        'major': major or '',
-        'deadline_before_str': deadline_before_str or '' # Pass back current deadline filter
-        
-    }
-    return render(request, 'scholarships.html', context)
-
 
 
 @login_required(login_url='login')
@@ -290,30 +232,36 @@ def delete_company(request, pk):
     company = get_object_or_404(Company, pk=pk)
     if request.method == 'POST':
         company.delete()
-        return redirect('faculties:faculty_dashboard')
-    return redirect('faculties:faculty_dashboard')
-# You'll need this import later to display them
+        return redirect('faculties:faculty_dashboard_home')
+    return redirect('faculties:faculty_dashboard_home')
 
 
-@login_required(login_url='login')
+
+
+
+@login_required
+@user_passes_test(is_faculty_or_admin)
 def post_announcement(request):
-    """
-    Handles posting a new announcement.
-    """
     if request.method == 'POST':
-        form = AnnouncementForm(request.POST)
+        # CRITICAL FIX: Add 'request.FILES' to the form instance
+        form = AnnouncementForm(request.POST, request.FILES)
         if form.is_valid():
             announcement = form.save(commit=False)
             announcement.posted_by = request.user
             announcement.save()
-            return redirect('faculties:faculty_dashboard_home') # Redirect to the dashboard
+            
+            # Note: The form.save_m2m() call is not needed unless you have a ManyToMany field.
+            # I have removed it here for cleaner code.
+            
+            messages.success(request, 'Announcement posted successfully.')
+            return redirect('faculties:faculty_dashboard_home')
+        else:
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = AnnouncementForm()
 
     context = {'form': form, 'title': 'Post New Announcement'}
-    # Template path is now in the faculties app
     return render(request, 'dashboard/post_announcement.html', context)
-
 def is_faculty(user):
     return user.userprofile.role in ['FACULTY', 'ADMIN']
 
@@ -337,3 +285,73 @@ def delete_announcement(request, pk):
         announcement.delete()
         messages.success(request, 'Announcement deleted successfully.')
     return redirect('faculties:faculty_dashboard_home')
+
+@login_required
+def manage_users(request):
+    if not request.user.is_authenticated or not request.user.userprofile.role == 'FACULTY':
+        raise PermissionDenied
+
+    # Get search query from URL parameters
+    search_query = request.GET.get('roll_no', '').strip()
+
+    # Start with all student users
+    student_users = User.objects.filter(
+        userprofile__role='STUDENT'
+    ).select_related('userprofile').order_by('-date_joined')
+
+    # Apply search filter if query exists
+    if search_query:
+        student_users = student_users.filter(
+            Q(userprofile__roll_no__icontains=search_query)
+        )
+
+    return render(request, 'manage_users.html', {
+        'users': student_users
+    })
+
+@login_required
+def edit_user(request, user_id):
+    try:
+        profile = request.user.userprofile
+        if profile.role not in ['FACULTY', 'ADMIN']:
+            raise PermissionDenied
+    except UserProfile.DoesNotExist:
+        raise PermissionDenied
+
+    edited_user = get_object_or_404(User, id=user_id)  # Changed variable name
+    user_profile = edited_user.userprofile  # Updated reference
+
+    # Prevent editing superusers
+    if edited_user.is_superuser:  # Updated reference
+        raise PermissionDenied("Cannot edit superuser accounts")
+
+    if request.method == 'POST':
+        # Create form with POST data and profile instance
+        form = FacultyUserEditForm(request.POST, profile=user_profile)
+        if form.is_valid():
+            form.save(edited_user, user_profile)  # Updated reference
+            return redirect('faculties:manage_users')
+    else:
+        # Initialize form with initial data
+        form = FacultyUserEditForm(profile=user_profile, initial={
+            'username': edited_user.username,  # Updated reference
+            'email': edited_user.email,  # Updated reference
+            'is_active': edited_user.is_active,  # Updated reference
+            'role': user_profile.role,
+            'roll_no': user_profile.roll_no,
+            'major': user_profile.major,
+        })
+
+    return render(request, 'dashboard/edit_user.html', {
+        'form': form,
+        'edited_user': edited_user  # Changed key name to avoid conflict
+    })
+
+@login_required
+@require_POST
+def delete_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    username = user.username
+    user.delete()
+    messages.success(request, f"Account {username} has been deleted successfully")
+    return redirect('faculties:manage_users')

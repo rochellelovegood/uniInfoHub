@@ -1,0 +1,172 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f8fafc;
+    color: #1a1a2e;
+    line-height: 1.6;
+}
+/* Dashboard Container */
+.dashboard-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.dashboard-title {
+    font-size: 2rem;
+    font-weight: bold;
+}
+.lead {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+}
+
+/* Section Title */
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Badge */
+.badge {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.7rem;
+}
+
+/* Profile Info */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.info-label {
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.info-value {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Form Inputs */
+.profile-info input,
+.profile-info select {
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+/* Buttons */
+.btn-gradient-primary {
+    background: linear-gradient(90deg, #0a2463, rgb(7, 7, 31));
+    color: #fff;
+    border: none;
+    margin: 2rem;
+    transition: all 0.3s ease;
+}
+.btn-gradient-primary:hover {
+    background: linear-gradient(90deg, #6366f1, #4f46e5);
+}
+
+/* Password Section */
+.password-section {
+    margin-top: 2rem;
+}
+.password-strength {
+    height: 6px;
+    width: 100%;
+    background: #eee;
+    border-radius: 4px;
+    margin-top: 0.3rem;
+    overflow: hidden;
+}
+.password-strength-meter {
+    height: 100%;
+    width: 0;
+    background-color: #4ade80;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+/* Wishlist Scholarship Card */
+.scholarship-card {
+    background-color: #f9f9f9;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+.scholarship-header {
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.badge-custom {
+    background-color: #e0e7ff;
+    color: #3730a3;
+    padding: 0.3rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+/* Empty Wishlist */
+.empty-wishlist {
+    text-align: center;
+    color: #555;
+    padding: 2rem 1rem;
+}
+.empty-wishlist i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #4f46e5;
+}
+
+/* Responsive Fixes */
+@media (max-width: 992px) {
+    .dashboard-card {
+        padding: 1rem;
+    }
+    .info-item {
+        flex-direction: column;
+    }
+    .info-label, .info-value {
+        width: 100%;
+    }
+}
+@media (max-width: 576px) {
+    .section-title {
+        font-size: 1.3rem;
+    }
+    .badge {
+        font-size: 0.8rem;
+    }
+}

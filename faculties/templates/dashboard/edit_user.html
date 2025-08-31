@@ -1,0 +1,409 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="form-container">
+        <div class="form-header">
+            <h2>
+                <i class="bi bi-person-lines-fill me-2"></i> Edit User: {{ edited_user.username }}
+            </h2>
+            <p class="mb-0">Modify user account information and profile details</p>
+        </div>
+
+        <div class="form-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="row">
+                    <!-- Account Information Column -->
+                    <div class="col-md-6">
+                        <h4 class="section-title">Account Information</h4>
+
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control" id="id_username" value="{{ form.username.value|default:'' }}">
+                            {% if form.username.help_text %}
+                                <div class="form-text">{{ form.username.help_text }}</div>
+                            {% endif %}
+                            {% for error in form.username.errors %}
+                                <div class="errorlist">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" id="id_email" value="{{ form.email.value|default:'' }}">
+                            {% if form.email.help_text %}
+                                <div class="form-text">{{ form.email.help_text }}</div>
+                            {% endif %}
+                            {% for error in form.email.errors %}
+                                <div class="errorlist">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="is_active" class="form-check-input" id="id_is_active" {% if form.is_active.value %}checked{% endif %}>
+                                <label class="form-check-label" for="id_is_active">
+                                    Account Active
+                                </label>
+                            </div>
+                            {% for error in form.is_active.errors %}
+                                <div class="errorlist">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h4 class="section-title">Profile Information</h4>
+
+                        <div class="form-group">
+                            <label class="form-label">Role</label>
+                            <input type="role" name="role" class="form-control" id="id_role" value="{{ form.role.value|default:'' }}">
+                            {% for error in form.role.errors %}
+                                <div class="errorlist">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Student-specific fields -->
+                        <div id="student-fields" class="{% if form.role.value == 'STUDENT' %}d-block{% else %}d-none{% endif %}">
+                            <div class="form-group">
+                                <label class="form-label">Roll Number</label>
+                                <input type="text" name="roll_no" class="form-control" id="id_roll_no" value="{{ form.roll_no.value|default:'' }}">
+                                <small class="form-text">Must start with 'YKPT'</small>
+                                {% for error in form.roll_no.errors %}
+                                    <div class="errorlist">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Major</label>
+                                {{ form.major }}
+                                {% for error in form.major.errors %}
+                                    <div class="errorlist">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Academic Level</label>
+                                <div class="form-check mb-2">
+                                    <input type="checkbox" name="academic_level_undergraduate" class="form-check-input" id="id_academic_level_undergraduate" {% if form.academic_level_undergraduate.value %}checked{% endif %}>
+                                    <label class="form-check-label" for="id_academic_level_undergraduate">
+                                        Undergraduate
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="academic_level_graduate" class="form-check-input" id="id_academic_level_graduate" {% if form.academic_level_graduate.value %}checked{% endif %}>
+                                    <label class="form-check-label" for="id_academic_level_graduate">
+                                        Graduate
+                                    </label>
+                                </div>
+
+                                {% for error in form.academic_level_undergraduate.errors %}
+                                    <div class="errorlist">{{ error }}</div>
+                                {% endfor %}
+                                {% for error in form.academic_level_graduate.errors %}
+                                    <div class="errorlist">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="form-actions mt-4 pt-3 border-top">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i> Save Changes
+                        </button>
+                        <a href="{% url 'faculties:manage_users' %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle me-1"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const roleSelect = document.getElementById('id_role');
+    const studentFields = document.getElementById('student-fields');
+    const undergradCheckbox = document.getElementById('id_academic_level_undergraduate');
+    const gradCheckbox = document.getElementById('id_academic_level_graduate');
+
+    // Toggle student fields based on role selection
+    if (roleSelect) {
+        roleSelect.addEventListener('change', function() {
+            if (this.value === 'STUDENT') {
+                studentFields.classList.remove('d-none');
+                studentFields.classList.add('d-block');
+            } else {
+                studentFields.classList.remove('d-block');
+                studentFields.classList.add('d-none');
+            }
+        });
+    }
+
+    // Ensure only one academic level can be selected at a time
+    if (undergradCheckbox && gradCheckbox) {
+        undergradCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                gradCheckbox.checked = false;
+            }
+        });
+
+        gradCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                undergradCheckbox.checked = false;
+            }
+        });
+    }
+});
+</script>
+
+<style>
+    :root {
+        --new-primary: #0a2463;
+        --new-accent: #5c9ead;
+        --new-background: #f8fafc;
+        --text-primary: #1a1a2e;
+        --text-secondary: #8892b0;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: var(--new-background);
+        color: var(--text-primary);
+        line-height: 1.6;
+    }
+
+    /* Section Titles */
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var(--new-primary);
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+
+    .section-title::after {
+        content: "";
+        display: block;
+        width: 40px;
+        height: 3px;
+        margin: 0.5rem 0 0;
+        background: linear-gradient(90deg, var(--new-primary), var(--new-accent));
+        border-radius: 2px;
+    }
+
+    .form-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        backdrop-filter: blur(8px);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        max-width: 1000px;
+        margin: 2rem auto;
+    }
+
+    .form-container:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+    }
+
+    .form-header {
+        background: linear-gradient(135deg, var(--new-primary), var(--new-accent));
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .form-header h2 {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-body {
+        padding: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        color: var(--new-primary);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control, .form-select {
+        background: #ffffff !important;
+        border: 1px solid #dee2e6 !important;
+        color: var(--text-primary) !important;
+        border-radius: 10px !important;
+        padding: 0.75rem 1rem !important;
+        width: 100%;
+        display: block;
+        transition: all 0.3s ease;
+        box-shadow: none !important;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background: #ffffff !important;
+        color: var(--text-primary) !important;
+        border-color: var(--new-accent) !important;
+        box-shadow: 0 0 0 0.25rem rgba(10, 36, 99, 0.25) !important;
+    }
+
+    .form-check-input:checked {
+        background-color: var(--new-primary) !important;
+        border-color: var(--new-primary) !important;
+    }
+
+    .form-check-input:focus {
+        border-color: var(--new-accent) !important;
+        box-shadow: 0 0 0 0.25rem rgba(10, 36, 99, 0.25) !important;
+    }
+
+    .form-check-label {
+        color: var(--text-primary);
+        font-weight: 500;
+        margin-left: 0.5rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(90deg, var(--new-primary), var(--new-accent));
+        color: white;
+        padding: 0.8rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: 0.3s;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: #e9ecef;
+        border: 1px solid #dee2e6;
+        color: var(--text-primary);
+        padding: 0.8rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-secondary:hover {
+        background: #d0d4d9;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .errorlist {
+        color: #e63946;
+        list-style-type: none;
+        padding-left: 0;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .form-text {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+
+    .text-muted {
+        color: var(--text-secondary) !important;
+    }
+
+    /* Dark theme support */
+    body.dark-theme {
+        background-color: #0a192f;
+        color: #ccd6f6;
+    }
+
+    body.dark-theme .form-container {
+        background: #172a45;
+        color: #ccd6f6;
+    }
+
+    body.dark-theme .form-control,
+    body.dark-theme .form-select {
+        background: #0a192f !important;
+        border: 1px solid #444 !important;
+        color: #ccd6f6 !important;
+    }
+
+    body.dark-theme .form-control:focus,
+    body.dark-theme .form-select:focus {
+        background: #0a192f !important;
+        color: #ccd6f6 !important;
+        border-color: #64ffda !important;
+        box-shadow: 0 0 0 0.25rem rgba(100, 255, 218, 0.25) !important;
+    }
+
+    body.dark-theme .form-label,
+    body.dark-theme .form-check-label {
+        color: #ccd6f6;
+    }
+
+    body.dark-theme .btn-secondary {
+        background: #172a45;
+        border: 1px solid #444;
+        color: #ccd6f6;
+    }
+
+    body.dark-theme .btn-secondary:hover {
+        background: #2a3d5e;
+    }
+
+    /* Hide theme switcher in this page */
+    #themeToggle {
+        display: none !important;
+    }
+
+    /* Ensure form controls have proper text color */
+    input[type="text"], input[type="email"], select, input[type="checkbox"] {
+        color: var(--text-primary) !important;
+        background-color: #ffffff !important;
+        border-color: #dee2e6 !important;
+    }
+
+    body.dark-theme input[type="text"],
+    body.dark-theme input[type="email"],
+    body.dark-theme select,
+    body.dark-theme input[type="checkbox"] {
+        color: #ccd6f6 !important;
+        background-color: #0a192f !important;
+        border-color: #444 !important;
+    }
+
+    /* Override any inherited black styles */
+    input, select, textarea {
+        background-color: #ffffff !important;
+        color: var(--text-primary) !important;
+        border-color: #dee2e6 !important;
+    }
+
+    body.dark-theme input,
+    body.dark-theme select,
+    body.dark-theme textarea {
+        background-color: #0a192f !important;
+        color: #ccd6f6 !important;
+        border-color: #444 !important;
+    }
+</style>
+{% endblock %}

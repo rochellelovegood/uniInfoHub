@@ -1,0 +1,98 @@
+.announcements-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.page-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0A2463;
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    font-size: 1rem;
+    color: #666;
+}
+
+.announcement-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: box-shadow 0.3s ease;
+}
+
+.announcement-card:hover {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #0A2463;
+    margin-bottom: 0.5rem;
+}
+
+.card-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.card-content {
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.see-more-btn {
+    background: none;
+    border: none;
+    color: #0A2463;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    font-size: 0.95rem;
+}
+
+.see-more-btn:hover {
+    color: #5C9EAD;
+}
+
+.card-footer {
+    font-size: 0.85rem;
+    color: #666;
+    border-top: 1px solid #eee;
+    padding-top: 0.75rem;
+}
+
+.see-more-btn i {
+    font-size: 0.9rem;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 900px) {
+    .grid-sizer,
+    .announcement-card {
+        width: 100%; /* 2 columns tablet */
+    }
+}
+
+@media (max-width: 600px) {
+    .grid-sizer,
+    .announcement-card {
+        width: 100%; /* 1 column mobile */
+    }
+}

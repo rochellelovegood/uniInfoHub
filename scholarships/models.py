@@ -1,4 +1,5 @@
 # uniHub/scholarships/models.py
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.auth.models import User
@@ -12,7 +13,11 @@ ACADEMIC_LEVEL_CHOICES = [
 ]
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='userprofile'
+    )
 
     ROLE_CHOICES = [
         ('STUDENT', 'Student'),
@@ -37,6 +42,8 @@ class UserProfile(models.Model):
         ('ES', 'B.C.Tech. (Embedded Systems)'),
         ('CN', 'B.C.Tech. (Communication and Networking)'),
         ('CSec', 'B.C.Tech. (Cyber Security)'),
+        ('CST', 'CST (Have not decided yet)')
+
     ]
     major = models.CharField(
         max_length=50,
@@ -97,12 +104,9 @@ class Company(models.Model):
 
 class Testimonial(models.Model):
     student_name = models.CharField(max_length=100)
-    graduation_info = models.CharField(max_length=100)
     company = models.CharField(max_length=100)
     role = models.CharField(max_length=100)
     quote = models.TextField()
-    technologies = models.CharField(max_length=200)
-    outcome = models.CharField(max_length=200)
     student_photo = models.ImageField(upload_to='testimonials/', blank=True, null=True)
     display_order = models.PositiveIntegerField(default=0)
 
@@ -139,7 +143,7 @@ class Scholarship(models.Model):
     )
     country = models.CharField(
         max_length=100, null=True, blank=True,
-        help_text="Optional: The country for which this scholarship is intended (e.g., 'USA', 'Myanmar', 'UK')."
+        help_text="Optional"
     )
 
     # ADDED: New field to specify if a scholarship is for undergraduate or graduate students
@@ -152,13 +156,15 @@ class Scholarship(models.Model):
     )
     
     MAJOR_CHOICES = [
+        ('All','All Majors'),
         ('SE', 'B.C.Sc. (Software Engineering)'),
         ('BIS', 'B.C.Sc. (Business Information Systems)'),
         ('KE', 'B.C.Sc. (Knowledge Engineering)'),
+        ('CSec', 'B.C.Sc. (Cyber Security)'),
         ('HPC', 'B.C.Sc. (High Performance Computing)'),
         ('ES', 'B.C.Tech. (Embedded Systems)'),
         ('CN', 'B.C.Tech. (Communication and Networking)'),
-        ('CSec', 'B.C.Tech. (Cyber Security)'),
+
     ]
     major = models.CharField(
         max_length=50,
@@ -209,9 +215,9 @@ class Announcement(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    place = models.CharField(max_length=200, help_text="e.g., Auditorium A, Online")
+    place = models.CharField(max_length=200, help_text="e.g.main hall/ theatre")
     time = models.TimeField(default=datetime.time(9, 0), help_text="Time of the event")
-    
+    attachment = models.FileField(upload_to='announcements/attachments/', blank=True, null=True)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='announcements')
 
     def __str__(self):

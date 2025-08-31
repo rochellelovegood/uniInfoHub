@@ -1,468 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}OpportunityHub - Home{% endblock %}
+{% block title %}UCSYerHub - Home{% endblock %}
 
 {% block extra_css %}
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+<link rel="stylesheet" href="{% static 'css/scholarhomepage.css' %}">
 
-    :root {
-        --primary: #6a11cb;
-        --secondary: #2575fc;
-        --dark: #1a1a2e;
-        --darker: #0d0d1a;
-        --card-bg: #2a2a3a;
-        --text: #e0e0e0;
-        --accent: #a777e3;
-        --light-accent: #c9a8ff;
-    }
-
-    body {
-        background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
-        color: var(--text);
-        min-height: 100vh;
-        line-height: 1.6;
-        overflow-x: hidden;
-    }
-
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-    }
-
-    /* Header Styles */
-    header {
-        background: rgba(26, 26, 46, 0.95);
-        backdrop-filter: blur(10px);
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 1000;
-        padding: 15px 0;
-        border-bottom: 1px solid rgba(138, 43, 226, 0.2);
-    }
-
-    .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .logo {
-        display: flex;
-        align-items: center;
-        font-size: 1.8rem;
-        font-weight: 700;
-        background: linear-gradient(to right, var(--text), var(--accent));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
-
-    .logo i {
-        margin-right: 10px;
-        color: var(--accent);
-    }
-
-    nav ul {
-        display: flex;
-        list-style: none;
-    }
-
-    nav ul li {
-        margin-left: 30px;
-    }
-
-    nav ul li a {
-        color: var(--text);
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s;
-        position: relative;
-    }
-
-    nav ul li a:hover {
-        color: var(--accent);
-    }
-
-    nav ul li a::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: var(--accent);
-        transition: width 0.3s;
-    }
-
-    nav ul li a:hover::after {
-        width: 100%;
-    }
-
-    .user-info {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .user-info span {
-        font-weight: 500;
-    }
-
-    .user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        color: white;
-    }
-
-    /* Slideshow Styles */
-    .slideshow-container {
-        position: relative;
-        width: 100%;
-        height: 85vh;
-        overflow: hidden;
-        margin-top: 70px;
-    }
-
-    .slideshow {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
-
-    .slide {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        animation: slideAnimation 24s infinite;
-    }
-
-    .slide:nth-child(1) {
-        animation-delay: 0s;
-        background-image: linear-gradient(rgba(26, 26, 46, 0.85), rgba(26, 26, 46, 0.85)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80');
-    }
-
-    .slide:nth-child(2) {
-        animation-delay: 8s;
-        background-image: linear-gradient(rgba(26, 26, 46, 0.85), rgba(26, 26, 46, 0.85)), url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80');
-    }
-
-    .slide:nth-child(3) {
-        animation-delay: 16s;
-        background-image: linear-gradient(rgba(26, 26, 46, 0.85), rgba(26, 26, 46, 0.85)), url('https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80');
-    }
-
-    .slide-content {
-        text-align: center;
-        max-width: 800px;
-        padding: 0 20px;
-    }
-
-    .slide-content h1 {
-        font-size: 3.5rem;
-        font-weight: 700;
-        margin-bottom: 20px;
-        background: linear-gradient(to right, var(--text), var(--accent));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        line-height: 1.2;
-    }
-
-    .slide-content p {
-        font-size: 1.2rem;
-        margin-bottom: 30px;
-        color: #bbb;
-    }
-
-    /* Categories Section */
-    .categories {
-        padding: 80px 0;
-    }
-
-    .section-title {
-        text-align: center;
-        margin-bottom: 60px;
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: linear-gradient(to right, var(--text), var(--accent));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
-
-    .category-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 30px;
-    }
-
-    .category-card {
-        background: var(--card-bg);
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        transition: all 0.4s ease;
-        border: 1px solid rgba(138, 43, 226, 0.2);
-        position: relative;
-        display: block;
-        text-decoration: none;
-        color: var(--text);
-    }
-
-    .category-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 40px rgba(106, 17, 203, 0.4);
-    }
-
-    .card-image {
-        height: 250px;
-        overflow: hidden;
-    }
-
-    .card-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-
-    .category-card:hover .card-image img {
-        transform: scale(1.05);
-    }
-
-    .card-content {
-        padding: 25px;
-    }
-
-    .card-content h3 {
-        font-size: 1.8rem;
-        margin-bottom: 15px;
-        color: var(--accent);
-    }
-
-    .card-content p {
-        color: #bbb;
-        margin-bottom: 25px;
-    }
-
-    .card-link {
-        display: inline-block;
-        color: var(--accent);
-        text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s;
-    }
-
-    .card-link i {
-        margin-left: 8px;
-        transition: transform 0.3s;
-    }
-
-    .category-card:hover .card-link i {
-        transform: translateX(5px);
-    }
-
-    /* Stats Section */
-    .stats {
-        padding: 60px 0;
-        background: rgba(26, 26, 46, 0.5);
-        margin: 40px 0;
-    }
-
-    .stats-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 30px;
-    }
-
-    .stat-card {
-        text-align: center;
-        padding: 30px;
-    }
-
-    .stat-number {
-        font-size: 3.5rem;
-        font-weight: 700;
-        background: linear-gradient(to right, var(--accent), var(--light-accent));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        margin-bottom: 10px;
-    }
-
-    .stat-label {
-        font-size: 1.2rem;
-        color: #bbb;
-    }
-
-    /* Footer */
-    footer {
-        background: rgba(20, 20, 35, 0.95);
-        padding: 40px 0 20px;
-        border-top: 1px solid rgba(138, 43, 226, 0.2);
-    }
-
-    .footer-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-    }
-
-    .footer-logo {
-        font-size: 1.5rem;
-        font-weight: 700;
-        background: linear-gradient(to right, var(--text), var(--accent));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
-
-    .social-links {
-        display: flex;
-        gap: 15px;
-    }
-
-    .social-links a {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: rgba(167, 119, 227, 0.1);
-        color: var(--accent);
-        transition: all 0.3s;
-        text-decoration: none;
-    }
-
-    .social-links a:hover {
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        color: white;
-        transform: translateY(-3px);
-    }
-
-    .copyright {
-        text-align: center;
-        padding-top: 20px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        color: #777;
-        font-size: 0.9rem;
-    }
-
-    /* Animations */
-    @keyframes slideAnimation {
-        0% {
-            opacity: 0;
-            transform: scale(1.05);
-        }
-        8% {
-            opacity: 1;
-            transform: scale(1);
-        }
-        33% {
-            opacity: 1;
-            transform: scale(1);
-        }
-        41% {
-            opacity: 0;
-            transform: scale(1.05);
-        }
-        100% {
-            opacity: 0;
-            transform: scale(1.05);
-        }
-    }
-
-    /* Responsive Design */
-    @media (max-width: 992px) {
-        .slide-content h1 {
-            font-size: 2.8rem;
-        }
-
-        nav ul li {
-            margin-left: 20px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .header-content {
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        nav ul {
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 15px 0;
-        }
-
-        nav ul li {
-            margin: 0 10px 10px;
-        }
-
-        .slideshow-container {
-            height: 70vh;
-        }
-
-        .slide-content h1 {
-            font-size: 2.3rem;
-        }
-
-        .slide-content p {
-            font-size: 1rem;
-        }
-
-        .section-title {
-            font-size: 2rem;
-        }
-
-        .category-cards {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .slide-content h1 {
-            font-size: 2rem;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-        }
-    }
-</style>
 {% endblock %}
-
 {% block content %}
 
-
-<!-- Slideshow -->
 <div class="slideshow-container">
     <div class="slideshow">
-        <!-- Slide 1 -->
         <div class="slide">
             <div class="slide-content">
                 <h1>Discover Your Academic Potential</h1>
@@ -470,7 +18,6 @@
             </div>
         </div>
 
-        <!-- Slide 2 -->
         <div class="slide">
             <div class="slide-content">
                 <h1>Connect with Industry Leaders</h1>
@@ -478,7 +25,6 @@
             </div>
         </div>
 
-        <!-- Slide 3 -->
         <div class="slide">
             <div class="slide-content">
                 <h1>Transform Your Career Path</h1>
@@ -488,30 +34,27 @@
     </div>
 </div>
 
-<!-- Categories Section -->
 <section class="categories">
     <div class="container">
         <h2 class="section-title">Explore Opportunities</h2>
 
         <div class="category-cards">
-            <!-- Scholarship Card -->
             <a href="{% url 'scholarships:list' %}" class="category-card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1584697964358-3e14ca57658b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80" alt="Scholarships">
-                </div>
-                <div class="card-content">
-                    <h3>Scholarships</h3>
-                    <p>Discover financial aid opportunities to support your education. Find scholarships tailored to your field of study, achievements, and background.</p>
-                    <div class="card-link">
-                        Explore Scholarships <i class="fas fa-arrow-right"></i>
-                    </div>
-                </div>
-            </a>
+    <div class="card-image">
+        <img src="{% static 'images/announcement.jpg' %}" alt="Scholarships">
+    </div>
+    <div class="card-content">
+        <h3>Scholarships</h3>
+        <p>Discover financial aid opportunities to support your education. Find scholarships tailored to your field of study, achievements, and background.</p>
+        <div class="card-link">
+            Explore Scholarships <i class="fas fa-arrow-right"></i>
+        </div>
+    </div>
+</a>
 
-            <!-- Internship Card -->
             <a href="{% url 'internships' %}" class="category-card">
                 <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80" alt="Internships">
+                    <img src="{% static 'images/scholarship.HEIC' %}" alt="Internships">
                 </div>
                 <div class="card-content">
                     <h3>Internships</h3>
@@ -522,14 +65,13 @@
                 </div>
             </a>
 
-            <!-- Activities Card -->
             <a href="{% url 'scholarships:announcements_list' %}" class="category-card">
                 <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1950&q=80" alt="Activities">
+                    <img src="{% static 'images/intern4.jpg' %}" alt="Activities">
                 </div>
                 <div class="card-content">
-                    <h3>Activities</h3>
-                    <p>Participate in extracurricular activities, workshops, and events to enhance your skills and build your network.</p>
+                    <h3>Announcements</h3>
+                    <p>Stay up-to-date with the latest news, events, and important notices from the university.</p>
                     <div class="card-link">
                         Browse Activities <i class="fas fa-arrow-right"></i>
                     </div>
@@ -539,20 +81,19 @@
     </div>
 </section>
 
-<!-- Stats Section -->
 <section class="stats">
     <div class="container">
         <div class="stats-container">
             <div class="stat-card">
-                <div class="stat-number">1,250+</div>
+                <div class="stat-number">150+</div>
                 <div class="stat-label">Scholarships</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">850+</div>
+                <div class="stat-number">150+</div>
                 <div class="stat-label">Internships</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">500+</div>
+                <div class="stat-number">100+</div>
                 <div class="stat-label">Activities</div>
             </div>
             <div class="stat-card">
@@ -562,7 +103,4 @@
         </div>
     </div>
 </section>
-
-<!-- Footer -->
-
 {% endblock %}
