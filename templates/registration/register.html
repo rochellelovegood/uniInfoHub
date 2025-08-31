@@ -5,7 +5,7 @@
 
 {% block extra_css %}
 <style>
-    /* Futuristic Theme Variables */
+
     :root {
         --primary-dark: #0a192f;
         --primary-light: #172a45;
@@ -19,7 +19,7 @@
     body {
         background: 
             linear-gradient(rgba(10, 25, 47, 0.95), rgba(10, 25, 47, 0.95));
-           
+            
         background-size: cover;
         color: var(--text-primary);
     }
@@ -40,10 +40,10 @@
     }
     
     .card-header {
-    background: rgba(100, 255, 218, 0.1) !important; /* More subtle teal tint */
+    background: rgba(100, 255, 218, 0.1) !important;
     border-bottom: 1px solid var(--glass-border) !important;
     padding: 1.5rem;
-    color: var(--accent-color) !important; /* Teal text color */
+    color: var(--accent-color) !important; 
     }
     
     .form-label {
@@ -89,7 +89,6 @@
         box-shadow: 0 6px 20px rgba(100, 255, 218, 0.4);
     }
     
-    /* Role selection styling */
     .role-options {
         display: flex;
         flex-direction: column;
@@ -128,8 +127,7 @@
     .student-option .role-icon { color: #64ffda; }
     .faculty-option .role-icon { color: #00a1ff; }
     .admin-option .role-icon { color: #a777e3; }
-    
-    /* Conditional fields */
+   
     .conditional-field {
         display: none;
     }
@@ -138,7 +136,7 @@
         display: block;
     }
     
-    /* Alert styling */
+    
     .alert {
         border-radius: 8px;
         backdrop-filter: blur(5px);
@@ -155,8 +153,7 @@
         border-color: rgba(255, 59, 48, 0.3);
         color: var(--text-primary);
     }
-    
-    /* Divider */
+  
     .divider {
         display: flex;
         align-items: center;
@@ -210,11 +207,10 @@
                             </div>
                         {% endif %}
                         
-                        <!-- Username Field -->
                         <div class="mb-3">
                             <label for="{{ form.username.id_for_label }}" class="form-label">
                                 {{ form.username.label }}
-                                <span class="text-danger">*</span>
+                                <span class="text-danger"></span>
                             </label>
                             {{ form.username }}
                             {% if form.username.help_text %}
@@ -225,11 +221,10 @@
                             {% endfor %}
                         </div>
                         
-                        <!-- Email Field -->
                         <div class="mb-3">
                             <label for="{{ form.email.id_for_label }}" class="form-label">
                                 {{ form.email.label }}
-                                <span class="text-danger">*</span>
+                                <span class="text-danger"></span>
                             </label>
                             {{ form.email }}
                             {% if form.email.help_text %}
@@ -240,11 +235,10 @@
                             {% endfor %}
                         </div>
                         
-                        <!-- Password Fields -->
                         <div class="mb-3">
                             <label for="{{ form.password1.id_for_label }}" class="form-label">
                                 {{ form.password1.label }}
-                                <span class="text-danger">*</span>
+                                <span class="text-danger"></span>
                             </label>
                             {{ form.password1 }}
                             {% if form.password1.help_text %}
@@ -258,7 +252,7 @@
                         <div class="mb-3">
                             <label for="{{ form.password2.id_for_label }}" class="form-label">
                                 {{ form.password2.label }}
-                                <span class="text-danger">*</span>
+                                <span class="text-danger"></span>
                             </label>
                             {{ form.password2 }}
                             {% if form.password2.help_text %}
@@ -269,11 +263,10 @@
                             {% endfor %}
                         </div>
                         
-                        <!-- Role Selection -->
                         <div class="mb-4">
                             <label class="form-label">
                                 Role
-                                <span class="text-danger">*</span>
+                                <span class="text-danger"></span>
                             </label>
                             <div class="role-options">
                                 <label class="role-option student-option {% if form.role.value == 'STUDENT' %}selected{% endif %}">
@@ -316,13 +309,11 @@
                             {% endif %}
                         </div>
                         
-                        <!-- Conditional Student Fields -->
                         <div id="student-fields" class="conditional-field {% if form.role.value == 'STUDENT' %}show{% endif %}">
-                            <!-- Roll Number Field -->
                             <div class="mb-3">
                                 <label for="{{ form.roll_no.id_for_label }}" class="form-label">
                                     {{ form.roll_no.label }}
-                                    <span class="text-danger">*</span>
+                                    <span class="text-danger"></span>
                                 </label>
                                 {{ form.roll_no }}
                                 {% if form.roll_no.help_text %}
@@ -333,11 +324,10 @@
                                 {% endfor %}
                             </div>
                             
-                            <!-- Major Field -->
                             <div class="mb-3">
                                 <label for="{{ form.major.id_for_label }}" class="form-label">
                                     {{ form.major.label }}
-                                    <span class="text-danger">*</span>
+                                    <span class="text-danger"></span>
                                 </label>
                                 {{ form.major }}
                                 {% if form.major.help_text %}
@@ -348,17 +338,19 @@
                                 {% endfor %}
                             </div>
                             
-                            <!-- Semester Field -->
+                            
+                            
+                            
                             <div class="mb-3">
-                                <label for="{{ form.semester.id_for_label }}" class="form-label">
-                                    {{ form.semester.label }}
-                                    <span class="text-danger">*</span>
+                                <label for="{{ form.academic_level.id_for_label }}" class="form-label">
+                                    {{ form.academic_level.label }}
+                                    <span class="text-danger"></span>
                                 </label>
-                                {{ form.semester }}
-                                {% if form.semester.help_text %}
-                                    <div class="form-text text-muted">{{ form.semester.help_text }}</div>
+                                {{ form.academic_level }}
+                                {% if form.academic_level.help_text %}
+                                    <div class="form-text text-muted">{{ form.academic_level.help_text }}</div>
                                 {% endif %}
-                                {% for error in form.semester.errors %}
+                                {% for error in form.academic_level.errors %}
                                     <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle-fill me-1"></i>{{ error }}</div>
                                 {% endfor %}
                             </div>

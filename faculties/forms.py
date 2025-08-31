@@ -1,6 +1,10 @@
 # faculties/forms.py
 from django import forms
 from scholarships.models import Company
+from django import forms
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.models import User
+from scholarships.models import UserProfile
 
 class CompanyForm(forms.ModelForm):
 
@@ -19,3 +23,5 @@ class CompanyForm(forms.ModelForm):
             'logo': 'Company Logo',
             'display_order': 'Display Order (Lower numbers appear first)',
         }
+
+

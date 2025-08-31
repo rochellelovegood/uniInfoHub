@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'scholarships',
     'faculties',  
+    'widget_tweaks',
+    'crispy_forms',
+    
 ]
 
 MIDDLEWARE = [
@@ -125,7 +128,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
-LOGIN_REDIRECT_URL = 'homepage' # Or 'scholarships:list' or any other URL name
+LOGIN_REDIRECT_URL = 'scholarship:homepage' # Or 'scholarships:list' or any other URL name
 LOGOUT_REDIRECT_URL = 'home' # Or 'scholarships:list'
 STATIC_URL = '/static/' # This is the URL prefix for static files (e.g., yoursite.com/static/images/rocket.png)
 
@@ -134,3 +137,5 @@ LOGIN_URL = 'scholarships:login'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
