@@ -347,12 +347,8 @@ footer {
     .social-links {
         justify-content: center;
     }
-    .profile-name {
-        display: none;
-    }
-    .logout-link span {
-        display: none;
-    }
+   
+    
 }
 
 @media (max-width: 576px) {
