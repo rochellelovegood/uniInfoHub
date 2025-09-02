@@ -11,47 +11,112 @@
 <div class="announcements-container">
     <div class="page-header">
         <h2>{{ title }}</h2>
-        <p class="text-secondary">Browse through the latest updates and important notices</p>
+        <p>Latest announcements pinned on the board</p>
     </div>
 
-    {% if announcements %}
+    {% if page_obj %}
     <div class="announcements-grid">
-        {% for announcement in announcements %}
+        {% for announcement in page_obj %}
         <div class="announcement-card">
-            <div class="card-header">
-                <h3 class="card-title">{{ announcement.title }}</h3>
-                {% if announcement.is_new %}
-                <span class="badge-new">NEW</span>
-                {% endif %}
-            </div>
+            {% if announcement.is_new %}
+            <div class="new-badge">NEW</div>
+            {% endif %}
+            <h3 class="card-title">{{ announcement.title }}</h3>
 
             <div class="card-meta">
                 {% if announcement.place %}
-                <span><i class="bi bi-geo-alt-fill"></i> {{ announcement.place }}</span>
+                    <div><i class="bi bi-geo-alt-fill"></i> {{ announcement.place }}</div>
                 {% endif %}
                 {% if announcement.time %}
-                <span><i class="bi bi-clock-fill"></i> {{ announcement.time|date:"g:i A" }}</span>
+                    <div><i class="bi bi-clock-fill"></i> {{ announcement.time|date:"g:i A" }}</div>
                 {% endif %}
             </div>
 
-            <div class="card-content" id="content-{{ announcement.id }}">
-                {{ announcement.content|linebreaks }}
+            <div class="card-content-wrapper collapsed">
+                <div class="card-content">
+                    {{ announcement.content|linebreaks }}
+                </div>
             </div>
+            
+            {% if announcement.content|length > 300 %}
+                <span class="see-more" data-target="{{ forloop.counter }}">Read more</span>
+            {% endif %}
 
             {% if announcement.attachment %}
-            <div class="attachment mt-2">
-                <a href="{{ announcement.attachment.url }}" target="_blank">View Attachment</a>
+            <div class="attachment">
+                <a href="{{ announcement.attachment.url }}" target="_blank">📎 Attachment</a>
             </div>
             {% endif %}
 
             <div class="card-footer">
-                Posted on {{ announcement.created_at|date:"M d, Y" }}
+                {{ announcement.created_at|date:"M d, Y" }}
             </div>
         </div>
         {% endfor %}
+    </div>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; First</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+        <span class="current-page">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+        {% endif %}
     </div>
     {% else %}
     <p>No announcements available.</p>
     {% endif %}
 </div>
+<div id="announcementModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3 id="modalTitle" class="modal-title"></h3>
+        <div id="modalContent" class="modal-body"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const modal = document.getElementById('announcementModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalContent = document.getElementById('modalContent');
+    const closeBtn = document.querySelector('.close-btn');
+
+    document.querySelectorAll('.see-more').forEach(link => {
+        const card = link.closest('.announcement-card');
+        const content = card.querySelector('.card-content');
+        const title = card.querySelector('.card-title');
+
+        link.addEventListener('click', function(event) {
+            event.preventDefault(); // Stop the link from navigating
+            
+            // Populate the modal with the content
+            modalTitle.textContent = title.textContent;
+            modalContent.innerHTML = content.innerHTML;
+            
+            // Display the modal
+            modal.style.display = 'block';
+        });
+    });
+
+    // When the user clicks on (x), close the modal
+    closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.addEventListener('click', function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
+</script>
 {% endblock %}

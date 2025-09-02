@@ -321,14 +321,32 @@ def remove_from_wishlist(request, scholarship_id):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
-
+from django.shortcuts import render
+from django.core.paginator import Paginator
+from django.utils import timezone
+from datetime import timedelta
+from .models import Announcement
 # ---------- Announcements ----------
 @login_required(login_url='login')
+
+
 def announcements_list(request):
     announcements = Announcement.objects.all().order_by('-created_at')
-    context = {'announcements': announcements, 'title': 'Announcements'}
-    return render(request, 'announcements_list.html', context)
+    today = timezone.now()
 
+    # Mark recent announcements
+    for ann in announcements:
+        ann.is_new = (today - ann.created_at).days < 7
+
+    paginator = Paginator(announcements, 6)  # 6 per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'title': 'Announcements',
+        'page_obj': page_obj
+    }
+    return render(request, 'announcements_list.html', context)
 
 def resources(request):
     return render(request, 'resources.html')
