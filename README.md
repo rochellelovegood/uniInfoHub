@@ -11,8 +11,6 @@ You can view the deployed site here:
 
 Dynamic Announcements: Stay updated with the latest university announcements, including events, deadlines, and news.
 
-Faculty Directory: Browse through a comprehensive list of university faculties and their respective details.
-
 Scholarship Information: Access details about available scholarships and application procedures.
 
 Responsive Design: Optimized for both desktop and mobile devices.
