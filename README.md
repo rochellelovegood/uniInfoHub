@@ -2,17 +2,22 @@ uniInfoHub
 
 uniInfoHub is a university information hub designed to provide students with easy access to essential resources and announcements. The platform offers a user-friendly interface to explore various university-related information.
 
-Features
+🌐 Live Demo
+
+You can view the deployed site here:
+👉 uniInfoHub on PythonAnywhere
+
+✨ Features
 
 Dynamic Announcements: Stay updated with the latest university announcements, including events, deadlines, and news.
 
 Faculty Directory: Browse through a comprehensive list of university faculties and their respective details.
 
-Scholarship Information: Access information about available scholarships and application procedures.
+Scholarship Information: Access details about available scholarships and application procedures.
 
-Responsive Design: The platform is optimized for both desktop and mobile devices, ensuring a seamless user experience.
+Responsive Design: Optimized for both desktop and mobile devices.
 
-Technologies Used
+🛠️ Technologies Used
 
 Frontend:
 
@@ -28,9 +33,7 @@ Python
 
 Django
 
-Setup Instructions
-
-To run the project locally:
+🚀 Setup Instructions (Run Locally)
 
 Clone the repository:
 
@@ -38,12 +41,10 @@ git clone https://github.com/rochellelovegood/uniInfoHub.git
 cd uniInfoHub
 
 
-Create a virtual environment:
+Create and activate a virtual environment:
 
 python -m venv venv
 
-
-Activate the virtual environment:
 
 On Windows:
 
@@ -69,8 +70,20 @@ Run the development server:
 
 python manage.py runserver
 
-https://khinthanthar1.pythonanywhere.com/scholarships/
 
-Contributing
+Open your browser and go to:
+http://127.0.0.1:8000/
 
-Contributions are welcome! If you'd like to contribute to uniInfoHub, please fork the repository, create a new branch, and submit a pull request with your proposed changes.
+🤝 Contributing
+
+Contributions are welcome! To contribute:
+
+Fork the repo
+
+Create a new branch (git checkout -b feature-branch)
+
+Commit your changes (git commit -m 'Add new feature')
+
+Push to your branch (git push origin feature-branch)
+
+Open a Pull Request
