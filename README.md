@@ -78,12 +78,17 @@ http://127.0.0.1:8000/
 
 Contributions are welcome! To contribute:
 
-Fork the repo
 
-Create a new branch (git checkout -b feature-branch)
 
-Commit your changes (git commit -m 'Add new feature')
 
-Push to your branch (git push origin feature-branch)
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f33a089a-05d0-4e10-9b48-158177723be5" />
 
-Open a Pull Request
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/11ac7575-5fe3-4bee-8b96-83b467d09bc7" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/4e5f3b61-bd2f-42ce-9276-1ced58034c70" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f6fd7ff1-0ebe-468f-98c3-0990b986a9b4" />
+
+![Uploading photo_2025-09-03_20-36-58.jpg…]()
+
+
