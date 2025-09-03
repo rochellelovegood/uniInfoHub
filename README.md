@@ -89,6 +89,8 @@ Contributions are welcome! To contribute:
 
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f6fd7ff1-0ebe-468f-98c3-0990b986a9b4" />
 
-![Uploading photo_2025-09-03_20-36-58.jpg…]()
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/a31851a3-bd45-4468-ac46-4aa4f68c37f2" />
+
+
 
 
