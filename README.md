@@ -5,7 +5,7 @@ uniInfoHub is a university information hub designed to provide students with eas
 🌐 Live Demo
 
 You can view the deployed site here:
-👉 uniInfoHub on PythonAnywhere
+👉 https://khinthanthar1.pythonanywhere.com/
 
 ✨ Features
 
